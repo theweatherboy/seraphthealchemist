@@ -28,7 +28,7 @@ export default function Navbar() {
         className="font-arcane text-2xl text-seraphic-gold flex items-center gap-2 group"
       >
         <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-        <span>Threads of Divinity</span>
+        <span>Seraph, The Alchemist</span>
       </Link>
 
       <button

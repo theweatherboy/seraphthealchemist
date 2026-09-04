@@ -24,7 +24,7 @@ export default function SupportPage() {
         </h1>
 
         <p className="font-celestial text-xl text-moon-ivory/80 mb-8 leading-relaxed">
-          Threads of Divinity is an evolving body of spiritual education, creative work, research, and practice.
+          Seraph, The Alchemist is an evolving body of spiritual education, creative work, research, and practice.
         </p>
 
         <p className="font-celestial text-lg text-moon-ivory/60 mb-12 leading-relaxed">

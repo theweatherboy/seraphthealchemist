@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!post) return { title: "Thread Not Found" };
 
   return {
-    title: `${post.title} | Threads of Divinity`,
-    description: `Explore the secrets of ${post.subject} in the Threads of Divinity grimoire.`,
+    title: `${post.title} | Seraph, The Alchemist`,
+    description: `Explore the secrets of ${post.subject} in the Seraph, The Alchemist grimoire.`,
     openGraph: {
       title: post.title,
       description: `Deep dive into ${post.subject}.`,

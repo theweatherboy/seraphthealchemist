@@ -40,5 +40,11 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-celestial), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+.shift-blur {
+  filter: blur(8px);
+  opacity: 0.6;
 }
 

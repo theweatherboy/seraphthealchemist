@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Threads of Divinity | Seraph the Alchemist",
+  title: "Seraph, The Alchemist | Seraph the Alchemist",
   description: "An immersive digital temple for exploring consciousness, spirituality, mysticism, and the transformation of the self.",
 };
 

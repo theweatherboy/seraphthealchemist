@@ -38,7 +38,7 @@ export default function Home() {
           className="max-w-2xl"
         >
           <h1 className="font-arcane text-5xl md:text-7xl text-seraphic-gold mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
-            Threads of Divinity
+            The Seraphim Sanctuary
           </h1>
           <p className="font-celestial text-xl md:text-2xl text-moon-ivory/80 mb-12 leading-relaxed">
             An interactive digital sanctuary for exploring consciousness, spirituality, mysticism, and the transformation of the self.
