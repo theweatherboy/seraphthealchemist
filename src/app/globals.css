@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0B0B0B;
+  --foreground: #E8E0CE;
+
+  /* Alchemical Palette */
+  --color-obsidian: #0B0B0B;
+  --color-void-purple: #171027;
+  --color-deep-indigo: #20204A;
+  --color-seraphic-gold: #D4AF37;
+  --color-antique-gold: #AA8A2E;
+  --color-dragon-emerald: #50C878;
+  --color-ether-teal: #3CA6A0;
+  --color-blood-garnet: #651F32;
+  --color-moon-ivory: #E8E0CE;
+  --color-astral-lavender: #9D8CC7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-obsidian: var(--color-obsidian);
+  --color-void-purple: var(--color-void-purple);
+  --color-deep-indigo: var(--color-deep-indigo);
+  --color-seraphic-gold: var(--color-seraphic-gold);
+  --color-antique-gold: var(--color-antique-gold);
+  --color-dragon-emerald: var(--color-dragon-emerald);
+  --color-ether-teal: var(--color-ether-teal);
+  --color-blood-garnet: var(--color-blood-garnet);
+  --color-moon-ivory: var(--color-moon-ivory);
+  --color-astral-lavender: var(--color-astral-lavender);
+
+  --font-arcane: var(--font-cinzel);
+  --font-celestial: var(--font-inter);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-celestial), Arial, Helvetica, sans-serif;
+}
+
