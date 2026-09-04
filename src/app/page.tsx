@@ -8,8 +8,13 @@ import Dragon from '@/components/canvas/Dragon';
 import CelestialWheel from '@/components/canvas/CelestialWheel';
 import Link from 'next/link';
 import ArcaneSigil from '@/components/ui/arcane/ArcaneSigil';
+import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+
+const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 export default function Home() {
+  useScrollNavigation(0, SITE_SEQUENCE);
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Immersive 3D Background */}

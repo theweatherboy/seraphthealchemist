@@ -3,6 +3,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/ui/ProductCard';
+import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+
+const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 const PRODUCTS = [
   {
@@ -32,6 +35,8 @@ const PRODUCTS = [
 ];
 
 export default function ForgePage() {
+  useScrollNavigation(3, SITE_SEQUENCE);
+
   return (
     <div className="min-h-screen pt-24 pb-12 px-6 md:px-12 max-w-6xl mx-auto">
       <motion.div

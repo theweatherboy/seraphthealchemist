@@ -3,8 +3,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
+import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+
+const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 export default function ContactPage() {
+  useScrollNavigation(6, SITE_SEQUENCE);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

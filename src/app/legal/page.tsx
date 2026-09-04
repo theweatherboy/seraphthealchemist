@@ -1,6 +1,13 @@
+"use client";
+
 import React from 'react';
+import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+
+const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 export default function LegalPage() {
+  useScrollNavigation(5, SITE_SEQUENCE);
+
   return (
     <div className="min-h-screen bg-black text-gray-300 px-6 py-20 font-serif">
       <div className="max-w-3xl mx-auto space-y-12">

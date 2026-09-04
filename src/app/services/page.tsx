@@ -3,8 +3,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import AlchemicalWheel from '@/components/features/AlchemicalWheel';
+import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+
+const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 export default function ServicesPage() {
+  useScrollNavigation(2, SITE_SEQUENCE);
+
   return (
     <div className="min-h-screen pt-24 pb-12 px-6 md:px-12 flex flex-col items-center">
       <motion.div

@@ -4,9 +4,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Sparkles, BookOpen, Compass } from 'lucide-react';
+import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+
+const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 // In a real app, this would be fetched via a Server Component or API
-// For this a-sync demo, we'll mock the data based on the instructions
 const GRIMOIRE_DATA = [
   { slug: 'emerald-tablet', title: 'The Emerald Tablet', subject: 'Alchemy', coord: '10, 5, -2' },
   { slug: 'nigredo', title: 'Nigredo', subject: 'Alchemy', coord: '12, -2, 5' },
@@ -18,6 +20,8 @@ const GRIMOIRE_DATA = [
 ];
 
 export default function GrimoireIndex() {
+  useScrollNavigation(1, SITE_SEQUENCE);
+
   return (
     <div className="min-h-screen pt-24 pb-12 px-6 md:px-12 max-w-6xl mx-auto">
       <header className="text-center mb-16">

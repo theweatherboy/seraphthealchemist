@@ -16,6 +16,7 @@ const navItems = [
   { name: 'COSMOLOGY', href: '/cosmology' },
   { name: 'SUPPORT THE TEMPLE', href: '/support' },
   { name: 'BEGIN YOUR JOURNEY', href: '/contact' },
+  { name: 'LEGAL', href: '/legal' },
 ];
 
 export default function Navbar() {
