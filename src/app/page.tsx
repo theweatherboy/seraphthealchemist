@@ -46,7 +46,7 @@ export default function Home() {
           <Angel position={[-5, 2, -2]} scale={0.8} />
           <Angel position={[5, -2, -3]} scale={1.2} />
           <Angel position={[0, 5, -5]} scale={1} />
-        </Scene>>
+        </Scene>
       </div>
 
       {/* Content Wrapper */}
