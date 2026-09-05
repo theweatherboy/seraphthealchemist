@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Realm, Chakra } from '@/data/realms';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { Realm, Chakra, realms } from '@/data/realms';
 
 interface RealmContextType {
   currentRealm: Realm;
@@ -15,12 +15,12 @@ export function RealmProvider({ children }: { children: ReactNode }) {
   const [realmId, setRealmId] = useState('earth');
 
   // Import realms here to avoid circular deps if any
-  const { realms } = require('@/data/realms');
+
   const currentRealm = realms.find((r: Realm) => r.id === realmId) || realms[0];
 
-  const setRealm = (id: string) => {
+  const setRealm = useCallback((id: string) => {
     setRealmId(id);
-  };
+  }, []);
 
   return (
     <RealmContext.Provider value={{

@@ -8,6 +8,8 @@ import LivingTapestry from '@/components/visual/LivingTapestry';
 import ParticleField from '@/components/visual/ParticleField';
 import EnvironmentBackground from '@/components/visual/EnvironmentBackground';
 
+import PaymentProvider from '@/components/ui/PaymentProvider';
+
 interface AppShellProps {
   children: React.ReactNode;
 }
@@ -15,6 +17,7 @@ interface AppShellProps {
 export default function AppShell({ children }: AppShellProps) {
   return (
     <RealmProvider>
+      <PaymentProvider>
       <div className="relative min-h-screen w-full bg-obsidian text-text overflow-x-hidden">
         {/* Living Environment (Persists) */}
         <div className="fixed inset-0 z-0 pointer-events-none">
@@ -32,6 +35,7 @@ export default function AppShell({ children }: AppShellProps) {
           {children}
         </main>
       </div>
+    </PaymentProvider>
     </RealmProvider>
   );
 }

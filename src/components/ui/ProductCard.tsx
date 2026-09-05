@@ -4,6 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 
+import { usePayment } from './PaymentProvider';
+
 interface ProductCardProps {
   title: string;
   category: string;
@@ -12,7 +14,8 @@ interface ProductCardProps {
   image?: string;
 }
 
-export default function ProductCard({ title, category, description, price, image }: ProductCardProps) {
+export default function ProductCard({ title, category, description, price }: ProductCardProps) {
+  const openPayment = usePayment();
   return (
     <motion.div
       whileHover={{ y: -10 }}
@@ -35,7 +38,7 @@ export default function ProductCard({ title, category, description, price, image
           {description}
         </p>
 
-        <button className="w-full py-3 px-4 bg-obsidian border border-seraphic-gold/40 text-seraphic-gold font-arcane rounded-xl hover:bg-seraphic-gold hover:text-obsidian transition-all flex items-center justify-center gap-2 group">
+        <button onClick={() => openPayment({ title, price })} className="w-full py-3 px-4 bg-obsidian border border-seraphic-gold/40 text-seraphic-gold font-arcane rounded-xl hover:bg-seraphic-gold hover:text-obsidian transition-all flex items-center justify-center gap-2 group">
           <ShoppingCart size={18} className="group-hover:scale-110 transition-transform" />
           <span>ACQUIRE</span>
         </button>

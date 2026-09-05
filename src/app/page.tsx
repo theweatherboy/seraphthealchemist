@@ -1,140 +1,44 @@
 "use client";
-
-import React, { useLayoutEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowDown, ArrowUpRight, Sparkles } from 'lucide-react';
 import { useRealm } from '@/context/RealmContext';
 import { realms } from '@/data/realms';
-import NavigationPopup from '@/components/ui/NavigationPopup';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
 
-gsap.registerPlugin(ScrollTrigger);
-
-export default function Home() {
-  const { setRealm } = useRealm();
-  const [showPopup, setShowPopup] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setShowPopup(true);
-  }, []);
-
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      realms.forEach((realm, idx) => {
-        ScrollTrigger.create({
-          trigger: `#realm-${realm.id}`,
-          start: "top center",
-          end: "bottom center",
-          onEnter: () => setRealm(realm.id),
-          onEnterBack: () => setRealm(realm.id),
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [setRealm]);
-
-  return (
-    <div ref={containerRef} className="relative w-full">
-      <NavigationPopup isOpen={showPopup} onClose={() => setShowPopup(false)} />
-
-      {/* Hero Section */}
-      <section className="relative h-screen w-full flex flex-col items-center justify-center text-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5 }}
-          className="flex flex-col items-center gap-8"
-        >
-          <div className="relative w-64 h-64 md:w-96 md:h-96">
-            <img
-              src="/logo.png"
-              alt="Threads of Divinity Logo"
-              className="w-full h-full object-contain drop-shadow-[0_0_30px_rgba(212,175,55,0.3)]"
-            />
-          </div>
-          <div className="text-center">
-            <p className="font-arcane text-xl md:text-2xl text-gold/80 mb-12 uppercase tracking-[0.3em]">
-              Weave. Transform. Return.
-            </p>
-          </div>
-          <div className="flex flex-col md:flex-row gap-6 justify-center">
-            <Link
-              href="/sanctuary"
-              className="px-10 py-4 font-arcane text-xl text-gold border border-gold/50 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full"
-            >
-              ENTER SANCTUARY
-            </Link>
-            <Link
-              href="/grimoire"
-              className="px-10 py-4 font-arcane text-xl text-gold border border-gold/50 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full"
-            >
-              EXPLORE GRIMOIRE
-            </Link>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Realm Sections */}
-      {realms.map((realm, idx) => (
-        <section
-          key={realm.id}
-          id={`realm-${realm.id}`}
-          className="relative h-screen w-full flex flex-col items-center justify-center px-4 text-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-            className="max-w-3xl"
-          >
-            <h2
-              className="font-arcane text-4xl md:text-7xl mb-6 tracking-widest transition-colors duration-1000"
-              style={{ color: realm.color }}
-            >
-              {realm.name.toUpperCase()}
-            </h2>
-            <p className="font-celestial text-xl md:text-2xl text-muted mb-8 italic">
-              {idx === 0 ? "Begin by returning to yourself." :
-               idx === 1 ? "Let energy move." :
-               idx === 2 ? "Transformation begins within." :
-               idx === 3 ? "Integration is the bridge." :
-               idx === 4 ? "Give language to what you discover." :
-               idx === 5 ? "Look beyond the visible." :
-               "Reach upward without abandoning Earth."}
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {realm.subjects.map(subject => (
-                <span
-                  key={subject}
-                  className="px-4 py-1 rounded-full border border-white/10 bg-white/5 text-sm font-celestial text-muted"
-                >
-                  {subject}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-      ))}
-
-      {/* Final Convergence */}
-      <section className="relative h-screen w-full flex flex-col items-center justify-center text-center px-4">
-        <div className="max-w-2xl">
-          <h2 className="font-arcane text-4xl text-gold mb-8">The Great Weave</h2>
-          <p className="font-celestial text-lg text-muted mb-12">
-            All threads converge. Earth and Heaven are revealed as one.
-          </p>
-          <Link
-            href="/contact"
-            className="px-12 py-4 font-arcane text-xl text-gold border border-gold/50 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full"
-          >
-            BEGIN YOUR JOURNEY
-          </Link>
-        </div>
-      </section>
-    </div>
-  );
+export default function Home(){
+ const {setRealm}=useRealm();
+ const journey=useRef<HTMLDivElement>(null);
+ useEffect(()=>{
+   const observer=new IntersectionObserver(entries=>{
+     const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+     if(visible) setRealm((visible.target as HTMLElement).dataset.realm!);
+   },{threshold:[.25,.6]});
+   journey.current?.querySelectorAll('[data-realm]').forEach(el=>observer.observe(el));
+   return ()=>observer.disconnect();
+ },[setRealm]);
+ return <div className="sanctuary-home">
+   <section className="sanctuary-hero">
+     <div className="hero-center">
+       <p className="eyebrow">Bridging heaven &amp; earth</p>
+       <Image src="/logo.png" width={130} height={130} alt="Seraph's dragon emblem" className="hero-emblem" priority/>
+       <h1>Seraph<span>The Alchemist</span></h1>
+       <p className="hero-mantra">Weave. Transform. Return.</p>
+       <p className="hero-description">A sanctuary for the seeker. A thread back to yourself.</p>
+       <div className="hero-actions"><a className="sanctuary-button" href="#journey">Enter the sanctuary <ArrowDown size={15}/></a><Link className="sanctuary-button subtle" href="/grimoire">Explore the Grimoire <ArrowUpRight size={15}/></Link></div>
+     </div>
+     <aside className="hero-panel earth-panel"><p className="eyebrow">Return to your center</p><h2>Rooted in the earthly.</h2><p>Grounding, protection, healing, and the quiet work of becoming.</p><Link href="/services">Find your practice <ArrowUpRight size={15}/></Link></aside>
+     <aside className="hero-panel celestial-panel"><p className="eyebrow">Expand your awareness</p><h2>Open to the celestial.</h2><p>Symbolism, intuition, and wisdom for the path unfolding within.</p><Link href="/grimoire">Follow your curiosity <ArrowUpRight size={15}/></Link></aside>
+     <a className="hero-scroll" href="#journey">Follow the thread <ArrowDown size={16}/></a>
+   </section>
+   <section id="journey" className="journey-section" ref={journey}>
+     <div className="journey-heading"><p className="eyebrow">Seven realms. One continuous thread.</p><h2>Where does your journey begin?</h2><p>Follow what calls to you. Every path is part of the same weave.</p></div>
+     <div className="realm-cards">{realms.map((realm,i)=><Link href={i===4||i===5||i===6?'/grimoire':'/services'} className="realm-card" key={realm.id} data-realm={realm.id} onMouseEnter={()=>setRealm(realm.id)} onFocus={()=>setRealm(realm.id)} style={{'--realm-color':realm.color,'--realm-position':(i*100/6)+'%'} as React.CSSProperties}>
+       <span className="realm-number">0{i+1} / {realm.chakra.replace('thirdEye','third eye')}</span><h3>{realm.name}</h3>
+       <div className="realm-sigil"><Sparkles size={34} strokeWidth={1}/></div>
+       <p>{realm.subjects.join(' · ')}</p><span className="realm-enter">Enter path <ArrowUpRight size={14}/></span>
+     </Link>)}</div>
+     <div className="journey-footer"><span>From the roots of the earth to the stars above.</span><Link href="/about">Meet the Alchemist <ArrowUpRight size={16}/></Link></div>
+   </section>
+ </div>;
 }

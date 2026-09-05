@@ -8,10 +8,12 @@ export default function RealmIndicator() {
   const { currentRealm, setRealm } = useRealm();
 
   return (
-    <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-4 p-3 rounded-full bg-glass border border-glass-border backdrop-blur-[var(--blur-glass)]">
+    <div className="hidden md:flex fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-4 p-3 rounded-full bg-glass border border-glass-border backdrop-blur-[var(--blur-glass)]">
       {realms.map((realm) => (
         <button
           key={realm.id}
+          aria-label={"Set atmosphere to " + realm.name}
+          aria-pressed={currentRealm.id === realm.id}
           onClick={() => setRealm(realm.id)}
           className="group relative flex items-center justify-center w-3 h-3 rounded-full transition-all duration-500"
           style={{

@@ -5,9 +5,12 @@ import { motion } from 'framer-motion';
 import { Heart, Flame } from 'lucide-react';
 import { useScrollNavigation } from '@/hooks/useScrollNavigation';
 
+import { usePayment } from '@/components/ui/PaymentProvider';
+
 const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
 export default function SupportPage() {
+  const openPayment = usePayment();
   useScrollNavigation(4, SITE_SEQUENCE);
 
   return (
@@ -40,6 +43,7 @@ export default function SupportPage() {
           {['$11', '$22', '$111'].map((amount) => (
             <motion.button
               key={amount}
+              onClick={() => openPayment({title: "Support the work", price: amount})}
               whileHover={{ scale: 1.05, borderColor: '#D4AF37' }}
               whileTap={{ scale: 0.95 }}
               className="p-6 bg-void-purple/40 border border-seraphic-gold/30 rounded-2xl text-moon-ivory font-arcane text-2xl hover:bg-void-purple/60 transition-all"
@@ -49,7 +53,7 @@ export default function SupportPage() {
           ))}
         </div>
 
-        <button className="px-12 py-4 bg-seraphic-gold text-obsidian font-arcane text-xl rounded-full hover:bg-moon-ivory transition-all shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+        <button onClick={() => openPayment({title: "Support the work"})} className="px-12 py-4 bg-seraphic-gold text-obsidian font-arcane text-xl rounded-full hover:bg-moon-ivory transition-all shadow-[0_0_20px_rgba(212,175,55,0.4)]">
           SUPPORT THE WORK
         </button>
 

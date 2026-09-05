@@ -65,3 +65,74 @@ body {
   opacity: 0.6;
 }
 
+
+/* Sanctuary: shared artwork and one continuous, luminous weave. */
+@theme inline {
+ --color-seraphic-gold: #d6b45a;
+ --color-moon-ivory: #ebe7dc;
+ --color-void-purple: #191526;
+}
+html { scroll-behavior:smooth; scroll-padding-top:100px; }
+:focus-visible { outline:2px solid #f2cf8d; outline-offset:5px; }
+.sanctuary-environment,.sanctuary-art,.sanctuary-shade,.realm-atmosphere { position:absolute; inset:0; }
+.sanctuary-art { background:url('/images/sanctuary-v1.webp') center 58% / cover no-repeat; }
+.sanctuary-shade { background:linear-gradient(180deg,rgba(5,9,18,.5),rgba(5,9,18,.2) 45%,rgba(5,9,18,.85)),radial-gradient(ellipse at center,transparent,rgba(5,9,18,.3)); }
+.realm-atmosphere { transition:background 1.5s; }
+.living-threads { position:absolute; inset:0; overflow:hidden; opacity:.85; }
+.living-threads svg { width:100%; height:100%; }
+.thread-drift { animation:weave-drift 18s ease-in-out infinite alternate; transform-origin:center; }
+.thread-spark { animation:weave-spark 18s linear infinite; }
+.realm-thread { transition:stroke 1.5s; }
+@keyframes weave-drift { from { transform:translateY(30px) rotate(-2deg); } to { transform:translateY(-20px) rotate(2deg); } }
+@keyframes weave-spark { to { stroke-dashoffset:-1000; } }
+.site-navigation { position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:50; display:flex; gap:26px; padding:16px 28px; max-width:calc(100% - 24px); overflow-x:auto; white-space:nowrap; border:1px solid #d6b45a35; border-radius:40px; background:#090e18c9; backdrop-filter:blur(18px); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:#eee3cf; }
+.site-navigation a:hover { color:#f2cf8d; }
+.sanctuary-hero { min-height:850px; height:100svh; max-height:1100px; position:relative; display:flex; justify-content:center; padding:125px 24px 110px; }
+.hero-center { text-align:center; max-width:660px; z-index:1; }
+.eyebrow { text-transform:uppercase; letter-spacing:.22em; font-size:10px; color:#e3c99a; }
+.hero-emblem { width:110px; height:110px; object-fit:contain; margin:18px auto 8px; filter:drop-shadow(0 0 20px #c9b8ed55); }
+.hero-center h1 { font-family:var(--font-cinzel),serif; font-size:clamp(64px,7vw,104px); line-height:1.1; color:#f7ead2; text-shadow:0 3px 35px #050912; }
+.hero-center h1 span { display:block; font-size:.36em; letter-spacing:.16em; margin-top:12px; }
+.hero-mantra { font-family:var(--font-cinzel),serif; letter-spacing:.22em; text-transform:uppercase; color:#f0d7a4; font-size:13px; margin-top:28px; }
+.hero-description { font-size:14px; color:#ded9d1; margin:18px auto 28px; }
+.hero-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.sanctuary-button { display:inline-flex; align-items:center; justify-content:center; gap:12px; padding:14px 22px; border:1px solid #c6a66b90; background:#b38b3a26; border-radius:30px; color:#f5ddb0; font-size:11px; text-transform:uppercase; letter-spacing:.08em; backdrop-filter:blur(12px); }
+.sanctuary-button:hover { background:#bb974c45; }
+.sanctuary-button.subtle { background:#07101c80; }
+.hero-panel { position:absolute; top:48%; width:230px; padding:25px; border:1px solid #c6a66b50; background:linear-gradient(140deg,#10151bc9,#16142380); backdrop-filter:blur(12px); border-radius:12px; }
+.earth-panel { left:4%; }.celestial-panel { right:4%; }
+.hero-panel h2 { font-family:var(--font-cinzel),serif; font-size:23px; margin:16px 0; color:#f1e1c9; }
+.hero-panel p:not(.eyebrow) { font-size:12px; line-height:1.9; color:#d2cec6; }
+.hero-panel a,.journey-footer a { display:flex; align-items:center; gap:10px; font-size:11px; color:#edd3a0; margin-top:22px; }
+.hero-scroll { position:absolute; bottom:32px; display:flex; gap:12px; align-items:center; font-size:10px; text-transform:uppercase; letter-spacing:.22em; color:#f3dcb0; }
+.journey-section { position:relative; padding:48px 4% 30px; background:linear-gradient(#090e18b0,#090e18f5); border-top:1px solid #d6b45a35; }
+.journey-heading { text-align:center; margin-bottom:35px; }
+.journey-heading h2 { font-family:var(--font-cinzel),serif; font-size:clamp(25px,3vw,38px); margin:14px 0; color:#f2e3c9; }
+.journey-heading>p:last-child { font-size:13px; color:#bdbab4; }
+.realm-cards { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:8px; }
+.realm-card { position:relative; isolation:isolate; display:flex; flex-direction:column; align-items:center; text-align:center; min-height:320px; padding:22px 12px; border:1px solid color-mix(in srgb,var(--realm-color),transparent 35%); border-radius:10px; overflow:hidden; background:#0b101c; transition:transform .3s,border-color .3s; }
+.realm-card:before { content:''; position:absolute; inset:0; z-index:-2; background:url('/images/sanctuary-v1.webp') var(--realm-position) center / auto 100%; opacity:.45; }
+.realm-card:after { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(#07101c55,var(--realm-color) 170%,#07101c),linear-gradient(transparent,#07101c); opacity:.7; }
+.realm-card:hover { transform:translateY(-6px); border-color:#efd7a3; }
+.realm-number { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#dcd1bd; }
+.realm-card h3 { font-family:var(--font-cinzel),serif; text-transform:uppercase; font-size:17px; margin-top:14px; }
+.realm-sigil { display:grid; place-items:center; width:70px; height:70px; margin:28px 0; border:1px solid #eed9b799; outline:1px solid #eed9b730; outline-offset:7px; border-radius:50%; color:#fff0cc; box-shadow:0 0 30px var(--realm-color); }
+.realm-card p { font-size:11px; line-height:1.8; color:#dedbd3; }
+.realm-enter { display:flex; align-items:center; gap:8px; margin-top:auto; padding-top:22px; font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:#efd7a3; }
+.journey-footer { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-top:28px; font-size:12px; color:#bdbab4; }
+.journey-footer a { margin:0; }
+.payment-dialog { margin:auto; padding:0; width:min(520px,calc(100% - 32px)); max-height:90svh; color:#eae1d2; border:1px solid #c7a56a70; border-radius:20px; background:#111521; box-shadow:0 25px 100px #0009; }
+.payment-dialog::backdrop { background:#030710bd; backdrop-filter:blur(8px); }
+.payment-content { padding:32px; position:relative; }
+.payment-close { position:absolute; right:16px; top:16px; padding:8px; }
+.payment-content h2 { font-family:var(--font-cinzel),serif; font-size:28px; margin:18px 0; }
+.payment-selection { display:flex; justify-content:space-between; gap:16px; color:#eccc91; margin-bottom:16px; }
+#payment-description,.payment-note { font-size:12px; line-height:1.8; color:#c3c3c8; }
+.payment-methods { display:grid; gap:10px; margin:22px 0; }
+.payment-methods a { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border:1px solid #dac08b40; border-radius:10px; background:#ffffff04; }
+.payment-methods a:hover { border-color:#dac08b; background:#dac08b12; }
+.payment-methods small { display:block; color:#b3b4bf; margin-top:4px; font-size:11px; }
+.payment-note a { text-decoration:underline; color:#eccc91; }
+@media(max-width:1100px) { .hero-panel { width:190px; top:60%; padding:18px; }.earth-panel{left:3%;}.celestial-panel{right:3%;}.realm-cards{grid-template-columns:repeat(4,minmax(0,1fr));} }
+@media(max-width:700px) { .site-navigation{gap:20px;padding:14px 20px;justify-content:flex-start;width:calc(100% - 24px);} .sanctuary-hero{height:auto;min-height:900px;display:block;padding:110px 20px 80px;} .hero-center{margin:auto;}.hero-panel{position:relative;inset:auto;width:100%;margin-top:18px;padding:18px;}.hero-panel h2{font-size:18px;margin:8px 0;}.hero-panel a{margin-top:12px;}.hero-scroll{left:50%;transform:translateX(-50%);white-space:nowrap;bottom:25px;}.realm-cards{grid-template-columns:repeat(2,minmax(0,1fr));}.realm-card:last-child{grid-column:1/-1;}.journey-footer{flex-direction:column;text-align:center;}.sanctuary-art{background-position:60% center;}.living-threads{opacity:.65;} }
+@media(prefers-reduced-motion:reduce) { html{scroll-behavior:auto;} .thread-drift,.thread-spark{animation:none;} .realm-card,.realm-thread{transition:none;} }
