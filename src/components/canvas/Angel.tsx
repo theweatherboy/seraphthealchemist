@@ -5,7 +5,12 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Float } from '@react-three/drei';
 
-export default function Angel({ position = [0, 0, 0], scale = 1 }) {
+interface AngelProps {
+  position?: [number, number, number];
+  scale?: number;
+}
+
+export default function Angel({ position = [0, 0, 0], scale = 1 }: AngelProps) {
   const wingsRef = useRef<THREE.Group>(null!);
 
   useFrame((state) => {
