@@ -10,10 +10,13 @@ export const ArcaneHeading = ({ children, level }: { children: React.ReactNode; 
     3: 'text-2xl md:text-4xl',
     4: 'text-xl md:text-3xl',
   };
+
+  const Tag = `h${level}` as any;
+
   return (
-    <h{level} className={`${sizes[level as keyof typeof sizes]} font-arcane text-gold mb-6 tracking-wider drop-shadow-sm`}>
+    <Tag className={`${sizes[level as keyof typeof sizes]} font-arcane text-gold mb-6 tracking-wider drop-shadow-sm`}>
       {children}
-    </h{level}
+    </Tag>
   );
 };
 
