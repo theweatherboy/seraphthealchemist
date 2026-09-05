@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import RiverOfLight from "@/components/canvas/RiverOfLight";
+import AppShell from "@/components/layout/AppShell";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -25,16 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${cinzel.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-obsidian text-moon-ivory">
-        <RiverOfLight />
-        <Navbar />
-        <main className="flex-grow">
+      <body className="min-h-full bg-obsidian text-moon-ivory">
+        <AppShell>
           {children}
-        </main>
+        </AppShell>
       </body>
     </html>
   );
 }
-
-
-

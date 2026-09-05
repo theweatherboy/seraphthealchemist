@@ -1,40 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0B0B0B;
-  --foreground: #E8E0CE;
+  --background: #08070d;
+  --foreground: #ebe7dc;
 
-  /* Alchemical Palette */
-  --color-obsidian: #0B0B0B;
-  --color-void-purple: #171027;
-  --color-deep-indigo: #20204A;
-  --color-seraphic-gold: #D4AF37;
-  --color-antique-gold: #AA8A2E;
-  --color-dragon-emerald: #50C878;
-  --color-ether-teal: #3CA6A0;
-  --color-blood-garnet: #651F32;
-  --color-moon-ivory: #E8E0CE;
-  --color-astral-lavender: #9D8CC7;
+  /* Chakra Colors */
+  --color-root: #8f2638;
+  --color-sacral: #c66a2b;
+  --color-solar: #d4a72c;
+  --color-heart: #3f8f68;
+  --color-throat: #3c91a8;
+  --color-third-eye: #4c438c;
+  --color-crown: #8669b8;
+
+  /* UI Colors */
+  --color-obsidian: #08070d;
+  --color-void: #11101c;
+  --color-glass: rgba(255,255,255,0.07);
+  --color-glass-border: rgba(255,255,255,0.14);
+  --color-text: #ebe7dc;
+  --color-muted: rgba(235,231,220,0.68);
+  --color-gold: #d6b45a;
+
+  /* Design Tokens */
+  --blur-glass: 18px;
+  --border-radius-lg: 24px;
+  --border-radius-md: 16px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
+  --color-root: var(--color-root);
+  --color-sacral: var(--color-sacral);
+  --color-solar: var(--color-solar);
+  --color-heart: var(--color-heart);
+  --color-throat: var(--color-throat);
+  --color-third-eye: var(--color-third-eye);
+  --color-crown: var(--color-crown);
+
   --color-obsidian: var(--color-obsidian);
-  --color-void-purple: var(--color-void-purple);
-  --color-deep-indigo: var(--color-deep-indigo);
-  --color-seraphic-gold: var(--color-seraphic-gold);
-  --color-antique-gold: var(--color-antique-gold);
-  --color-dragon-emerald: var(--color-dragon-emerald);
-  --color-ether-teal: var(--color-ether-teal);
-  --color-blood-garnet: var(--color-blood-garnet);
-  --color-moon-ivory: var(--color-moon-ivory);
-  --color-astral-lavender: var(--color-astral-lavender);
+  --color-void: var(--color-void);
+  --color-glass: var(--color-glass);
+  --color-glass-border: var(--color-glass-border);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-gold: var(--color-gold);
 
   --font-arcane: var(--font-cinzel);
   --font-celestial: var(--font-inter);
 }
+
 
 body {
   background: var(--background);

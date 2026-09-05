@@ -4,15 +4,31 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Float, MeshDistortMaterial, Points, PointMaterial } from '@react-three/drei';
+import { useRealm } from '@/context/RealmContext';
 import * as THREE_CURVE from 'three';
 
 const SEGMENT_COUNT = 16;
 
 export default function Dragon() {
+  const { currentRealm } = useRealm();
   const bodyRef = useRef<THREE.Group>(null!);
   const segmentsRef = useRef<THREE.Mesh[]>([]);
   const auraRef = useRef<THREE.Points>(null!);
   const headLightRef = useRef<THREE.PointLight>(null!);
+
+  // Adjust movement speed based on realm
+  const baseSpeed = useMemo(() => {
+    const speeds: Record<string, number> = {
+      earth: 0.06,
+      flow: 0.08,
+      alchemy: 0.1,
+      healing: 0.07,
+      knowledge: 0.09,
+      oracle: 0.12,
+      celestial: 0.15
+    };
+    return speeds[currentRealm.id] || 0.08;
+  }, [currentRealm]);
 
   // Create a more complex, evolving path
   const path = useMemo(() => {
@@ -43,8 +59,8 @@ export default function Dragon() {
 
     // Update segments along the path
     segmentsRef.current.forEach((segment, i) => {
-      // Slow, flowing movement
-      const progress = (t * 0.08 + i * 0.04) % 1;
+      // Flowing movement based on realm speed
+      const progress = (t * baseSpeed + i * 0.04) % 1;
       const pos = path.getPointAt(progress);
 
       // Add some organic "sway" using sine waves
@@ -64,6 +80,7 @@ export default function Dragon() {
     // Move the light with the head (the 0th segment)
     if (segmentsRef.current[0] && headLightRef.current) {
       headLightRef.current.position.copy(segmentsRef.current[0].position);
+      headLightRef.current.color.set(currentRealm.color);
     }
 
     if (auraRef.current) {
@@ -92,11 +109,11 @@ export default function Dragon() {
           >
             <sphereGeometry args={[0.3, 32, 32]} />
             <MeshDistortMaterial
-              color={i === 0 ? "#F9E2AF" : "#D4AF37"}
+              color={i === 0 ? "#F9E2AF" : currentRealm.color}
               speed={2}
               distort={i === 0 ? 0.1 : 0.3}
               radius={1}
-              emissive={i === 0 ? "#F9E2AF" : "#AA8A2E"}
+              emissive={i === 0 ? "#F9E2AF" : currentRealm.color}
               emissiveIntensity={i === 0 ? 2 : 0.5}
               metalness={1}
               roughness={0.2}

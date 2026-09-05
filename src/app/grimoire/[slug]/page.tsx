@@ -1,81 +1,98 @@
-import { getGrimoirePostBySlug } from "@/lib/mdx";
-import { notFound } from "next/navigation";
-import { motion } from "framer-motion";
-import type { Metadata } from "next";
+import React from 'react';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { mdxComponents } from '@/components/mdx/MdxComponents';
+import KnowledgeGraph from '@/components/grimoire/KnowledgeGraph';
 
-async function getAllPaths() {
-  const { getAllGrimoirePosts } = await import("@/lib/mdx");
-  const posts = await getAllGrimoirePosts();
-  return posts.map(post => ({ slug: post.slug }));
-}
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  const contentDir = path.join(process.cwd(), 'content/grimoire');
 
-export async function generateStaticParams() {
-  const paths = await getAllPaths();
-  return paths;
-}
-
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getGrimoirePostBySlug(params.slug);
-  if (!post) return { title: "Thread Not Found" };
-
-  return {
-    title: `${post.title} | Seraph, The Alchemist`,
-    description: `Explore the secrets of ${post.subject} in the Seraph, The Alchemist grimoire.`,
-    openGraph: {
-      title: post.title,
-      description: `Deep dive into ${post.subject}.`,
-    }
-  };
-}
-
-export default async function GrimoirePostPage({ params }: { params: { slug: string } }) {
-  const post = await getGrimoirePostBySlug(params.slug);
-
-  if (!post) {
+  if (!fs.existsSync(contentDir)) {
     notFound();
   }
 
+  const files = fs.readdirSync(contentDir);
+  const allArticles = files
+    .filter(file => file.endsWith('.mdx'))
+    .map(file => {
+      const filePath = path.join(contentDir, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContent);
+      return {
+        slug: file.replace('.mdx', ''),
+        ...data,
+      };
+    });
+
+  const article = allArticles.find(a => a.slug === slug);
+
+  if (!article) {
+    notFound();
+  }
+
+  const fileContent = fs.readFileSync(path.join(contentDir, `${slug}.mdx`), 'utf8');
+
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6 md:px-12 max-w-4xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        className="flex flex-col gap-8"
-      >
-        <header className="border-b border-seraphic-gold/30 pb-6">
-          <div className="text-seraphic-gold font-arcane text-sm uppercase tracking-widest mb-2">
-            {post.subject}
-          </div>
-          <h1 className="font-arcane text-4xl md:text-6xl text-seraphic-gold mb-4">
-            {post.title}
+    <div className="relative pt-32 pb-20 px-4 w-full min-h-screen">
+      <div className="max-w-3xl mx-auto">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm font-celestial text-muted mb-12">
+          <Link href="/grimoire" className="hover:text-gold transition-colors">Grimoire</Link>
+          <span>/</span>
+          <span className="text-gold">{article.category}</span>
+        </nav>
+
+        {/* Header */}
+        <header className="text-center mb-16">
+          <h1 className="font-arcane text-4xl md:text-6xl text-gold mb-6 tracking-wider">
+            {article.title}
           </h1>
-          <div className="flex gap-4 text-xs text-moon-ivory/50 font-celestial uppercase">
-            <span>Coordinate: {post.coordinate.x}, {post.coordinate.y}, {post.coordinate.z}</span>
-          </div>
+          <p className="font-celestial text-xl text-muted italic max-w-2xl mx-auto">
+            {article.description}
+          </p>
         </header>
 
-        <article className="prose prose-invert max-w-none">
-          <div className="font-celestial text-lg leading-relaxed text-moon-ivory/90">
-            {post.content}
-          </div>
+        {/* Content */}
+        <article className="font-celestial text-moon-ivory/90 leading-relaxed text-lg space-y-6 prose prose-invert max-w-none">
+          <MDXRemote
+            source={fileContent}
+            components={mdxComponents}
+          />
         </article>
 
-        <footer className="mt-12 pt-8 border-t border-seraphic-gold/20">
-          <h3 className="font-arcane text-xl text-seraphic-gold mb-4">Connected Threads</h3>
-          <div className="flex flex-wrap gap-3">
-            {post.links.map(link => (
-              <a
-                key={link}
-                href={`/grimoire/${link.toLowerCase().replace(/\s+/g, '-')}`}
-                className="px-4 py-2 bg-void-purple border border-seraphic-gold/30 text-moon-ivory hover:text-seraphic-gold hover:border-seraphic-gold transition-all rounded-full text-sm font-celestial"
+        {/* Knowledge Graph Section */}
+        <section className="mt-20 mb-12">
+          <h3 className="font-arcane text-2xl text-gold mb-8 text-center tracking-widest uppercase">
+            Conceptual Connections
+          </h3>
+          <KnowledgeGraph
+            currentSlug={article.slug}
+            relatedSlugs={article.related || []}
+            allArticles={allArticles}
+          />
+        </section>
+
+        {/* Footer / Related */}
+        <footer className="mt-20 pt-12 border-t border-gold/20">
+          <h3 className="font-arcane text-2xl text-gold mb-8 text-center">Explore Related Concepts</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {article.related?.map((rel: string) => (
+              <Link
+                key={rel}
+                href={`/grimoire/${rel}`}
+                className="p-4 rounded-xl bg-glass border border-glass-border hover:border-gold/50 transition-all text-center font-celestial text-muted hover:text-gold"
               >
-                ✦ {link}
-              </a>
+                {rel.replace(/-/g, ' ')}
+              </Link>
             ))}
           </div>
         </footer>
-      </motion.div>
+      </div>
     </div>
   );
 }
