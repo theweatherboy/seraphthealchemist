@@ -9,6 +9,18 @@ import { mdxComponents } from '@/components/mdx/MdxComponents';
 import KnowledgeGraph from '@/components/grimoire/KnowledgeGraph';
 import { GrimoireArticle } from '@/data/grimoire';
 
+export async function generateStaticParams() {
+  const contentDir = path.join(process.cwd(), 'content/grimoire');
+  if (!fs.existsSync(contentDir)) return [];
+
+  const files = fs.readdirSync(contentDir);
+  return files
+    .filter(file => file.endsWith('.mdx'))
+    .map(file => ({
+      slug: file.replace('.mdx', ''),
+    }));
+}
+
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const contentDir = path.join(process.cwd(), 'content/grimoire');
@@ -31,11 +43,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     });
 
   const article = allArticles.find(a => a.slug === slug);
-
-  if (!article) {
-    notFound();
-  }
-
 
   if (!article) {
     notFound();
