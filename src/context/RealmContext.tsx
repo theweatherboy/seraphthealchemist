@@ -16,7 +16,7 @@ export function RealmProvider({ children }: { children: ReactNode }) {
 
   // Import realms here to avoid circular deps if any
   const { realms } = require('@/data/realms');
-  const currentRealm = realms.find(r => r.id === realmId) || realms[0];
+  const currentRealm = realms.find((r: Realm) => r.id === realmId) || realms[0];
 
   const setRealm = (id: string) => {
     setRealmId(id);

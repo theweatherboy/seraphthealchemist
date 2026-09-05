@@ -25,7 +25,7 @@ export default function ParticleField() {
       speedY: number;
       opacity: number;
 
-      constructor() {
+      constructor(canvas: HTMLCanvasElement) {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 0.5;
@@ -34,7 +34,7 @@ export default function ParticleField() {
         this.opacity = Math.random() * 0.5 + 0.2;
       }
 
-      update() {
+      update(canvas: HTMLCanvasElement) {
         this.x += this.speedX;
         this.y += this.speedY;
 
@@ -44,8 +44,7 @@ export default function ParticleField() {
         if (this.y < 0) this.y = canvas.height;
       }
 
-      draw() {
-        if (!ctx || !canvas) return;
+      draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = currentRealm.color;
@@ -57,7 +56,7 @@ export default function ParticleField() {
     const init = () => {
       particles = [];
       for (let i = 0; i < 60; i++) {
-        particles.push(new Particle());
+        particles.push(new Particle(canvas));
       }
     };
 
@@ -68,11 +67,11 @@ export default function ParticleField() {
     };
 
     const animate = () => {
-      if (!ctx || !canvas) return;
+      if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
-        p.update();
-        p.draw();
+        p.update(canvas);
+        p.draw(ctx);
       });
       animationFrameId = requestAnimationFrame(animate);
     };
