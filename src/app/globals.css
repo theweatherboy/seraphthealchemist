@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08070d;
+  --background: #12111a;
   --foreground: #ebe7dc;
 
   /* Chakra Colors */
@@ -13,17 +13,17 @@
   --color-third-eye: #4c438c;
   --color-crown: #8669b8;
 
-  /* UI Colors */
-  --color-obsidian: #08070d;
-  --color-void: #11101c;
-  --color-glass: rgba(255,255,255,0.07);
-  --color-glass-border: rgba(255,255,255,0.14);
+  /* UI Colors - Lightened for "Luminous" feel */
+  --color-obsidian: #12111a;
+  --color-void: #1c1b2a;
+  --color-glass: rgba(255,255,255,0.1);
+  --color-glass-border: rgba(255,255,255,0.2);
   --color-text: #ebe7dc;
-  --color-muted: rgba(235,231,220,0.68);
+  --color-muted: rgba(235,231,220,0.75);
   --color-gold: #d6b45a;
 
   /* Design Tokens */
-  --blur-glass: 18px;
+  --blur-glass: 24px;
   --border-radius-lg: 24px;
   --border-radius-md: 16px;
 }

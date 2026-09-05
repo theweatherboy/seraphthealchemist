@@ -47,14 +47,20 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5 }}
-          className="max-w-4xl"
+          className="flex flex-col items-center gap-8"
         >
-          <h1 className="font-arcane text-6xl md:text-9xl text-gold mb-6 tracking-tighter drop-shadow-2xl">
-            THREADS <br /> OF DIVINITY
-          </h1>
-          <p className="font-arcane text-xl md:text-2xl text-gold/80 mb-12 uppercase tracking-[0.3em]">
-            Weave. Transform. Return.
-          </p>
+          <div className="relative w-64 h-64 md:w-96 md:h-96">
+            <img
+              src="/logo.png"
+              alt="Threads of Divinity Logo"
+              className="w-full h-full object-contain drop-shadow-[0_0_30px_rgba(212,175,55,0.3)]"
+            />
+          </div>
+          <div className="text-center">
+            <p className="font-arcane text-xl md:text-2xl text-gold/80 mb-12 uppercase tracking-[0.3em]">
+              Weave. Transform. Return.
+            </p>
+          </div>
           <div className="flex flex-col md:flex-row gap-6 justify-center">
             <Link
               href="/sanctuary"

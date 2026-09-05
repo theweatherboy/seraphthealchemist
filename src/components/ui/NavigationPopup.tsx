@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -10,8 +10,20 @@ interface NavigationPopupProps {
 }
 
 export default function NavigationPopup({ isOpen, onClose }: NavigationPopupProps) {
+  useEffect(() => {
+    if (isOpen) {
+      const hasSeen = localStorage.getItem('hasSeenIntro');
+      if (hasSeen) {
+        onClose();
+      } else {
+        localStorage.setItem('hasSeenIntro', 'true');
+      }
+    }
+  }, [isOpen, onClose]);
+
   return (
     <AnimatePresence>
+
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
