@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { GrimoireArticle } from '@/data/grimoire';
+import GrimoireGrid from '@/components/grimoire/GrimoireGrid';
 
 export default async function GrimoirePage() {
   const contentDir = path.join(process.cwd(), 'content/grimoire');
@@ -23,7 +23,6 @@ export default async function GrimoirePage() {
     });
 
   const categories = Array.from(new Set(articles.map(a => a.category)));
-
 
   return (
     <div className="relative pt-32 pb-20 px-4 w-full min-h-screen">
@@ -49,34 +48,8 @@ export default async function GrimoirePage() {
           ))}
         </div>
 
-        {/* Knowledge Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map((article, idx) => (
-            <motion.div
-              key={article.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              className="group relative p-8 rounded-[var(--border-radius-lg)] bg-glass border border-glass-border backdrop-blur-[var(--blur-glass)] hover:border-gold/50 transition-all duration-500"
-            >
-              <span className="font-arcane text-xs uppercase tracking-widest text-gold/60 mb-3 block">
-                {article.category}
-              </span>
-              <h3 className="font-arcane text-2xl text-gold mb-4 group-hover:text-white transition-colors">
-                {article.title}
-              </h3>
-              <p className="font-celestial text-moon-ivory/70 mb-6 line-clamp-3">
-                {article.description}
-              </p>
-              <Link
-                href={`/grimoire/${article.slug}`}
-                className="inline-block text-sm font-arcane uppercase tracking-widest text-gold hover:underline"
-              >
-                Read Article →
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        {/* Knowledge Grid - Moved to Client Component to avoid Server/Client conflict with Framer Motion */}
+        <GrimoireGrid articles={articles} />
       </div>
     </div>
   );
