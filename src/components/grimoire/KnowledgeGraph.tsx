@@ -54,7 +54,7 @@ export default function KnowledgeGraph({ currentSlug, relatedSlugs, allArticles 
     relatedSlugs.forEach(slug => {
       const article = allArticles.find(a => a.slug === slug);
       if (article?.related) {
-        article.related.forEach(relSlug => {
+        article.related.forEach((relSlug: string) => {
           if (relSlug !== currentSlug && !nodeMap[relSlug]) {
             nodes.push({
               id: relSlug,

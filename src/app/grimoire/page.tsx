@@ -4,12 +4,13 @@ import path from 'path';
 import matter from 'gray-matter';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { GrimoireArticle } from '@/data/grimoire';
 
 export default async function GrimoirePage() {
   const contentDir = path.join(process.cwd(), 'content/grimoire');
   const files = fs.readdirSync(contentDir);
 
-  const articles = files
+  const articles: GrimoireArticle[] = files
     .filter(file => file.endsWith('.mdx'))
     .map(file => {
       const filePath = path.join(contentDir, file);
@@ -18,10 +19,11 @@ export default async function GrimoirePage() {
       return {
         slug: file.replace('.mdx', ''),
         ...data,
-      };
+      } as GrimoireArticle;
     });
 
   const categories = Array.from(new Set(articles.map(a => a.category)));
+
 
   return (
     <div className="relative pt-32 pb-20 px-4 w-full min-h-screen">

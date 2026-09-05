@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { mdxComponents } from '@/components/mdx/MdxComponents';
 import KnowledgeGraph from '@/components/grimoire/KnowledgeGraph';
+import { GrimoireArticle } from '@/data/grimoire';
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -17,7 +18,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   }
 
   const files = fs.readdirSync(contentDir);
-  const allArticles = files
+  const allArticles: GrimoireArticle[] = files
     .filter(file => file.endsWith('.mdx'))
     .map(file => {
       const filePath = path.join(contentDir, file);
@@ -26,10 +27,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       return {
         slug: file.replace('.mdx', ''),
         ...data,
-      };
+      } as GrimoireArticle;
     });
 
   const article = allArticles.find(a => a.slug === slug);
+
+  if (!article) {
+    notFound();
+  }
+
 
   if (!article) {
     notFound();

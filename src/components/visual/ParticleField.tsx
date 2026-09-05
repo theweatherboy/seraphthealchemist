@@ -45,7 +45,7 @@ export default function ParticleField() {
       }
 
       draw() {
-        if (!ctx) return;
+        if (!ctx || !canvas) return;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = currentRealm.color;
@@ -54,12 +54,6 @@ export default function ParticleField() {
       }
     }
 
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      init();
-    };
-
     const init = () => {
       particles = [];
       for (let i = 0; i < 60; i++) {
@@ -67,7 +61,14 @@ export default function ParticleField() {
       }
     };
 
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    };
+
     const animate = () => {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         p.update();
