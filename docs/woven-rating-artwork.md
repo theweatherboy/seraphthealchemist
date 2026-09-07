@@ -1,0 +1,9 @@
+# Woven rating artwork
+
+The public label is **Weaves**. Published reviews display one 72px bloom matching the numeric rating, beside `5 / 5 · Weaves` (with the customer's actual score).
+
+Generated with the built-in image generation tool using the owner's lotus and woven-thread reference screenshots. Original asset: `public/images/reviews/woven-lotus-ratings-v1.png`. The UI displays the five columns through CSS with screen blending and visible numeric rating text; no database migration is needed.
+
+## Generation prompt
+
+Create a polished website UI artwork sprite sheet, 1536x1024 landscape, on perfectly solid black #000000. Exactly five equally spaced isolated luminous lotus-and-woven-thread emblems arranged horizontally in ONE ROW across the middle, each centered at x=10%,30%,50%,70%,90% with generous black margins, no overlap between emblems. Reference 1 supplies the filigree energy strands; reference 2 supplies the translucent rose-gold crystalline petals. Progression: first a delicate single upright luminous petal wrapped by one pink filament; second two opening petals with two entwining amber and rose threads; third three petals with braided gold threads; fourth four open petals with intertwined lavender cyan gold threads; fifth a fully open five-petal lotus woven with fine rainbow filaments, warm glowing heart. Petals should be translucent, intricate, elegant, airy not chunky; fine sparkling energy trails form graceful orbital loops around each flower. Each emblem same overall bounding size, 80% of its equal-width cell, generous empty black above and below. High-end mystical fantasy illustration, believable soft bloom, pearl gold blush lilac highlights, exquisitely fine strands. NO text, NO numbers, NO stars as rating symbols, no frames, no UI, no other objects. This will be sliced in code as five equal columns used as 1-to-5 rating illustrations.
