@@ -3,15 +3,16 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAccount } from '@/lib/supabase/session';
+import { services } from '@/data/services';
 
 export async function addServiceInstance(formData: FormData) {
   const { client, user } = await requireAccount('/admin');
   const customerId = String(formData.get('customer_id') ?? '');
-  const title = String(formData.get('service_title') ?? '').trim();
   const slug = String(formData.get('service_slug') ?? '').trim();
   const completedAt = String(formData.get('completed_at') ?? '');
-  if (!/^[0-9a-f-]{36}$/i.test(customerId) || !title || !slug || !/^\d{4}-\d{2}-\d{2}$/.test(completedAt)) redirect('/admin?error=service');
-  const { error } = await client.from('service_instances').insert({ customer_id: customerId, service_slug: slug, service_title: title, completed_at: completedAt, verified_by: user.id });
+  const service = services.find(item => item.slug === slug);
+  if (!/^[0-9a-f-]{36}$/i.test(customerId) || !service || !/^\d{4}-\d{2}-\d{2}$/.test(completedAt)) redirect('/admin?error=service');
+  const { error } = await client.from('service_instances').insert({ customer_id: customerId, service_slug: service.slug, service_title: service.title, completed_at: completedAt, verified_by: user.id });
   if (error) {
     console.error('[admin/service] Could not verify service:', error.code, error.message);
     redirect('/admin?error=service');
