@@ -6,16 +6,25 @@ export function getSupabaseConfig() {
   const clean = (value: string | undefined) => value?.trim().replace(/^['"]|['"]$/g, '');
   const url = clean(process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL);
   const key = clean(process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-  if (!url || !key) return null;
+  if (!url || !key) {
+    console.warn('[supabase/config] Missing production configuration:', { hasUrl: Boolean(url), hasKey: Boolean(key) });
+    return null;
+  }
 
   try {
     const parsed = new URL(url);
-    if (parsed.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(parsed.hostname)) return null;
+    if (parsed.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(parsed.hostname)) {
+      console.warn('[supabase/config] Invalid production URL protocol/host');
+      return null;
+    }
     // Only a publishable key belongs here. Never accept a privileged secret.
     // Supabase projects may expose either the newer sb_publishable key or the
     // legacy JWT-shaped anon key. Both are public client keys; secret/service
     // role keys are rejected because they do not match either format.
-    if (!key.startsWith('sb_publishable_') && !key.startsWith('eyJ')) return null;
+    if (!key.startsWith('sb_publishable_') && !key.startsWith('eyJ')) {
+      console.warn('[supabase/config] Unsupported public key format:', key.slice(0, 8));
+      return null;
+    }
     return { url: parsed.origin, key };
   } catch {
     return null;
