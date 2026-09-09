@@ -22,9 +22,9 @@ export type Database = {
         Relationships: [];
       };
       service_requests: {
-        Row: { id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note: string | null; status: 'pending' | 'confirmed' | 'declined' | 'cancelled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; created_at: string };
-        Insert: { id?: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note?: string | null; status?: 'pending' | 'confirmed' | 'declined' | 'cancelled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; created_at?: string };
-        Update: { status?: 'pending' | 'confirmed' | 'declined' | 'cancelled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null };
+        Row: { id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note: string | null; contact_email: string | null; contact_phone: string | null; preferred_date: string | null; preferred_time: string | null; timezone: string; scheduled_at: string | null; status: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; updated_at: string; created_at: string };
+        Insert: { id?: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note?: string | null; contact_email?: string | null; contact_phone?: string | null; preferred_date?: string | null; preferred_time?: string | null; timezone?: string; scheduled_at?: string | null; status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; updated_at?: string; created_at?: string };
+        Update: { status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; scheduled_at?: string | null; timezone?: string; updated_at?: string };
         Relationships: [];
       };
       reviews: {

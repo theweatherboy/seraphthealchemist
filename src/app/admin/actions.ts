@@ -32,3 +32,27 @@ export async function moderateReview(formData: FormData) {
   revalidatePath('/admin'); revalidatePath('/reviews');
   redirect('/admin?saved=moderation');
 }
+
+export async function updateServiceRequest(formData: FormData) {
+  const { client, user } = await requireAccount('/admin');
+  const requestId = String(formData.get('request_id') ?? '');
+  const status = String(formData.get('status') ?? '');
+  const scheduledDate = String(formData.get('scheduled_date') ?? '').trim() || null;
+  const scheduledTime = String(formData.get('scheduled_time') ?? '').trim() || null;
+  const timezone = String(formData.get('timezone') ?? 'America/Chicago').trim();
+  const adminNote = String(formData.get('admin_note') ?? '').trim() || null;
+  const statuses = ['pending', 'contacted', 'scheduled', 'completed', 'declined', 'canceled'];
+  if (!/^[0-9a-f-]{36}$/i.test(requestId) || !statuses.includes(status) || adminNote && adminNote.length > 1000 || /[\u0000-\u001f\u007f]/.test((adminNote ?? '') + timezone)) redirect('/admin?error=request');
+  let scheduledAt: string | null = null;
+  if (scheduledDate || scheduledTime) {
+    if (!scheduledDate || !scheduledTime || !/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate) || !/^\d{2}:\d{2}$/.test(scheduledTime)) redirect('/admin?error=request');
+    scheduledAt = `${scheduledDate}T${scheduledTime}:00`;
+  }
+  const { error } = await client.from('service_requests').update({ status: status as 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled', scheduled_at: scheduledAt, timezone, admin_note: adminNote, reviewed_by: user.id, reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString() }).eq('id', requestId);
+  if (error) {
+    console.error('[admin/requests] Could not update request:', error.code, error.message);
+    redirect('/admin?error=request');
+  }
+  revalidatePath('/admin'); revalidatePath('/account');
+  redirect('/admin?saved=request');
+}
