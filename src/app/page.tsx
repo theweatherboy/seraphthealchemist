@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowDown, ArrowUpRight, Sparkles } from 'lucide-react';
 import { useRealm } from '@/context/RealmContext';
-import { realms } from '@/data/realms';
+import { chakraPages, realms } from '@/data/realms';
 
 export default function Home(){
  const {setRealm}=useRealm();
@@ -33,8 +33,8 @@ export default function Home(){
    </section>
    <section id="journey" className="journey-section" ref={journey}>
      <div className="journey-heading"><p className="eyebrow">Seven realms. One continuous thread.</p><h2>Where does your journey begin?</h2><p>Follow what calls to you. Every path is part of the same weave.</p></div>
-     <div className="realm-cards">{realms.map((realm,i)=><Link href={i===4||i===5||i===6?'/grimoire':'/services'} className="realm-card" key={realm.id} data-realm={realm.id} onMouseEnter={()=>setRealm(realm.id)} onFocus={()=>setRealm(realm.id)} style={{'--realm-color':realm.color,'--realm-position':(i*100/6)+'%'} as React.CSSProperties}>
-       <span className="realm-number">0{i+1} / {realm.chakra.replace('thirdEye','third eye')}</span><h3>{realm.name}</h3>
+     <div className="realm-cards">{realms.map((realm,i)=><Link href={`/chakras/${chakraPages[realm.chakra].slug}`} className="realm-card" key={realm.id} data-realm={realm.id} onMouseEnter={()=>setRealm(realm.id)} onFocus={()=>setRealm(realm.id)} style={{'--realm-color':realm.color,'--realm-position':(i*100/6)+'%'} as React.CSSProperties}>
+       <span className="realm-number">0{i+1} / {chakraPages[realm.chakra].name}</span><h3>{realm.name}</h3>
        <div className="realm-sigil"><Sparkles size={34} strokeWidth={1}/></div>
        <p>{realm.subjects.join(' · ')}</p><span className="realm-enter">Enter path <ArrowUpRight size={14}/></span>
      </Link>)}</div>

@@ -7,6 +7,16 @@ export type Chakra =
   | "thirdEye"
   | "crown";
 
+export const chakraPages: Record<Chakra, { name: string; slug: string }> = {
+  root: { name: "Root", slug: "root" },
+  sacral: { name: "Sacral", slug: "sacral" },
+  solar: { name: "Solar Plexus", slug: "solar-plexus" },
+  heart: { name: "Heart", slug: "heart" },
+  throat: { name: "Throat", slug: "throat" },
+  thirdEye: { name: "Third Eye", slug: "third-eye" },
+  crown: { name: "Crown", slug: "crown" },
+};
+
 export interface Realm {
   id: string;
   name: string;
