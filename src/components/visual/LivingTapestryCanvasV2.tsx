@@ -1,17 +1,82 @@
 "use client";
+
 import { useEffect, useRef } from "react";
+import { createWeaveRenderer } from "./weave-renderer";
 
-type Strand = { phase:number; speed:number; width:number; alpha:number; amp:number; bias:number; hue:number; seed:number; angle:number };
-const colors = ["#d56b45","#efb84e","#d9d17d","#92c98d","#72d3d8","#79a9e5","#9188de","#c397e9"];
-const strands: Strand[] = Array.from({length:104},(_,i)=>{const family=Math.floor(i/13);return {phase:family*.72+(Math.random()-.5)*.16,speed:.00008+Math.random()*.0002,width:.26+Math.random()*.86,alpha:.03+Math.random()*.22,amp:30+Math.random()*50,bias:(family-3.5)*.13+(Math.random()-.5)*.09,hue:i/103*7+(Math.random()-.5)*.7,seed:Math.random()*1000,angle:(family-3.5)*.22+(Math.random()-.5)*.22};});
+export default function LivingTapestryCanvasV2() {
+  const canvas = useRef<HTMLCanvasElement>(null);
 
-export default function LivingTapestryCanvasV2(){
- const canvas=useRef<HTMLCanvasElement>(null);
- useEffect(()=>{const el=canvas.current,ctx=el?.getContext("2d");if(!el||!ctx)return;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;let w=0,h=0,dpr=1,raf=0,t0=performance.now();let target={x:0,y:0,active:false},mouse={x:0,y:0};
-  const resize=()=>{const b=el.getBoundingClientRect();w=b.width;h=b.height;dpr=Math.min(devicePixelRatio||1,1.5);el.width=w*dpr;el.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);};
-  const move=(e:PointerEvent)=>{const b=el.getBoundingClientRect();target={x:e.clientX-b.left,y:e.clientY-b.top,active:true};};const leave=()=>{target.active=false;};resize();mouse={x:w/2,y:h/2};window.addEventListener("resize",resize);window.addEventListener("pointermove",move,{passive:true});window.addEventListener("pointerleave",leave);
-  const draw=(now:number)=>{const t=reduced?0:now-t0;ctx.clearRect(0,0,w,h);if(target.active){mouse.x+=(target.x-mouse.x)*.07;mouse.y+=(target.y-mouse.y)*.07;const glow=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,210);glow.addColorStop(0,"rgba(255,224,151,.3)");glow.addColorStop(.28,"rgba(158,214,255,.12)");glow.addColorStop(1,"rgba(100,115,255,0)");ctx.fillStyle=glow;ctx.fillRect(mouse.x-210,mouse.y-210,420,420);}else{mouse.x=w/2;mouse.y=h/2;}
-   strands.forEach((s,index)=>{const p:{x:number;y:number}[]=[];const base=h*(.53+s.bias*.3);for(let i=0;i<=48;i++){const u=i/48;let x=w*(u*1.2-.1)+Math.sin(s.angle)*(u-.5)*h*.7;const slow=Math.sin(t*s.speed+s.phase),detail=Math.sin(u*6.1+s.seed+t*s.speed*1.7);let y=base+slow*s.amp*.55+detail*s.amp*.32+Math.sin(u*1.8+s.phase)*s.amp*.35+(u-.5)*s.bias*85+Math.cos(s.angle)*(u-.5)*h*.48;if(target.active){const dx=x-mouse.x,dy=y-mouse.y,d=Math.hypot(dx,dy),pull=Math.max(0,1-d/220);y+=(mouse.y-y)*pull*.1;x+=(mouse.x-x)*pull*.04;}p.push({x,y});}
-    ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);for(let i=0;i<p.length-1;i++){const p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;ctx.bezierCurveTo(p1.x+(p2.x-p0.x)/6,p1.y+(p2.y-p0.y)/6,p2.x-(p3.x-p1.x)/6,p2.y-(p3.y-p1.y)/6,p2.x,p2.y);}const near=target.active?Math.max(0,1-Math.hypot(p[24].x-mouse.x,p[24].y-mouse.y)/230):0;ctx.strokeStyle=colors[Math.max(0,Math.min(7,Math.floor(s.hue)))];ctx.globalAlpha=s.alpha*(.5+near*2);ctx.lineWidth=s.width*(.7+near*1.5);ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();if(index%17===0){ctx.globalAlpha=.4+near*.35;ctx.lineWidth=1.15+near;ctx.strokeStyle="#fff2d1";ctx.stroke();}});ctx.globalAlpha=1;if(!reduced)raf=requestAnimationFrame(draw);};draw(performance.now());return()=>{cancelAnimationFrame(raf);window.removeEventListener("resize",resize);window.removeEventListener("pointermove",move);window.removeEventListener("pointerleave",leave);};},[]);
- return <div className="living-threads living-threads-canvas" aria-hidden="true"><canvas ref={canvas}/></div>;
+  useEffect(() => {
+    const el = canvas.current;
+    if (!el) return;
+    const renderer = createWeaveRenderer(el);
+    if (!renderer) return;
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+    const pointer = { x: 0, y: 0, strength: 0 };
+    const target = { x: 0, y: 0, strength: 0 };
+    let frame = 0, last = 0, time = 0, interval = 1000 / 45;
+
+    const tick = (now: number) => {
+      frame = 0;
+      if (document.hidden) { last = 0; return; }
+      const elapsed = last ? now-last : interval;
+      if (elapsed >= interval-1) {
+        const dt = Math.min(elapsed/1000, .08);
+        last = now;
+        if (!reducedMotion.matches) time += dt;
+        const ease = 1-Math.exp(-dt*7);
+        pointer.x += (target.x-pointer.x)*ease;
+        pointer.y += (target.y-pointer.y)*ease;
+        pointer.strength += (target.strength-pointer.strength)*ease;
+        renderer.draw(time, reducedMotion.matches ? { ...pointer, strength:0 } : pointer);
+      }
+      if (!reducedMotion.matches) frame = requestAnimationFrame(tick);
+    };
+    const restart = () => {
+      cancelAnimationFrame(frame);
+      last = 0;
+      if (!document.hidden) frame = requestAnimationFrame(tick);
+    };
+    const resize = () => {
+      const box = el.getBoundingClientRect();
+      interval = 1000/(box.width < 700 ? 30 : 45);
+      renderer.resize(box.width, box.height, window.devicePixelRatio || 1);
+      restart();
+    };
+    const move = (event: PointerEvent) => {
+      if (!finePointer.matches || reducedMotion.matches || event.pointerType === "touch") return;
+      const box = el.getBoundingClientRect();
+      target.x = event.clientX-box.left;
+      target.y = event.clientY-box.top;
+      if (pointer.strength < .015) { pointer.x=target.x; pointer.y=target.y; }
+      target.strength=1;
+    };
+    const leave = () => { target.strength=0; };
+    const preferencesChanged = () => { leave(); restart(); };
+    const visibilityChanged = () => { leave(); restart(); };
+    const observer = new ResizeObserver(resize);
+    observer.observe(el);
+    resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", move, { passive:true });
+    document.documentElement.addEventListener("pointerleave", leave);
+    window.addEventListener("blur", leave);
+    document.addEventListener("visibilitychange", visibilityChanged);
+    reducedMotion.addEventListener("change", preferencesChanged);
+    finePointer.addEventListener("change", preferencesChanged);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", move);
+      document.documentElement.removeEventListener("pointerleave", leave);
+      window.removeEventListener("blur", leave);
+      document.removeEventListener("visibilitychange", visibilityChanged);
+      reducedMotion.removeEventListener("change", preferencesChanged);
+      finePointer.removeEventListener("change", preferencesChanged);
+    };
+  }, []);
+
+  return <div className="living-threads living-threads-canvas" aria-hidden="true"><canvas ref={canvas} /></div>;
 }
