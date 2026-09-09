@@ -94,7 +94,7 @@ export default function ServiceDetailContent({ service }: { service: Service }) 
                 </ul>
               </div>
 
-              <button onClick={() => openPayment({ title: service.title, price: "$" + service.price })} className="w-full py-4 font-arcane text-lg text-gold border border-gold/50 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full uppercase tracking-widest">
+              <button onClick={() => openPayment({ title: service.title, slug: service.slug, price: "$" + service.price })} className="w-full py-4 font-arcane text-lg text-gold border border-gold/50 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full uppercase tracking-widest">
                 Purchase Session
               </button>
             </div>

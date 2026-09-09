@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ExternalLink, X } from 'lucide-react';
-type Purchase = { title: string; price?: string };
+type Purchase = { title: string; price?: string; slug?: string };
 const PaymentContext = createContext<(purchase: Purchase) => void>(() => {});
 export const usePayment = () => useContext(PaymentContext);
 const methods = [
@@ -31,7 +31,7 @@ export default function PaymentProvider({ children }: { children: ReactNode }) {
         <p className="payment-selection">{purchase?.title} {purchase?.price && <strong>{purchase.price}</strong>}</p>
         <p id="payment-description">Choose a provider below. Check the recipient and amount before paying, and include the offering name in your payment note where available.</p>
         <div className="payment-methods">{methods.map(method => <a key={method.name} href={method.url} target="_blank" rel="noopener noreferrer"><span><strong>{method.name}</strong><small>{method.detail}</small></span><ExternalLink size={18} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>)}</div>
-        <p className="payment-note">These links do not automatically carry your selection or confirm payment here. For scheduling or delivery, <a href="/contact">contact Seraph</a> with your offering and payment reference.</p>
+        <p className="payment-note">After paying, <a href={purchase?.slug ? `/account?request=${encodeURIComponent(purchase.slug)}` : '/account'}>send your service request</a> with the payment reference. This lets Seraph confirm your session.</p>
       </div>
     </dialog>
   </PaymentContext.Provider>;

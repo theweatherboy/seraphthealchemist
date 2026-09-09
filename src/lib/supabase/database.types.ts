@@ -21,6 +21,12 @@ export type Database = {
         Update: { customer_id?: string; service_slug?: string; service_title?: string; completed_at?: string; verification_note?: string | null; verified_by?: string; revoked_at?: string | null };
         Relationships: [];
       };
+      service_requests: {
+        Row: { id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note: string | null; status: 'pending' | 'confirmed' | 'declined' | 'cancelled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; created_at: string };
+        Insert: { id?: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note?: string | null; status?: 'pending' | 'confirmed' | 'declined' | 'cancelled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; created_at?: string };
+        Update: { status?: 'pending' | 'confirmed' | 'declined' | 'cancelled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null };
+        Relationships: [];
+      };
       reviews: {
         Row: { id: string; service_instance_id: string; customer_id: string; rating: number; status: 'pending' | 'approved' | 'rejected' | 'withdrawn' | 'hidden'; approved_revision_id: string | null; created_at: string; updated_at: string };
         Insert: { id?: string; service_instance_id: string; customer_id: string; rating?: number; status?: 'pending' | 'approved' | 'rejected' | 'withdrawn' | 'hidden'; approved_revision_id?: string | null; created_at?: string; updated_at?: string };
