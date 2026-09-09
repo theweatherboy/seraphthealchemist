@@ -1,0 +1,17 @@
+"use client";
+import { useEffect, useRef } from "react";
+
+type Strand = { phase:number; speed:number; width:number; alpha:number; amp:number; bias:number; hue:number; seed:number };
+const colors = ["#d56b45","#efb84e","#d9d17d","#92c98d","#72d3d8","#79a9e5","#9188de","#c397e9"];
+const strands: Strand[] = Array.from({length:64},(_,i)=>({phase:Math.random()*6.28,speed:.00008+Math.random()*.0002,width:.3+Math.random()*.9,alpha:.035+Math.random()*.23,amp:18+Math.random()*52,bias:(Math.random()-.5)*.9,hue:i/63*7+(Math.random()-.5)*.7,seed:Math.random()*1000}));
+
+export default function LivingTapestryCanvasV2(){
+ const canvas=useRef<HTMLCanvasElement>(null);
+ useEffect(()=>{const el=canvas.current,ctx=el?.getContext("2d");if(!el||!ctx)return;const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;let w=0,h=0,dpr=1,raf=0,t0=performance.now();let target={x:0,y:0,active:false},mouse={x:0,y:0};
+  const resize=()=>{const b=el.getBoundingClientRect();w=b.width;h=b.height;dpr=Math.min(devicePixelRatio||1,1.5);el.width=w*dpr;el.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);};
+  const move=(e:PointerEvent)=>{const b=el.getBoundingClientRect();target={x:e.clientX-b.left,y:e.clientY-b.top,active:true};};const leave=()=>{target.active=false;};resize();mouse={x:w/2,y:h/2};window.addEventListener("resize",resize);window.addEventListener("pointermove",move,{passive:true});window.addEventListener("pointerleave",leave);
+  const draw=(now:number)=>{const t=reduced?0:now-t0;ctx.clearRect(0,0,w,h);if(target.active){mouse.x+=(target.x-mouse.x)*.07;mouse.y+=(target.y-mouse.y)*.07;const glow=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,210);glow.addColorStop(0,"rgba(255,224,151,.3)");glow.addColorStop(.28,"rgba(158,214,255,.12)");glow.addColorStop(1,"rgba(100,115,255,0)");ctx.fillStyle=glow;ctx.fillRect(mouse.x-210,mouse.y-210,420,420);}else{mouse.x=w/2;mouse.y=h/2;}
+   strands.forEach((s,index)=>{const p:{x:number;y:number}[]=[];const base=h*(.53+s.bias*.3);for(let i=0;i<=48;i++){const u=i/48,x=w*(u*1.2-.1);const slow=Math.sin(t*s.speed+s.phase),detail=Math.sin(u*6.1+s.seed+t*s.speed*1.7);let y=base+slow*s.amp*.55+detail*s.amp*.32+Math.sin(u*1.8+s.phase)*s.amp*.35+(u-.5)*s.bias*85;if(target.active){const dx=x-mouse.x,dy=y-mouse.y,d=Math.hypot(dx,dy),pull=Math.max(0,1-d/220);y+=(mouse.y-y)*pull*.1;}p.push({x,y});}
+    ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);for(let i=0;i<p.length-1;i++){const p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;ctx.bezierCurveTo(p1.x+(p2.x-p0.x)/6,p1.y+(p2.y-p0.y)/6,p2.x-(p3.x-p1.x)/6,p2.y-(p3.y-p1.y)/6,p2.x,p2.y);}const near=target.active?Math.max(0,1-Math.hypot(p[24].x-mouse.x,p[24].y-mouse.y)/230):0;ctx.strokeStyle=colors[Math.max(0,Math.min(7,Math.floor(s.hue)))];ctx.globalAlpha=s.alpha*(.5+near*2);ctx.lineWidth=s.width*(.7+near*1.5);ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();if(index%17===0){ctx.globalAlpha=.4+near*.35;ctx.lineWidth=1.15+near;ctx.strokeStyle="#fff2d1";ctx.stroke();}});ctx.globalAlpha=1;if(!reduced)raf=requestAnimationFrame(draw);};draw(performance.now());return()=>{cancelAnimationFrame(raf);window.removeEventListener("resize",resize);window.removeEventListener("pointermove",move);window.removeEventListener("pointerleave",leave);};},[]);
+ return <div className="living-threads living-threads-canvas" aria-hidden="true"><canvas ref={canvas}/></div>;
+}
