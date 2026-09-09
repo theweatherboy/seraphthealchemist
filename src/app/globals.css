@@ -81,6 +81,8 @@ html { scroll-behavior:smooth; scroll-padding-top:100px; }
 .living-threads { position:absolute; inset:0; overflow:hidden; opacity:.85; }
 .living-threads svg { width:100%; height:100%; }
 .living-threads-canvas canvas { width:100%; height:100%; display:block; }
+.living-threads-canvas { filter:saturate(1.35) drop-shadow(0 0 9px rgba(126,184,255,.22)); }
+.living-threads-canvas canvas { transform:scale(1.12); transform-origin:center; }
 .thread-drift { animation:weave-drift 18s ease-in-out infinite alternate; transform-origin:center; }
 .thread-spark { animation:weave-spark 18s linear infinite; }
 .realm-thread { transition:stroke 1.5s; }
