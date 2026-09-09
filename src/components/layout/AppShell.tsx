@@ -4,7 +4,7 @@ import React from 'react';
 import { RealmProvider } from '@/context/RealmContext';
 import GlobalNavigation from './GlobalNavigation';
 import RealmIndicator from './RealmIndicator';
-import LivingTapestry from '@/components/visual/LivingTapestry';
+import LivingTapestry from '@/components/visual/LivingTapestryCanvas';
 import ParticleField from '@/components/visual/ParticleField';
 import EnvironmentBackground from '@/components/visual/EnvironmentBackground';
 
