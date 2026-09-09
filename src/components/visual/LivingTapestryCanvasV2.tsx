@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 type Strand = { phase:number; speed:number; width:number; alpha:number; amp:number; bias:number; hue:number; seed:number };
 const colors = ["#d56b45","#efb84e","#d9d17d","#92c98d","#72d3d8","#79a9e5","#9188de","#c397e9"];
-const strands: Strand[] = Array.from({length:64},(_,i)=>({phase:Math.random()*6.28,speed:.00008+Math.random()*.0002,width:.3+Math.random()*.9,alpha:.035+Math.random()*.23,amp:18+Math.random()*52,bias:(Math.random()-.5)*.9,hue:i/63*7+(Math.random()-.5)*.7,seed:Math.random()*1000}));
+const strands: Strand[] = Array.from({length:64},(_,i)=>{const family=Math.floor(i/8);return {phase:family*.72+(Math.random()-.5)*.16,speed:.00008+Math.random()*.0002,width:.28+Math.random()*.82,alpha:.035+Math.random()*.2,amp:28+Math.random()*42,bias:(family-3.5)*.13+(Math.random()-.5)*.07,hue:i/63*7+(Math.random()-.5)*.7,seed:Math.random()*1000};});
 
 export default function LivingTapestryCanvasV2(){
  const canvas=useRef<HTMLCanvasElement>(null);
