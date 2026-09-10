@@ -22,9 +22,27 @@ export type Database = {
         Relationships: [];
       };
       service_requests: {
-        Row: { id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note: string | null; contact_email: string | null; contact_phone: string | null; preferred_date: string | null; preferred_time: string | null; timezone: string; scheduled_at: string | null; status: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; updated_at: string; created_at: string };
-        Insert: { id?: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note?: string | null; contact_email?: string | null; contact_phone?: string | null; preferred_date?: string | null; preferred_time?: string | null; timezone?: string; scheduled_at?: string | null; status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; updated_at?: string; created_at?: string };
-        Update: { status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; scheduled_at?: string | null; timezone?: string; updated_at?: string };
+        Row: { id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note: string | null; contact_email: string | null; contact_phone: string | null; preferred_date: string | null; preferred_time: string | null; timezone: string; scheduled_at: string | null; scheduled_end_at: string | null; status: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; updated_at: string; created_at: string };
+        Insert: { id?: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; note?: string | null; contact_email?: string | null; contact_phone?: string | null; preferred_date?: string | null; preferred_time?: string | null; timezone?: string; scheduled_at?: string | null; scheduled_end_at?: string | null; status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; updated_at?: string; created_at?: string };
+        Update: { status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; scheduled_at?: string | null; scheduled_end_at?: string | null; timezone?: string; updated_at?: string };
+        Relationships: [];
+      };
+      scheduling_availability: {
+        Row: { id: string; weekday: number; starts_at: string; ends_at: string; timezone: string; is_enabled: boolean; created_at: string; updated_at: string };
+        Insert: { id?: string; weekday: number; starts_at: string; ends_at: string; timezone?: string; is_enabled?: boolean; created_at?: string; updated_at?: string };
+        Update: { weekday?: number; starts_at?: string; ends_at?: string; timezone?: string; is_enabled?: boolean; updated_at?: string };
+        Relationships: [];
+      };
+      scheduling_blocks: {
+        Row: { id: string; starts_at: string; ends_at: string; reason: string; created_by: string; created_at: string };
+        Insert: { id?: string; starts_at: string; ends_at: string; reason?: string; created_by: string; created_at?: string };
+        Update: { starts_at?: string; ends_at?: string; reason?: string };
+        Relationships: [];
+      };
+      service_schedule_policies: {
+        Row: { service_slug: string; duration_minutes: number; buffer_minutes: number; max_per_day: number | null; max_per_week: number | null; max_per_month: number | null; is_bookable: boolean; updated_by: string | null; updated_at: string };
+        Insert: { service_slug: string; duration_minutes: number; buffer_minutes?: number; max_per_day?: number | null; max_per_week?: number | null; max_per_month?: number | null; is_bookable?: boolean; updated_by?: string | null; updated_at?: string };
+        Update: { duration_minutes?: number; buffer_minutes?: number; max_per_day?: number | null; max_per_week?: number | null; max_per_month?: number | null; is_bookable?: boolean; updated_by?: string | null; updated_at?: string };
         Relationships: [];
       };
       reviews: {
@@ -63,6 +81,8 @@ export type Database = {
     Functions: {
       submit_review: { Args: { instance_id: string; review_body: string; review_rating?: number }; Returns: string };
       moderate_review: { Args: { target_review: string; target_revision: string; decision: string; reason?: string | null }; Returns: undefined };
+      create_scheduling_block: { Args: { starts_local: string; ends_local: string; schedule_timezone: string; block_reason: string }; Returns: string };
+      schedule_service_request: { Args: { target_request: string; next_status: string; scheduled_local?: string | null; schedule_timezone?: string; next_admin_note?: string | null }; Returns: undefined };
     };
     Enums: { [_ in never]: never };
     CompositeTypes: { [_ in never]: never };
