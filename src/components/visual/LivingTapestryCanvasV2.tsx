@@ -15,7 +15,10 @@ export default function LivingTapestryCanvasV2() {
     const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
     const pointer = { x: 0, y: 0, strength: 0 };
     const target = { x: 0, y: 0, strength: 0 };
-    let frame = 0, last = 0, time = 0, interval = 1000 / 45;
+    let frame = 0, last = 0, time = 0, interval = 1000 / 45, resizeFrame = 0;
+    let dimensions = { width: 0, height: 0 };
+
+    const renderNow = () => renderer.draw(time, reducedMotion.matches ? { ...pointer, strength:0 } : pointer);
 
     const tick = (now: number) => {
       frame = 0;
@@ -29,7 +32,7 @@ export default function LivingTapestryCanvasV2() {
         pointer.x += (target.x-pointer.x)*ease;
         pointer.y += (target.y-pointer.y)*ease;
         pointer.strength += (target.strength-pointer.strength)*ease;
-        renderer.draw(time, reducedMotion.matches ? { ...pointer, strength:0 } : pointer);
+        renderNow();
       }
       if (!reducedMotion.matches) frame = requestAnimationFrame(tick);
     };
@@ -38,11 +41,24 @@ export default function LivingTapestryCanvasV2() {
       last = 0;
       if (!document.hidden) frame = requestAnimationFrame(tick);
     };
-    const resize = () => {
+    const resize = (force = false) => {
       const box = el.getBoundingClientRect();
-      interval = 1000/(box.width < 700 ? 30 : 45);
-      renderer.resize(box.width, box.height, window.devicePixelRatio || 1);
+      const width = Math.round(box.width), height = Math.round(box.height);
+      const widthChanged = Math.abs(width-dimensions.width) > 1;
+      const heightChanged = Math.abs(height-dimensions.height) > 1;
+      const mobile = width < 700;
+      // Mobile browsers repeatedly alter viewport height while their chrome moves.
+      // The previous frame remains valid through those small changes, avoiding a flash.
+      if (!force && !widthChanged && (!heightChanged || (mobile && Math.abs(height-dimensions.height) < 160))) return;
+      dimensions = { width, height };
+      interval = 1000/(mobile ? 30 : 45);
+      renderer.resize(width, height, window.devicePixelRatio || 1);
+      renderNow();
       restart();
+    };
+    const scheduleResize = () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => resize());
     };
     const move = (event: PointerEvent) => {
       if (!finePointer.matches || reducedMotion.matches || event.pointerType === "touch") return;
@@ -53,12 +69,12 @@ export default function LivingTapestryCanvasV2() {
       target.strength=1;
     };
     const leave = () => { target.strength=0; };
-    const preferencesChanged = () => { leave(); restart(); };
+    const preferencesChanged = () => { leave(); renderNow(); restart(); };
     const visibilityChanged = () => { leave(); restart(); };
-    const observer = new ResizeObserver(resize);
+    const observer = new ResizeObserver(scheduleResize);
     observer.observe(el);
-    resize();
-    window.addEventListener("resize", resize);
+    resize(true);
+    window.addEventListener("resize", scheduleResize);
     window.addEventListener("pointermove", move, { passive:true });
     document.documentElement.addEventListener("pointerleave", leave);
     window.addEventListener("blur", leave);
@@ -67,8 +83,9 @@ export default function LivingTapestryCanvasV2() {
     finePointer.addEventListener("change", preferencesChanged);
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(resizeFrame);
       observer.disconnect();
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", scheduleResize);
       window.removeEventListener("pointermove", move);
       document.documentElement.removeEventListener("pointerleave", leave);
       window.removeEventListener("blur", leave);
