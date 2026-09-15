@@ -2,13 +2,14 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ExternalLink, X } from 'lucide-react';
 type Purchase = { title: string; price?: string; slug?: string };
+type PaymentMethod = 'cash_app' | 'paypal' | 'venmo' | 'stripe';
 const PaymentContext = createContext<(purchase: Purchase) => void>(() => {});
 export const usePayment = () => useContext(PaymentContext);
-const methods = [
-  { name: 'Cash App', url: 'https://cash.app/$seraphthealchemist', detail: '$seraphthealchemist' },
-  { name: 'PayPal', url: 'https://www.paypal.me/seraphthealchemist', detail: 'Pay with PayPal' },
-  { name: 'Venmo', url: 'https://www.venmo.com/seraphthealchemist', detail: '@seraphthealchemist' },
-  { name: 'Stripe', url: 'https://buy.stripe.com/cN23cmePvfGK4ow28e', detail: 'Open secure checkout' },
+const methods: { key: PaymentMethod; name: string; url: string; detail: string }[] = [
+  { key: 'cash_app', name: 'Cash App', url: 'https://cash.app/$seraphthealchemist', detail: '$seraphthealchemist' },
+  { key: 'paypal', name: 'PayPal', url: 'https://www.paypal.me/seraphthealchemist', detail: 'Pay with PayPal' },
+  { key: 'venmo', name: 'Venmo', url: 'https://www.venmo.com/seraphthealchemist', detail: '@seraphthealchemist' },
+  { key: 'stripe', name: 'Stripe', url: 'https://buy.stripe.com/cN23cmePvfGK4ow28e', detail: 'Open secure checkout' },
 ];
 export default function PaymentProvider({ children }: { children: ReactNode }) {
   const [purchase, setPurchase] = useState<Purchase | null>(null);
@@ -22,6 +23,9 @@ export default function PaymentProvider({ children }: { children: ReactNode }) {
     document.body.style.overflow = 'hidden';
     return () => { element?.close(); document.body.style.overflow = previous; opener?.focus(); };
   }, [purchase]);
+  const bookingUrl = (method: PaymentMethod) => purchase?.slug
+    ? `/account?request=${encodeURIComponent(purchase.slug)}&payment=${method}`
+    : '/account';
   return <PaymentContext.Provider value={setPurchase}>
     {children}
     <dialog ref={dialog} className="payment-dialog" aria-labelledby="payment-title" aria-describedby="payment-description" onCancel={() => setPurchase(null)} onClick={e => { if(e.target === e.currentTarget) setPurchase(null); }}>
@@ -30,8 +34,8 @@ export default function PaymentProvider({ children }: { children: ReactNode }) {
         <p className="eyebrow">Continue your journey</p><h2 id="payment-title">Choose how to pay</h2>
         <p className="payment-selection">{purchase?.title} {purchase?.price && <strong>{purchase.price}</strong>}</p>
         <p id="payment-description">Choose a provider below. Check the recipient and amount before paying, and include the offering name in your payment note where available.</p>
-        <div className="payment-methods">{methods.map(method => <a key={method.name} href={method.url} target="_blank" rel="noopener noreferrer"><span><strong>{method.name}</strong><small>{method.detail}</small></span><ExternalLink size={18} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>)}</div>
-        <p className="payment-note">After paying, <a href={purchase?.slug ? `/account?request=${encodeURIComponent(purchase.slug)}` : '/account'}>send your service request</a> with the payment reference. This lets Seraph confirm your session.</p>
+        <div className="payment-methods">{methods.map(method => <a key={method.key} href={method.url} target="_blank" rel="noopener noreferrer" onClick={() => { window.location.assign(bookingUrl(method.key)); }}><span><strong>{method.name}</strong><small>{method.detail}</small></span><ExternalLink size={18} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>)}</div>
+        <p className="payment-note">Choosing a provider opens payment in a new tab and brings you to scheduling here, with your offering and payment method ready. Add the payment reference, choose a time, then reserve it for Seraph&apos;s review.</p>
       </div>
     </dialog>
   </PaymentContext.Provider>;

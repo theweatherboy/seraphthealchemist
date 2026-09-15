@@ -37,12 +37,14 @@ export async function updateServiceRequest(formData: FormData) {
   const { client } = await requireAccount('/admin');
   const requestId = String(formData.get('request_id') ?? '');
   const status = String(formData.get('status') ?? '');
+  const paymentStatus = String(formData.get('payment_status') ?? '').trim() || null;
   const scheduledDate = String(formData.get('scheduled_date') ?? '').trim() || null;
   const scheduledTime = String(formData.get('scheduled_time') ?? '').trim() || null;
   const timezone = String(formData.get('timezone') ?? 'America/Chicago').trim();
   const adminNote = String(formData.get('admin_note') ?? '').trim() || null;
   const statuses = ['pending', 'contacted', 'scheduled', 'completed', 'declined', 'canceled'];
-  if (!/^[0-9a-f-]{36}$/i.test(requestId) || !statuses.includes(status) || adminNote && adminNote.length > 1000 || /[\u0000-\u001f\u007f]/.test((adminNote ?? '') + timezone)) redirect('/admin?error=request');
+  const paymentStatuses = ['awaiting_verification', 'verified', 'declined', 'refunded'];
+  if (!/^[0-9a-f-]{36}$/i.test(requestId) || !statuses.includes(status) || paymentStatus && !paymentStatuses.includes(paymentStatus) || adminNote && adminNote.length > 1000 || /[\u0000-\u001f\u007f]/.test((adminNote ?? '') + timezone)) redirect('/admin?error=request');
   let scheduledLocal: string | null = null;
   if (scheduledDate || scheduledTime) {
     if (!scheduledDate || !scheduledTime || !/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate) || !/^\d{2}:\d{2}$/.test(scheduledTime)) redirect('/admin?error=request');
@@ -54,6 +56,7 @@ export async function updateServiceRequest(formData: FormData) {
     scheduled_local: scheduledLocal,
     schedule_timezone: timezone,
     next_admin_note: adminNote,
+    next_payment_status: paymentStatus,
   });
   if (error) {
     console.error('[admin/requests] Could not schedule request:', error.code, error.message);

@@ -35,7 +35,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const [profilesResult, reviewsResult, requestsResult, availabilityResult, blocksResult, policiesResult] = await Promise.all([
     client.from('profiles').select('id, display_name').order('display_name'),
     client.from('reviews').select('id, customer_id, service_instance_id, status, created_at').eq('status', 'pending').order('created_at', { ascending: true }),
-    client.from('service_requests').select('id, customer_id, service_title, service_slug, payment_method, payment_reference, contact_email, contact_phone, preferred_date, preferred_time, timezone, scheduled_at, scheduled_end_at, status, note, admin_note, created_at').order('created_at', { ascending: true }),
+    client.from('service_requests').select('id, customer_id, service_title, service_slug, payment_method, payment_reference, payment_status, contact_email, contact_phone, preferred_date, preferred_time, timezone, scheduled_at, scheduled_end_at, status, note, admin_note, created_at').order('created_at', { ascending: true }),
     client.from('scheduling_availability').select('id, weekday, starts_at, ends_at, timezone, is_enabled').order('weekday').order('starts_at'),
     client.from('scheduling_blocks').select('id, starts_at, ends_at, reason').gte('ends_at', new Date().toISOString()).order('starts_at'),
     client.from('service_schedule_policies').select('service_slug, duration_minutes, buffer_minutes, max_per_day, max_per_week, max_per_month, is_bookable'),
