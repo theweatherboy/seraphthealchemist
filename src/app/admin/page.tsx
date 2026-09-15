@@ -46,8 +46,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const policies = new Map<string, SchedulePolicy>((policiesResult.data ?? []).map(policy => [policy.service_slug, policy]));
   const scheduleUnavailable = availabilityResult.error || blocksResult.error || policiesResult.error;
 
-  return <section className="account-page"><div className="account-panel">
-    <p className="eyebrow">Sanctuary administration</p><h1>Welcome, Seraph</h1><p>Your administrator access is confirmed.</p>
+  return <section className="account-page admin-page"><div className="account-panel">
+    <p className="eyebrow">Sanctuary administration</p><h1>Welcome, Seraph</h1><p>Your administrator access is confirmed. <Link href="/admin/scheduling">Open the focused scheduling workspace</Link>.</p>
     {params.error && <p role="alert" className="account-notice">The requested administration action could not be completed. Check that the selected time is available and does not overlap an existing appointment.</p>}
     {params.saved && <p role="status" className="account-notice">Saved.</p>}
 
