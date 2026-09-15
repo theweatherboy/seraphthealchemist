@@ -42,12 +42,13 @@ export async function updateServiceRequest(formData: FormData) {
   const scheduledTime = String(formData.get('scheduled_time') ?? '').trim() || null;
   const timezone = String(formData.get('timezone') ?? 'America/Chicago').trim();
   const adminNote = String(formData.get('admin_note') ?? '').trim() || null;
+  const returnTo = String(formData.get('return_to') ?? '') === `/admin/scheduling?request=${requestId}` ? `/admin/scheduling?request=${requestId}` : '/admin';
   const statuses = ['pending', 'contacted', 'scheduled', 'completed', 'declined', 'canceled'];
   const paymentStatuses = ['awaiting_verification', 'verified', 'declined', 'refunded'];
-  if (!/^[0-9a-f-]{36}$/i.test(requestId) || !statuses.includes(status) || paymentStatus && !paymentStatuses.includes(paymentStatus) || adminNote && adminNote.length > 1000 || /[\u0000-\u001f\u007f]/.test((adminNote ?? '') + timezone)) redirect('/admin?error=request');
+  if (!/^[0-9a-f-]{36}$/i.test(requestId) || !statuses.includes(status) || paymentStatus && !paymentStatuses.includes(paymentStatus) || adminNote && adminNote.length > 1000 || /[\u0000-\u001f\u007f]/.test((adminNote ?? '') + timezone)) redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}error=request`);
   let scheduledLocal: string | null = null;
   if (scheduledDate || scheduledTime) {
-    if (!scheduledDate || !scheduledTime || !/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate) || !/^\d{2}:\d{2}$/.test(scheduledTime)) redirect('/admin?error=request');
+    if (!scheduledDate || !scheduledTime || !/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate) || !/^\d{2}:\d{2}$/.test(scheduledTime)) redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}error=request`);
     scheduledLocal = `${scheduledDate}T${scheduledTime}:00`;
   }
   const { error } = await client.rpc('schedule_service_request', {
@@ -60,10 +61,10 @@ export async function updateServiceRequest(formData: FormData) {
   });
   if (error) {
     console.error('[admin/requests] Could not schedule request:', error.code, error.message);
-    redirect('/admin?error=request');
+    redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}error=request`);
   }
-  revalidatePath('/admin'); revalidatePath('/account');
-  redirect('/admin?saved=request');
+  revalidatePath('/admin'); revalidatePath('/admin/scheduling'); revalidatePath('/account');
+  redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}saved=request`);
 }
 
 const validClock = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
