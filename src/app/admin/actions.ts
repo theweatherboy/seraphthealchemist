@@ -11,14 +11,14 @@ export async function addServiceInstance(formData: FormData) {
   const slug = String(formData.get('service_slug') ?? '').trim();
   const completedAt = String(formData.get('completed_at') ?? '');
   const service = services.find(item => item.slug === slug);
-  if (!/^[0-9a-f-]{36}$/i.test(customerId) || !service || !/^\d{4}-\d{2}-\d{2}$/.test(completedAt)) redirect('/admin?error=service');
+  if (!/^[0-9a-f-]{36}$/i.test(customerId) || !service || !/^\d{4}-\d{2}-\d{2}$/.test(completedAt)) redirect('/admin/testimonies?error=service');
   const { error } = await client.from('service_instances').insert({ customer_id: customerId, service_slug: service.slug, service_title: service.title, completed_at: completedAt, verified_by: user.id });
   if (error) {
     console.error('[admin/service] Could not verify service:', error.code, error.message);
-    redirect('/admin?error=service');
+    redirect('/admin/testimonies?error=service');
   }
-  revalidatePath('/admin'); revalidatePath('/account');
-  redirect('/admin?saved=service');
+  revalidatePath('/admin', 'layout'); revalidatePath('/account');
+  redirect('/admin/testimonies?saved=service');
 }
 
 export async function moderateReview(formData: FormData) {
@@ -28,9 +28,9 @@ export async function moderateReview(formData: FormData) {
   const decision = String(formData.get('decision') ?? '');
   const reason = String(formData.get('reason') ?? '').trim() || null;
   const { error } = await client.rpc('moderate_review', { target_review: reviewId, target_revision: revisionId, decision, reason });
-  if (error) redirect('/admin?error=moderation');
-  revalidatePath('/admin'); revalidatePath('/reviews');
-  redirect('/admin?saved=moderation');
+  if (error) redirect('/admin/testimonies?error=moderation');
+  revalidatePath('/admin', 'layout'); revalidatePath('/reviews');
+  redirect('/admin/testimonies?saved=moderation');
 }
 
 export async function updateServiceRequest(formData: FormData) {
@@ -63,7 +63,7 @@ export async function updateServiceRequest(formData: FormData) {
     console.error('[admin/requests] Could not schedule request:', error.code, error.message);
     redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}error=request`);
   }
-  revalidatePath('/admin'); revalidatePath('/admin/scheduling'); revalidatePath('/account');
+  revalidatePath('/admin', 'layout'); revalidatePath('/admin/scheduling'); revalidatePath('/account');
   redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}saved=request`);
 }
 
@@ -77,24 +77,24 @@ export async function addAvailabilityWindow(formData: FormData) {
   const startsAt = String(formData.get('starts_at') ?? '').trim();
   const endsAt = String(formData.get('ends_at') ?? '').trim();
   const timezone = String(formData.get('timezone') ?? 'America/Chicago').trim();
-  if (!Number.isInteger(weekday) || weekday < 0 || weekday > 6 || !validClock.test(startsAt) || !validClock.test(endsAt) || startsAt >= endsAt || !validTimezone.test(timezone)) redirect('/admin?error=availability');
+  if (!Number.isInteger(weekday) || weekday < 0 || weekday > 6 || !validClock.test(startsAt) || !validClock.test(endsAt) || startsAt >= endsAt || !validTimezone.test(timezone)) redirect('/admin/services?error=availability');
   const { error } = await client.from('scheduling_availability').insert({ weekday, starts_at: startsAt, ends_at: endsAt, timezone, is_enabled: true });
   if (error) {
     console.error('[admin/availability] Could not save availability:', error.code, error.message);
-    redirect('/admin?error=availability');
+    redirect('/admin/services?error=availability');
   }
-  revalidatePath('/admin');
-  redirect('/admin?saved=availability');
+  revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=availability');
 }
 
 export async function deleteAvailabilityWindow(formData: FormData) {
   const { client } = await requireAccount('/admin');
   const id = String(formData.get('availability_id') ?? '');
-  if (!validUuid.test(id)) redirect('/admin?error=availability');
+  if (!validUuid.test(id)) redirect('/admin/services?error=availability');
   const { error } = await client.from('scheduling_availability').delete().eq('id', id);
-  if (error) redirect('/admin?error=availability');
-  revalidatePath('/admin');
-  redirect('/admin?saved=availability');
+  if (error) redirect('/admin/services?error=availability');
+  revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=availability');
 }
 
 export async function addSchedulingBlock(formData: FormData) {
@@ -103,24 +103,24 @@ export async function addSchedulingBlock(formData: FormData) {
   const endsLocal = String(formData.get('ends_at') ?? '').trim();
   const timezone = String(formData.get('timezone') ?? 'America/Chicago').trim();
   const reason = String(formData.get('reason') ?? '').trim();
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(startsLocal) || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(endsLocal) || endsLocal <= startsLocal || !validTimezone.test(timezone) || reason.length < 2 || reason.length > 200 || /[\u0000-\u001f\u007f]/.test(reason)) redirect('/admin?error=block');
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(startsLocal) || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(endsLocal) || endsLocal <= startsLocal || !validTimezone.test(timezone) || reason.length < 2 || reason.length > 200 || /[\u0000-\u001f\u007f]/.test(reason)) redirect('/admin/services?error=block');
   const { error } = await client.rpc('create_scheduling_block', { starts_local: startsLocal, ends_local: endsLocal, schedule_timezone: timezone, block_reason: reason });
   if (error) {
     console.error('[admin/blocks] Could not save scheduling block:', error.code, error.message);
-    redirect('/admin?error=block');
+    redirect('/admin/services?error=block');
   }
-  revalidatePath('/admin');
-  redirect('/admin?saved=block');
+  revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=block');
 }
 
 export async function deleteSchedulingBlock(formData: FormData) {
   const { client } = await requireAccount('/admin');
   const id = String(formData.get('block_id') ?? '');
-  if (!validUuid.test(id)) redirect('/admin?error=block');
+  if (!validUuid.test(id)) redirect('/admin/services?error=block');
   const { error } = await client.from('scheduling_blocks').delete().eq('id', id);
-  if (error) redirect('/admin?error=block');
-  revalidatePath('/admin');
-  redirect('/admin?saved=block');
+  if (error) redirect('/admin/services?error=block');
+  revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=block');
 }
 
 export async function saveServiceSchedulePolicy(formData: FormData) {
@@ -138,12 +138,12 @@ export async function saveServiceSchedulePolicy(formData: FormData) {
   const maxPerWeek = limit('max_per_week', 500);
   const maxPerMonth = limit('max_per_month', 2000);
   const service = services.find(item => item.slug === serviceSlug);
-  if (!service || !Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 480 || !Number.isInteger(bufferMinutes) || bufferMinutes < 0 || bufferMinutes > 180 || [maxPerDay, maxPerWeek, maxPerMonth].some(Number.isNaN)) redirect('/admin?error=policy');
+  if (!service || !Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 480 || !Number.isInteger(bufferMinutes) || bufferMinutes < 0 || bufferMinutes > 180 || [maxPerDay, maxPerWeek, maxPerMonth].some(Number.isNaN)) redirect('/admin/services?error=policy');
   const { error } = await client.from('service_schedule_policies').upsert({ service_slug: serviceSlug, duration_minutes: durationMinutes, buffer_minutes: bufferMinutes, max_per_day: maxPerDay, max_per_week: maxPerWeek, max_per_month: maxPerMonth, is_bookable: formData.get('is_bookable') === 'on', updated_by: user.id }, { onConflict: 'service_slug' });
   if (error) {
     console.error('[admin/policies] Could not save service policy:', error.code, error.message);
-    redirect('/admin?error=policy');
+    redirect('/admin/services?error=policy');
   }
-  revalidatePath('/admin');
-  redirect('/admin?saved=policy');
+  revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=policy');
 }

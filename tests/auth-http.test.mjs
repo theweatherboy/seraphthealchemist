@@ -35,8 +35,9 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     if (url.pathname === '/auth/v1/user') { response.end(JSON.stringify(user)); return; }
     if (url.pathname === '/auth/v1/logout') { response.writeHead(204); response.end(); return; }
     if (url.pathname === '/rest/v1/profiles') {
-      if (request.method === 'GET' && !url.searchParams.has('id')) {
+      if (['GET', 'HEAD'].includes(request.method) && !url.searchParams.has('id')) {
         assert(isAdmin, 'only the admin page requests the customer list');
+        response.setHeader('Content-Range', '0-0/1');
         response.end(JSON.stringify([{ id: userId, display_name: displayName }])); return;
       }
       assert.equal(url.searchParams.get('id'), `eq.${userId}`, 'owner filter uses verified session ID');
@@ -126,14 +127,16 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     assert.equal(account.status, 200);
     assert.match(account.headers.get('cache-control'), /private/);
     assert.match(await account.text(), /private@example.test/);
-    assert.equal((await request('/admin')).status, 404, 'non-admin cannot open admin screen');
+    for (const path of ['/admin', '/admin/scheduling', '/admin/calendar', '/admin/clients', '/admin/services', '/admin/testimonies']) {
+      assert.equal((await request(path)).status, 404, `non-admin cannot open ${path}`);
+    }
     const invalidName = await submit('/account', 'Save display name', { display_name: 'x' });
     assert.equal(invalidName.headers.get('location'), '/account?error=name');
     const updated = await submit('/account', 'Save display name', { display_name: ' Willow ', id: 'attacker-supplied-id' });
     assert.equal(updated.headers.get('location'), '/account?saved=1');
     assert.equal(displayName, 'Willow');
     isAdmin = true;
-    assert.match(await (await request('/admin')).text(), /Your administrator access is confirmed/);
+    assert.match(await (await request('/admin')).text(), /Welcome, Seraph/);
     const logout = await submit('/account', 'Sign out');
     assert.equal(logout.headers.get('location'), '/login?message=signed-out');
     assert.match((await request('/account')).headers.get('location'), /^\/login/);

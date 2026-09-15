@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { RealmProvider } from '@/context/RealmContext';
 import GlobalNavigation from './GlobalNavigation';
 import RealmIndicator from './RealmIndicator';
@@ -15,6 +16,8 @@ interface AppShellProps {
 }
 
 export default function AppShell({ children }: AppShellProps) {
+  const pathname = usePathname();
+  const admin = pathname === '/admin' || pathname.startsWith('/admin/');
   return (
     <RealmProvider>
       <PaymentProvider>
@@ -27,8 +30,8 @@ export default function AppShell({ children }: AppShellProps) {
         </div>
 
         {/* Persistent UI */}
-        <GlobalNavigation />
-        <RealmIndicator />
+        {!admin && <GlobalNavigation />}
+        {!admin && <RealmIndicator />}
 
         {/* Page Content (Transitions) */}
         <main className="relative z-10">
