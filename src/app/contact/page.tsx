@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
@@ -92,7 +93,7 @@ export default function ContactPage() {
             <Send size={20} />
             <span>SEND INTO THE ETHER</span>
           </button>
-        <p className="text-sm text-muted">Your message is processed by FormSubmit and sent to Seraph. You can also email <a className="underline" href="mailto:seraphthealchemist@gmail.com">seraphthealchemist@gmail.com</a>.</p>
+        <p className="text-sm text-muted">Your message is processed by FormSubmit and sent to Seraph. Read our <Link className="underline" href="/privacy-policy">Privacy Policy</Link>. You can also email <a className="underline" href="mailto:seraphthealchemist@gmail.com">seraphthealchemist@gmail.com</a>.</p>
         </form>
       </motion.div>
     </div>

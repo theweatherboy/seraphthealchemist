@@ -1,12 +1,12 @@
 # Account foundation: setup and launch checklist
 
-This first milestone adds Google login/logout, a private account page, editable public display names, and a database-protected admin entry page. Service records, review submission, moderation, and the grouped public reviews page are the next milestone, not implemented controls in this release.
+Google login/logout, customer profiles, historical service verification, testimony submission and moderation, public testimonies, booking, and administration are implemented. Service names, subtitles, descriptions, prices, and displayed durations can now be edited in Admin ? Availability & Services after applying the catalog migration. Live production configuration must still be verified.
 
 ## Runtime
 
 Use Node 22 (also set by `package.json` for Vercel). Next.js now runs as a server application; `next build` no longer creates a deployable static `out/` folder. The old GitHub Pages workflow is replaced by build/security-test CI. Vercel's Git integration remains responsible for deployments. Check the Vercel production branch is `master` before publishing.
 
-The Supabase resource `seraph-sanctuary` is connected to Development and Preview only. Keep production customer data out of this database. Missing configuration leaves public pages working and shows an honest sign-in-unavailable state.
+The last recorded setup had the Supabase resource `seraph-sanctuary` connected to Development and Preview only; verify the current dashboard settings. Keep production customer data out of this database. Missing configuration leaves public pages working and shows an honest sign-in-unavailable state.
 
 ## Local environment
 
@@ -64,3 +64,17 @@ Confirm one membership exists for the intended owner. Then reload `/account` and
 After building and testing, explicitly revisit the Supabase plan with the owner: Free may pause after a week of inactivity and lacks automatic backups. Decide whether to upgrade for availability and backups before real customers depend on accounts. Provision a separate production database, apply reviewed migrations, and enable production environment variables. Do not copy test users or records into production.
 
 Google OAuth is currently in Testing mode. Prepare its production audience/publishing requirements before opening sign-in to all customers. Update the site's privacy description for account identity and future public testimonies before production launch.
+
+
+## Invite existing clients to leave testimonies
+
+1. Before inviting clients, verify Vercel Production has the intended Supabase URL and publishable key. Apply all unapplied SQL migrations in filename order through `202609160008_service_catalog.sql`. Do not rerun older migrations that are already installed.
+2. Verify Google sign-in is enabled for the intended client audience and the production site URL and exact `/auth/callback` redirect are configured in Supabase. The repository last recorded Google OAuth in Testing mode; confirm the current Google Auth Platform audience settings.
+3. Sign in with the owner account and verify it has the intended admin membership. Test a separate customer account through sign-in, historical service confirmation, testimony submission, approval, and public display.
+4. Send clients `https://www.seraphthealchemist.com/login`. Their first **Continue with Google** creates their account; you do not assign a password.
+5. Ask the client to share the account ID shown in My account. In **Admin ? Testimonies ? Verify a completed service**, match the member's name and ID prefix, choose the offering, and enter the original completion date. No new booking or payment is required for past sessions.
+6. Have the client reload My account and submit the testimony beside that session. Publish it from **Admin ? Testimonies** after review.
+
+The catalog migration enables admin-only saved edits and seeds 15-minute Mini Cord Cut, 15-minute Mediumship, and 10-minute Psychic Reading booking policies. Default prices are $66, $99, and $77 respectively. Public offering text uses the saved catalog; confirmed historical service titles remain unchanged. Displayed duration describes the offering (including multi-session packages); actual appointment length, buffers, and booking caps remain under **Service limits**.
+
+Primary configuration reference: https://supabase.com/docs/guides/auth/social-login/auth-google and https://supabase.com/docs/guides/auth/redirect-urls.

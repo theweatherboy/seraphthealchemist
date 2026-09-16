@@ -1,6 +1,6 @@
 # Reviews, customer accounts, and administration
 
-Status: the owner connected a development/preview Supabase resource and configured Google OAuth. The local account foundation is implemented; see `accounts-setup.md` for the SQL migration and live-login setup still to complete. Review endpoints and service-verification controls remain planned.
+Status: Google accounts, historical service verification, testimony submission/moderation, public testimonies, scheduling, and the admin offering editor are implemented. This document retains the original design notes; use `accounts-setup.md` for the current launch steps and remaining hosted configuration checks.
 
 ## Recommended foundation
 

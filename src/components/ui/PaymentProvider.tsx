@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ExternalLink, X } from 'lucide-react';
 type Purchase = { title: string; price?: string; slug?: string };
@@ -34,6 +35,7 @@ export default function PaymentProvider({ children }: { children: ReactNode }) {
         <p className="eyebrow">Continue your journey</p><h2 id="payment-title">Choose how to pay</h2>
         <p className="payment-selection">{purchase?.title} {purchase?.price && <strong>{purchase.price}</strong>}</p>
         <p id="payment-description">Choose a provider below. Check the recipient and amount before paying, and include the offering name in your payment note where available.</p>
+        <p className="payment-note">Before paying, review the <Link href="/terms-of-service" onClick={() => setPurchase(null)}>Terms of Service</Link> and <Link href="/privacy-policy" onClick={() => setPurchase(null)}>Privacy Policy</Link>. By proceeding with a purchase, you confirm you are at least 18 and agree to the Terms of Service.</p>
         <div className="payment-methods">{methods.map(method => <a key={method.key} href={method.url} target="_blank" rel="noopener noreferrer" onClick={() => { window.location.assign(bookingUrl(method.key)); }}><span><strong>{method.name}</strong><small>{method.detail}</small></span><ExternalLink size={18} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>)}</div>
         <p className="payment-note">Choosing a provider opens payment in a new tab and brings you to scheduling here, with your offering and payment method ready. Add the payment reference, choose a time, then reserve it for Seraph&apos;s review.</p>
       </div>

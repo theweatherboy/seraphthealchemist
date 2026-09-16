@@ -3,15 +3,44 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAccount } from '@/lib/supabase/session';
-import { services } from '@/data/services';
+import { getServices } from '@/lib/services';
+import { requireAdmin } from '@/lib/admin';
+
+export async function saveService(formData: FormData) {
+  const { client } = await requireAdmin();
+  const slug = String(formData.get('slug') ?? '');
+  const title = String(formData.get('title') ?? '').trim();
+  const subtitle = String(formData.get('subtitle') ?? '').trim();
+  const description = String(formData.get('description') ?? '').trim();
+  const duration = String(formData.get('duration') ?? '').trim();
+  const priceText = String(formData.get('price') ?? '').trim();
+  const price = Number(priceText);
+  const services = await getServices();
+  if (!services.some(service => service.slug === slug) ||
+      title.length < 2 || title.length > 120 || subtitle.length < 2 || subtitle.length > 200 ||
+      description.length < 10 || description.length > 3000 || duration.length < 2 || duration.length > 80 ||
+      !/^\d+(\.\d{1,2})?$/.test(priceText) || !Number.isFinite(price) || price < 0 || price > 999999) {
+    redirect('/admin/services?error=catalog');
+  }
+  const { error } = await client.from('service_catalog').upsert({ slug, title, subtitle, description, price, duration });
+  if (error) redirect('/admin/services?error=catalog');
+  revalidatePath('/services', 'layout');
+  revalidatePath('/account');
+  revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=catalog');
+}
 
 export async function addServiceInstance(formData: FormData) {
-  const { client, user } = await requireAccount('/admin');
+  const { client, user } = await requireAdmin();
   const customerId = String(formData.get('customer_id') ?? '');
   const slug = String(formData.get('service_slug') ?? '').trim();
   const completedAt = String(formData.get('completed_at') ?? '');
+  const services = await getServices();
   const service = services.find(item => item.slug === slug);
-  if (!/^[0-9a-f-]{36}$/i.test(customerId) || !service || !/^\d{4}-\d{2}-\d{2}$/.test(completedAt)) redirect('/admin/testimonies?error=service');
+  const completedDate = new Date(`${completedAt}T00:00:00Z`);
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  if (!/^[0-9a-f-]{36}$/i.test(customerId) || !service || !/^\d{4}-\d{2}-\d{2}$/.test(completedAt) ||
+      Number.isNaN(completedDate.getTime()) || completedDate.toISOString().slice(0, 10) !== completedAt || completedAt > today) redirect('/admin/testimonies?error=service');
   const { error } = await client.from('service_instances').insert({ customer_id: customerId, service_slug: service.slug, service_title: service.title, completed_at: completedAt, verified_by: user.id });
   if (error) {
     console.error('[admin/service] Could not verify service:', error.code, error.message);
@@ -137,6 +166,7 @@ export async function saveServiceSchedulePolicy(formData: FormData) {
   const maxPerDay = limit('max_per_day', 100);
   const maxPerWeek = limit('max_per_week', 500);
   const maxPerMonth = limit('max_per_month', 2000);
+  const services = await getServices();
   const service = services.find(item => item.slug === serviceSlug);
   if (!service || !Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 480 || !Number.isInteger(bufferMinutes) || bufferMinutes < 0 || bufferMinutes > 180 || [maxPerDay, maxPerWeek, maxPerMonth].some(Number.isNaN)) redirect('/admin/services?error=policy');
   const { error } = await client.from('service_schedule_policies').upsert({ service_slug: serviceSlug, duration_minutes: durationMinutes, buffer_minutes: bufferMinutes, max_per_day: maxPerDay, max_per_week: maxPerWeek, max_per_month: maxPerMonth, is_bookable: formData.get('is_bookable') === 'on', updated_by: user.id }, { onConflict: 'service_slug' });

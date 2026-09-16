@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:accounts": "node --test tests/accounts.test.mjs tests/public-review-services.test.mjs",
+    "test:accounts": "node --test tests/accounts.test.mjs tests/public-review-services.test.mjs tests/service-catalog.test.mjs tests/booking-preferences.test.mjs",
     "test:auth": "node --test tests/auth-http.test.mjs"
   },
   "dependencies": {

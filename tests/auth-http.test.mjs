@@ -11,6 +11,9 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
   const publicId = '00000000-0000-4000-8000-000000000002';
   let isAdmin = false;
   let displayName = 'River';
+  let catalog = [];
+  let bookedPreferences;
+  let marketingWithdrawals = 0;
   let callbackCount = 0;
   const encode = value => Buffer.from(JSON.stringify(value)).toString('base64url');
   const token = `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode({ sub: userId, exp: Math.floor(Date.now() / 1000) + 3600, aud: 'authenticated' })}.test-signature`;
@@ -34,6 +37,15 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     }
     if (url.pathname === '/auth/v1/user') { response.end(JSON.stringify(user)); return; }
     if (url.pathname === '/auth/v1/logout') { response.writeHead(204); response.end(); return; }
+    if (url.pathname === '/rest/v1/rpc/book_service_request_with_preferences') {
+      let body = ''; for await (const chunk of request) body += chunk;
+      bookedPreferences = JSON.parse(body);
+      response.end(JSON.stringify('00000000-0000-4000-8000-000000000003')); return;
+    }
+    if (url.pathname === '/rest/v1/rpc/withdraw_marketing_consent') {
+      marketingWithdrawals++;
+      response.end('null'); return;
+    }
     if (url.pathname === '/rest/v1/profiles') {
       if (['GET', 'HEAD'].includes(request.method) && !url.searchParams.has('id')) {
         assert(isAdmin, 'only the admin page requests the customer list');
@@ -49,6 +61,14 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     }
     if (url.pathname === '/rest/v1/admin_memberships') {
       response.end(JSON.stringify(isAdmin ? { user_id: userId } : null)); return;
+    }
+    if (url.pathname === '/rest/v1/service_catalog') {
+      if (request.method === 'POST') {
+        assert(isAdmin, 'only an administrator can save offerings');
+        let body = ''; for await (const chunk of request) body += chunk;
+        catalog = [JSON.parse(body)];
+      }
+      response.end(JSON.stringify(catalog)); return;
     }
     if (['/rest/v1/service_instances', '/rest/v1/reviews'].includes(url.pathname)) {
       response.end('[]'); return;
@@ -135,8 +155,33 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     const updated = await submit('/account', 'Save display name', { display_name: ' Willow ', id: 'attacker-supplied-id' });
     assert.equal(updated.headers.get('location'), '/account?saved=1');
     assert.equal(displayName, 'Willow');
+    const booked = await submit('/account?request=mini-cord-cut', 'Pay &amp; reserve appointment', {
+      service_slug: 'mini-cord-cut', payment_method: 'paypal', payment_reference: 'Receipt-123',
+      slot_start: new Date(Date.now() + 86400000).toISOString(), timezone: 'America/Chicago',
+      recording_opt_in: 'on', marketing_email_opt_in: 'on',
+    });
+    assert.equal(booked.headers.get('location'), '/account?saved=request');
+    assert.equal(bookedPreferences.allow_recording, true);
+    assert.equal(bookedPreferences.allow_ai_notes, false);
+    assert.equal(bookedPreferences.allow_marketing_email, true);
+    assert.equal(bookedPreferences.allow_marketing_sms, false);
+    const withdrawn = await submit('/account', 'Withdraw marketing permission');
+    assert.equal(withdrawn.headers.get('location'), '/account?saved=preferences');
+    assert.equal(marketingWithdrawals, 1);
     isAdmin = true;
     assert.match(await (await request('/admin')).text(), /Welcome, Seraph/);
+    const offering = { slug: 'mini-cord-cut', title: 'Updated Cord Cut', subtitle: 'A Moment to Release', description: 'An updated description for this offering.', price: '68.50', duration: '15 min' };
+    const badOffering = await submit('/admin/services', 'Save offering', { ...offering, price: '-5' });
+    assert.equal(badOffering.headers.get('location'), '/admin/services?error=catalog');
+    assert.equal(catalog.length, 0);
+    const savedOffering = await submit('/admin/services', 'Save offering', offering);
+    assert.equal(savedOffering.headers.get('location'), '/admin/services?saved=catalog');
+    assert.equal(catalog[0].price, 68.5);
+    for (const path of ['/services', '/services/mini-cord-cut', '/account?request=mini-cord-cut']) {
+      const page = await request(path);
+      assert.equal(page.status, 200);
+      assert.match(await page.text(), /Updated Cord Cut/, `saved offering is used by ${path}`);
+    }
     const logout = await submit('/account', 'Sign out');
     assert.equal(logout.headers.get('location'), '/login?message=signed-out');
     assert.match((await request('/account')).headers.get('location'), /^\/login/);

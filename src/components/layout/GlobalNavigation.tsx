@@ -15,6 +15,8 @@ export default function GlobalNavigation() {
       <Link href="/support" className="hover:text-white transition-colors">Support</Link>
       <Link href="/contact" className="hover:text-white transition-colors">Connect</Link>
       <Link href="/account" className="hover:text-white transition-colors" prefetch={false}>Account</Link>
+      <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
+      <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
     </nav>
   );
 }

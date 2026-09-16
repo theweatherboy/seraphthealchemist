@@ -26,7 +26,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     {configured ? <form action={signInWithGoogle}>
       <SubmitButton pendingLabel="Opening Google…">Continue with Google</SubmitButton>
     </form> : <p role="status" className="account-notice">Account sign-in is coming soon. You can still explore the sanctuary or contact Seraph.</p>}
+    <p className="account-fine-print">By continuing with Google, you confirm you are at least 18 and agree to the <Link href="/terms-of-service">Terms of Service</Link>. Read the <Link href="/privacy-policy">Privacy Policy</Link> for how your information is handled.</p>
     <p className="account-fine-print">Your first sign-in creates an account. Your email stays private, and you choose the name used for future public testimonies.</p>
-    <div className="account-links"><Link href="/">Return to the sanctuary</Link><Link href="/legal">Privacy &amp; terms</Link></div>
+    <div className="account-links"><Link href="/">Return to the sanctuary</Link><Link href="/privacy-policy">Privacy Policy</Link><Link href="/terms-of-service">Terms of Service</Link></div>
   </div></section>;
 }

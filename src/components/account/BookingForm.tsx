@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import SubmitButton from '@/components/auth/SubmitButton';
 import { submitServiceRequest } from '@/app/account/request-actions';
 
@@ -24,6 +25,7 @@ function slotLabel(slot: Slot) {
 }
 
 export default function BookingForm({ offerings, initialService, initialPaymentMethod }: { offerings: Offering[]; initialService: string; initialPaymentMethod?: string }) {
+  const [marketingSms, setMarketingSms] = useState(false);
   const [service, setService] = useState(initialService);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>(isPaymentMethod(initialPaymentMethod) ? initialPaymentMethod : '');
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -66,11 +68,21 @@ export default function BookingForm({ offerings, initialService, initialPaymentM
     {paymentMethod && <a className="account-payment-link" href={paymentLinks[paymentMethod].url} target="_blank" rel="noopener noreferrer">{paymentLinks[paymentMethod].label} ↗</a>}
     <label htmlFor="payment-reference">Payment reference</label>
     <input id="payment-reference" name="payment_reference" required maxLength={120} placeholder="Receipt, username, or confirmation" />
-    <label htmlFor="contact-phone">Phone or alternate contact (optional)</label>
-    <input id="contact-phone" name="contact_phone" type="tel" maxLength={40} autoComplete="tel" />
+    <label htmlFor="contact-phone">Phone (optional unless you choose marketing texts)</label>
+    <input id="contact-phone" name="contact_phone" type="tel" required={marketingSms} maxLength={40} autoComplete="tel" />
     <label htmlFor="request-note">Note (optional)</label>
     <textarea id="request-note" name="note" maxLength={1000} />
+    <fieldset className="account-form"><legend>Optional preferences</legend>
+      <label className="account-check"><input name="recording_opt_in" type="checkbox" /> I would like this session recorded in Zoom and consent to that recording.</label>
+      <p className="account-fine-print">Recording is optional and applies only to this session. Seraph will confirm before recording begins. You can change your mind before or during the session.</p>
+      <label className="account-check"><input name="ai_notes_opt_in" type="checkbox" /> I consent to Zoom AI Companion processing session speech to create notes that Seraph keeps.</label>
+      <p className="account-fine-print">AI notes are separate from recording. Leave either option unchecked to decline it and still receive your session. Read the <Link href="/privacy-policy#session-records">session privacy details</Link>.</p>
+      <label className="account-check"><input name="marketing_email_opt_in" type="checkbox" /> I agree to receive marketing emails from Seraph, The Alchemist, LLC at my account email.</label>
+      <label className="account-check"><input name="marketing_sms_opt_in" type="checkbox" checked={marketingSms} onChange={event => setMarketingSms(event.target.checked)} /> I agree to receive marketing texts from Seraph, The Alchemist, LLC at the phone number provided.</label>
+      <p className="account-fine-print">Marketing permission is optional and is not a condition of purchase. Message frequency varies; message and data rates may apply to texts. Withdraw permission in My account or email seraphthealchemist@gmail.com. Appointment communications are separate.</p>
+    </fieldset>
     <p className="account-fine-print">Your selected time is reserved when you submit. Seraph verifies the payment before sending confirmation details.</p>
+    <p className="account-fine-print">By reserving, you confirm you are at least 18 and agree to the <Link href="/terms-of-service">Terms of Service</Link>, including the service disclaimers and cancellation terms. See the <Link href="/privacy-policy">Privacy Policy</Link> for how booking details are used.</p>
     <SubmitButton pendingLabel="Reserving your time…">Pay & reserve appointment</SubmitButton>
   </form>;
 }

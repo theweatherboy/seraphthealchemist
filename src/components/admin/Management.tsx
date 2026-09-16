@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import ServiceEditor from '@/components/admin/ServiceEditor';
 import { requireAccount } from '@/lib/supabase/session';
 import SubmitButton from '@/components/auth/SubmitButton';
 import {
@@ -10,7 +11,7 @@ import {
   moderateReview,
   saveServiceSchedulePolicy,
 } from '@/app/admin/actions';
-import { services } from '@/data/services';
+import { getServices } from '@/lib/services';
 import type { Database } from '@/lib/supabase/database.types';
 
 
@@ -26,6 +27,8 @@ export default async function Management({ searchParams, section }: { searchPara
   const { client, user } = await requireAccount('/admin');
   const { data, error } = await client.from('admin_memberships').select('user_id').eq('user_id', user.id).maybeSingle();
   if (error || !data) notFound();
+  const services = await getServices();
+  const catalogResult = await client.from('service_catalog').select('slug').limit(1);
   const params = await searchParams;
   const [profilesResult, reviewsResult, availabilityResult, blocksResult, policiesResult] = await Promise.all([
     client.from('profiles').select('id, display_name').order('display_name'),
@@ -40,7 +43,7 @@ export default async function Management({ searchParams, section }: { searchPara
   const policies = new Map<string, SchedulePolicy>((policiesResult.data ?? []).map(policy => [policy.service_slug, policy]));
   const scheduleUnavailable = availabilityResult.error || blocksResult.error || policiesResult.error;
 
-  return <section className="admin-management"><header className="admin-heading"><p className="eyebrow">Sanctuary administration</p><h1>{section === 'services' ? 'Availability & Services' : 'Testimonies'}</h1><p>{section === 'services' ? 'Make space for your work. Set your hours, service lengths, and booking limits.' : 'Confirm completed sessions and review the words your clients share.'}</p></header>{params.error && <p role="alert" className="admin-notice">The change could not be saved. Check the details and try again.</p>}{params.saved && <p role="status" className="admin-notice">Your changes have been saved.</p>}<div className="admin-management-body">{section === 'services' ? <>    <div className="account-next"><h2>Availability & booking rules</h2><p className="account-fine-print">These rules are applied when you schedule a confirmed appointment. A scheduled service cannot overlap another, fall inside a block, or exceed its service limit.</p>
+  return <section className="admin-management"><header className="admin-heading"><p className="eyebrow">Sanctuary administration</p><h1>{section === 'services' ? 'Availability & Services' : 'Testimonies'}</h1><p>{section === 'services' ? 'Make space for your work. Set your hours, service lengths, and booking limits.' : 'Confirm completed sessions and review the words your clients share.'}</p></header>{params.error && <p role="alert" className="admin-notice">The change could not be saved. Check the details and try again.</p>}{params.saved && <p role="status" className="admin-notice">Your changes have been saved.</p>}<div className="admin-management-body">{section === 'services' ? <><ServiceEditor services={services} available={!catalogResult.error} />    <div className="account-next"><h2>Availability & booking rules</h2><p className="account-fine-print">These rules are applied when you schedule a confirmed appointment. A scheduled service cannot overlap another, fall inside a block, or exceed its service limit.</p>
       {scheduleUnavailable ? <p role="alert">Apply the availability migration before configuring booking rules.</p> : <>
         <div className="account-next"><h3>Weekly availability</h3><p className="account-fine-print">Add one or more windows for each day. Times use the selected sanctuary timezone.</p>
           <form action={addAvailabilityWindow} className="account-form"><label htmlFor="availability-day">Day</label><select id="availability-day" name="weekday" defaultValue="1">{weekdays.map((day, index) => <option key={day} value={index}>{day}</option>)}</select><label htmlFor="availability-start">Start</label><input id="availability-start" name="starts_at" type="time" required /><label htmlFor="availability-end">End</label><input id="availability-end" name="ends_at" type="time" required /><label htmlFor="availability-timezone">Sanctuary timezone</label><input id="availability-timezone" name="timezone" defaultValue="America/Chicago" required /><SubmitButton pendingLabel="Saving…">Add availability window</SubmitButton></form>
@@ -53,7 +56,7 @@ export default async function Management({ searchParams, section }: { searchPara
       </>}
     </div>
 
-</> : <>    <div className="account-next"><h2>Verify a completed service</h2><form action={addServiceInstance} className="account-form"><label htmlFor="customer-id">Customer</label><select id="customer-id" name="customer_id" required><option value="">Choose a member</option>{(profilesResult.data ?? []).map(profile => <option value={profile.id} key={profile.id}>{profile.display_name} ({profile.id.slice(0, 8)})</option>)}</select><label htmlFor="service-slug">Published offering</label><select id="service-slug" name="service_slug" required><option value="">Choose an offering</option>{services.map(service => <option value={service.slug} key={service.slug}>{service.title}</option>)}</select><label htmlFor="completed-at">Completed on</label><input id="completed-at" name="completed_at" type="date" required /><SubmitButton pendingLabel="Saving…">Confirm service</SubmitButton></form></div>
+</> : <>    <div className="account-next"><h2>Verify a completed service</h2><p>For past sessions, ask your client to sign in at /login and share their account ID from My account. Select that member, the service, and its original completion date. They can then return to My account to submit a testimony; no new booking or payment is needed.</p>{profilesResult.error && <p role="alert">The client list could not be loaded. Please reload before confirming a service.</p>}<form action={addServiceInstance} className="account-form"><label htmlFor="customer-id">Customer</label><select id="customer-id" name="customer_id" required><option value="">Choose a member</option>{(profilesResult.data ?? []).map(profile => <option value={profile.id} key={profile.id}>{profile.display_name} ({profile.id.slice(0, 8)})</option>)}</select><label htmlFor="service-slug">Published offering</label><select id="service-slug" name="service_slug" required><option value="">Choose an offering</option>{services.map(service => <option value={service.slug} key={service.slug}>{service.title}</option>)}</select><label htmlFor="completed-at">Completed on</label><input id="completed-at" name="completed_at" type="date" required /><SubmitButton pendingLabel="Saving…">Confirm service</SubmitButton></form></div>
     <div className="account-next"><h2>Testimonies awaiting review</h2>{reviewsResult.error ? <p role="alert">The review queue could not be loaded.</p> : pendingReviews.length ? pendingReviews.map(review => { const revision = (revisionsResult.data ?? []).find(item => item.review_id === review.id); return <article className="review-entry" key={review.id}><h3>Pending testimony</h3><p>{revision?.body ?? 'Revision unavailable'}</p><form action={moderateReview} className="account-links"><input type="hidden" name="review_id" value={review.id} /><input type="hidden" name="revision_id" value={revision?.id ?? ''} /><button name="decision" value="approved" type="submit">Publish</button><button name="decision" value="rejected">Reject</button></form></article>; }) : <p>No pending testimonies.</p>}</div>
 </>}</div></section>;
 }

@@ -3,6 +3,12 @@
 export type Database = {
   public: {
     Tables: {
+      service_catalog: {
+        Row: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string };
+        Insert: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string };
+        Update: { title?: string; subtitle?: string; description?: string; price?: number; duration?: string };
+        Relationships: [];
+      };
       profiles: {
         Row: { id: string; public_id: string; display_name: string; created_at: string; updated_at: string };
         Insert: { id: string; public_id?: string; display_name?: string; created_at?: string; updated_at?: string };
@@ -22,7 +28,7 @@ export type Database = {
         Relationships: [];
       };
       service_requests: {
-        Row: { id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; payment_status: 'awaiting_verification' | 'verified' | 'declined' | 'refunded'; note: string | null; contact_email: string | null; contact_phone: string | null; preferred_date: string | null; preferred_time: string | null; timezone: string; scheduled_at: string | null; scheduled_end_at: string | null; status: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; updated_at: string; created_at: string };
+        Row: { ai_notes_opt_in: boolean; recording_opt_in: boolean; marketing_email_opt_in: boolean; marketing_sms_opt_in: boolean; preferences_recorded_at: string | null; preferences_version: string | null; id: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; payment_status: 'awaiting_verification' | 'verified' | 'declined' | 'refunded'; note: string | null; contact_email: string | null; contact_phone: string | null; preferred_date: string | null; preferred_time: string | null; timezone: string; scheduled_at: string | null; scheduled_end_at: string | null; status: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note: string | null; reviewed_by: string | null; reviewed_at: string | null; updated_at: string; created_at: string };
         Insert: { id?: string; customer_id: string; service_slug: string; service_title: string; payment_method: 'cash_app' | 'paypal' | 'venmo' | 'stripe'; payment_reference: string; payment_status?: 'awaiting_verification' | 'verified' | 'declined' | 'refunded'; note?: string | null; contact_email?: string | null; contact_phone?: string | null; preferred_date?: string | null; preferred_time?: string | null; timezone?: string; scheduled_at?: string | null; scheduled_end_at?: string | null; status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; updated_at?: string; created_at?: string };
         Update: { status?: 'pending' | 'contacted' | 'scheduled' | 'completed' | 'declined' | 'canceled'; payment_status?: 'awaiting_verification' | 'verified' | 'declined' | 'refunded'; admin_note?: string | null; reviewed_by?: string | null; reviewed_at?: string | null; scheduled_at?: string | null; scheduled_end_at?: string | null; timezone?: string; updated_at?: string };
         Relationships: [];
@@ -85,6 +91,8 @@ export type Database = {
       schedule_service_request: { Args: { target_request: string; next_status: string; scheduled_local?: string | null; schedule_timezone?: string; next_admin_note?: string | null; next_payment_status?: string | null }; Returns: undefined };
       available_booking_slots: { Args: { target_service: string; from_day?: string; number_of_days?: number }; Returns: Array<{ slot_start: string; slot_end: string; slot_timezone: string }> };
       book_service_request: { Args: { target_service: string; target_title: string; selected_start: string; selected_timezone: string; selected_payment_method: string; selected_payment_reference: string; selected_note?: string | null; selected_phone?: string | null }; Returns: string };
+      book_service_request_with_preferences: { Args: { target_service: string; target_title: string; selected_start: string; selected_timezone: string; selected_payment_method: string; selected_payment_reference: string; selected_note?: string | null; selected_phone?: string | null; allow_recording?: boolean; allow_ai_notes?: boolean; allow_marketing_email?: boolean; allow_marketing_sms?: boolean }; Returns: string };
+      withdraw_marketing_consent: { Args: Record<string, never>; Returns: undefined };
     };
     Enums: { [_ in never]: never };
     CompositeTypes: { [_ in never]: never };

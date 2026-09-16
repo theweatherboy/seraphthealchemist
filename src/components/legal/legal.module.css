@@ -1,0 +1,21 @@
+.document { max-width: 900px; margin: 0 auto; padding: 124px 24px 80px; color: #eee7da; line-height: 1.85; overflow-wrap: anywhere; }
+.header, .contents, .body { background: #10121eef; border: 1px solid #d6b45a40; border-radius: 20px; padding: clamp(24px, 5vw, 48px); }
+.header h1 { font-family: var(--font-cinzel), serif; font-size: clamp(30px, 5vw, 48px); color: #f3d99f; line-height: 1.25; margin: 16px 0 22px; }
+.date { font-size: 13px; color: #c4bdaa; margin-top: 20px; }
+.links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 22px; font-size: 14px; }
+.document a { color: #f3d99f; text-decoration: underline; text-underline-offset: 4px; }
+.document a:hover { color: #fff; }
+.contents { margin: 20px 0; }
+.contents > p { font-weight: 600; margin-bottom: 12px; }
+.contents ol { columns: 2; padding-left: 22px; list-style: decimal; }
+.contents li { break-inside: avoid; margin-bottom: 8px; font-size: 14px; }
+.body section { scroll-margin-top: 110px; }
+.body section + section { margin-top: 36px; padding-top: 30px; border-top: 1px solid #d6b45a30; }
+.body h2 { color: #f3d99f; font-family: var(--font-cinzel), serif; font-size: clamp(19px, 3vw, 24px); line-height: 1.5; margin-bottom: 16px; }
+.body p + p, .body ul { margin-top: 14px; }
+.body ul { padding-left: 22px; list-style: disc; }
+.body li + li { margin-top: 10px; }
+.body strong { color: #fff4da; }
+.footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 28px 0; font-size: 14px; }
+@media (max-width: 600px) { .document { padding: 110px 16px 50px; } .contents ol { columns: 1; } }
+@media print { .document { padding: 0; color: #111; max-width: none; } .header, .contents, .body { background: white; border-color: #ccc; } .document h1, .document h2, .document a, .document strong, .date { color: #111; } .links, .contents, .footer { display: none; } }
