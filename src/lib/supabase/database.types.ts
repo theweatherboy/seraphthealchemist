@@ -3,6 +3,12 @@
 export type Database = {
   public: {
     Tables: {
+      navigation_visibility: {
+        Row: { href: string; label: string; is_visible: boolean; sort_order: number; updated_at: string };
+        Insert: { href: string; label: string; is_visible?: boolean; sort_order: number; updated_at?: string };
+        Update: { href?: string; label?: string; is_visible?: boolean; sort_order?: number; updated_at?: string };
+        Relationships: [];
+      };
       service_catalog: {
         Row: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string };
         Insert: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string };

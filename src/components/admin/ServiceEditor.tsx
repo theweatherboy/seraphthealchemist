@@ -1,9 +1,11 @@
 import type { Service } from '@/data/services';
 import { saveService } from '@/app/admin/actions';
 import SubmitButton from '@/components/auth/SubmitButton';
+import NavigationVisibilityEditor from '@/components/admin/NavigationVisibilityEditor';
 
 export default function ServiceEditor({ services, available }: { services: Service[]; available: boolean }) {
   return <div className="account-next">
+    <NavigationVisibilityEditor />
     <h2>Edit offerings</h2>
     <p className="account-fine-print">Update the name, description, price, and displayed length of each offering. Changes appear on the service and booking pages. Past sessions keep the name recorded when they were confirmed. Set the actual appointment length under Service limits below.</p>
     {!available ? <p role="alert">Service editing is unavailable. Apply the service catalog migration and reload this page.</p> : services.map(service =>

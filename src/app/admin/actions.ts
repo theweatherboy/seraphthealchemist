@@ -6,6 +6,17 @@ import { requireAccount } from '@/lib/supabase/session';
 import { getServices } from '@/lib/services';
 import { requireAdmin } from '@/lib/admin';
 
+export async function updateNavigationVisibility(formData: FormData) {
+  const { client } = await requireAdmin();
+  const href = String(formData.get('href') ?? '');
+  const visible = String(formData.get('is_visible') ?? '') === 'true';
+  if (!/^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*)?$/.test(href) || href === '/terms-of-service' || href === '/privacy-policy') redirect('/admin/services?error=navigation');
+  const { error } = await client.from('navigation_visibility').update({ is_visible: visible }).eq('href', href);
+  if (error) redirect('/admin/services?error=navigation');
+  revalidatePath('/'); revalidatePath('/admin', 'layout');
+  redirect('/admin/services?saved=navigation');
+}
+
 export async function saveService(formData: FormData) {
   const { client } = await requireAdmin();
   const slug = String(formData.get('slug') ?? '');
