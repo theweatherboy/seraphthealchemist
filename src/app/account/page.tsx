@@ -24,6 +24,9 @@ const calendarUrl = (request: { service_title: string; scheduled_at: string | nu
 export default async function AccountPage({ searchParams }: { searchParams: Promise<{ error?: string; saved?: string; request?: string; payment?: string }> }) {
   const { client, user } = await requireAccount();
   const services = await getServices();
+  // Existing Auth users may have had their profile removed manually. Repair
+  // only the signed-in user's row before reading it; this never grants admin.
+  await client.rpc('ensure_my_profile');
   const [params, profileResult, adminResult, instancesResult, reviewsResult, requestsResult] = await Promise.all([
     searchParams,
     client.from('profiles').select('display_name, public_id').eq('id', user.id).maybeSingle(),

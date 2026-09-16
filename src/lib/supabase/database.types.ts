@@ -92,6 +92,7 @@ export type Database = {
       available_booking_slots: { Args: { target_service: string; from_day?: string; number_of_days?: number }; Returns: Array<{ slot_start: string; slot_end: string; slot_timezone: string }> };
       book_service_request: { Args: { target_service: string; target_title: string; selected_start: string; selected_timezone: string; selected_payment_method: string; selected_payment_reference: string; selected_note?: string | null; selected_phone?: string | null }; Returns: string };
       book_service_request_with_preferences: { Args: { target_service: string; target_title: string; selected_start: string; selected_timezone: string; selected_payment_method: string; selected_payment_reference: string; selected_note?: string | null; selected_phone?: string | null; allow_recording?: boolean; allow_ai_notes?: boolean; allow_marketing_email?: boolean; allow_marketing_sms?: boolean }; Returns: string };
+      ensure_my_profile: { Args: Record<string, never>; Returns: undefined };
       withdraw_marketing_consent: { Args: Record<string, never>; Returns: undefined };
     };
     Enums: { [_ in never]: never };
