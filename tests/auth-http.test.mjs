@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
+import { readFile } from 'node:fs/promises';
 
 // Run against a production build. Supabase is simulated on loopback; no real
 // account, Google login or hosted database is used by these boundary checks.
@@ -12,6 +13,7 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
   let isAdmin = false;
   let displayName = 'River';
   let catalog = [];
+  let menuVisible = true;
   let bookedPreferences;
   let marketingWithdrawals = 0;
   let callbackCount = 0;
@@ -36,6 +38,15 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       response.writeHead(401); response.end(JSON.stringify({ message: 'Invalid test token' })); return;
     }
     if (url.pathname === '/auth/v1/user') { response.end(JSON.stringify(user)); return; }
+    if (url.pathname === '/rest/v1/navigation_visibility') {
+      if (request.method === 'PATCH') {
+        assert(isAdmin, 'only administrators can change menu visibility');
+        let body = ''; for await (const chunk of request) body += chunk;
+        menuVisible = JSON.parse(body).is_visible;
+        response.end(JSON.stringify({ is_visible: menuVisible })); return;
+      }
+      response.end(JSON.stringify([{ href: '/services', is_visible: menuVisible }, { href: '/privacy-policy', is_visible: false }])); return;
+    }
     if (url.pathname === '/auth/v1/logout') { response.writeHead(204); response.end(); return; }
     if (url.pathname === '/rest/v1/rpc/book_service_request_with_preferences') {
       let body = ''; for await (const chunk of request) body += chunk;
@@ -169,6 +180,26 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     assert.equal(withdrawn.headers.get('location'), '/account?saved=preferences');
     assert.equal(marketingWithdrawals, 1);
     isAdmin = true;
+    const manifest = JSON.parse(await readFile('.next/server/server-reference-manifest.json', 'utf8'));
+    const actionId = Object.keys(manifest.node).find(key => manifest.node[key].exportedName === 'updateNavigationVisibility');
+    assert(actionId, 'navigation action is present in production build');
+    const changeMenu = async (href, visible) => {
+      const body = new FormData();
+      body.set('_1_href', href); body.set('_1_is_visible', String(visible)); body.set('0', '["$K1"]');
+      const response = await request('/admin/services', { method: 'POST', body, headers: { Origin: origin, 'Next-Action': actionId } });
+      return response.text();
+    };
+    for (const visible of [false, true, false, true]) {
+      assert.match(await changeMenu('/services', visible), /"ok":true/);
+      const response = await request('/api/navigation');
+      assert.match(response.headers.get('cache-control'), /no-store/);
+      const { items } = await response.json();
+      assert.equal(items.find(item => item.href === '/services').is_visible, visible, 'saved state survives a fresh request');
+      assert.equal(items.find(item => item.href === '/privacy-policy').is_visible, true, 'legal links always stay visible');
+      assert.equal(items.length, 11, 'hidden links remain available to the editor');
+    }
+    assert.match(await changeMenu('/privacy-policy', false), /"ok":false/);
+    assert.match(await changeMenu('/invalid-page', false), /"ok":false/);
     assert.match(await (await request('/admin')).text(), /Welcome, Seraph/);
     const offering = { slug: 'mini-cord-cut', title: 'Updated Cord Cut', subtitle: 'A Moment to Release', description: 'An updated description for this offering.', price: '68.50', duration: '15 min' };
     const badOffering = await submit('/admin/services', 'Save offering', { ...offering, price: '-5' });

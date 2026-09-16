@@ -9,5 +9,5 @@ export async function getNavigationVisibility() {
   const { data, error } = await client.from('navigation_visibility').select('href,label,sort_order,is_visible').order('sort_order');
   if (error) return defaultNavigation.map(item => ({ ...item, is_visible: true }));
   const saved = new Map((data ?? []).map(item => [item.href, item]));
-  return defaultNavigation.map(item => ({ ...item, ...saved.get(item.href) }));
+  return defaultNavigation.map(item => ({ ...item, is_visible: item.href === '/terms-of-service' || item.href === '/privacy-policy' || (saved.get(item.href)?.is_visible ?? true) }));
 }
