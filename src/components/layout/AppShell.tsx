@@ -18,23 +18,24 @@ interface AppShellProps {
 export default function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const admin = pathname === '/admin' || pathname.startsWith('/admin/');
+  const home = pathname === '/';
   return (
     <RealmProvider>
       <PaymentProvider>
-      <div className="relative min-h-screen w-full bg-obsidian text-text overflow-x-hidden">
+      <div className={`relative min-h-screen w-full overflow-x-hidden ${home ? 'bg-[#f8f3ed] text-[#422a39]' : 'bg-obsidian text-text'}`}>
         {/* Living Environment (Persists) */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
+        {!home && <div className="fixed inset-0 z-0 pointer-events-none">
           <EnvironmentBackground />
           <ParticleField />
           <LivingTapestry />
-        </div>
+        </div>}
 
         {/* Persistent UI */}
         {!admin && <GlobalNavigation />}
-        {!admin && <RealmIndicator />}
+        {!admin && !home && <RealmIndicator />}
 
         {/* Page Content (Transitions) */}
-        <main className="relative z-10">
+        <main id="main-content" className="relative z-10">
           {children}
         </main>
       </div>

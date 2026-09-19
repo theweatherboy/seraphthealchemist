@@ -1,0 +1,140 @@
+.home {
+  --ink: #422a39;
+  --wine: #643948;
+  --copper: #946748;
+  color: var(--ink);
+  background: #f8f3ed;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.home :is(h1,h2,h3,p) { margin: 0; }
+.home :is(a,button):focus-visible { outline: 2px solid #713a60; outline-offset: 5px; }
+.eyebrow { font-family: var(--font-inter), sans-serif; text-transform: uppercase; font-size: 10px; letter-spacing: .27em; line-height: 1.8; }
+.hero { position: relative; min-height: 550px; height: min(47vw, 680px); isolation: isolate; display: flex; justify-content: center; align-items: flex-start; padding: 132px 24px 110px; }
+.heroArtwork { object-fit: cover; object-position: center 48%; z-index: -3; }
+.heroVeil { position: absolute; inset: 0; z-index: -2; background: linear-gradient(0deg,#f8f3ed 0%,#f8f3ed00 21%),radial-gradient(ellipse at 50% 36%,#fff8ed75 0%,#fff8ed22 37%,transparent 60%); }
+.heroCenter { text-align: center; width: min(670px, 100%); }
+.heroCenter > .eyebrow { font-size: 11px; letter-spacing: .3em; }
+.heroCenter h1 { font-weight: 400; font-size: clamp(84px,9.5vw,146px); line-height: .95; letter-spacing: .055em; text-transform: uppercase; color: #512b3b; text-shadow: 0 2px 25px #fff5e4aa; margin: 6px 0 0; }
+.heroCenter h1 span { display: block; font-size: .27em; letter-spacing: .2em; line-height: 1.6; }
+.ornament { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 12px auto; color: #8e634f; }
+.ornament span { height: 1px; width: 44px; background: linear-gradient(90deg,transparent,#ab8168); }
+.ornament span:last-child { transform: rotate(180deg); }
+.heroDescription { font-size: clamp(19px,1.65vw,25px); line-height: 1.35; text-shadow: 0 1px 14px #fff; }
+.actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin-top: 28px; }
+.button { display: inline-flex; justify-content: center; align-items: center; gap: 13px; min-height: 46px; padding: 13px 26px; border-radius: 30px; border: 1px solid #fffbf0b3; background: linear-gradient(120deg,#66404c,#7f5358 70%,#b68b70); color: #fff9ee; font-family: var(--font-inter),sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .11em; text-transform: uppercase; box-shadow: 0 3px 20px #78504618; transition: transform .2s,box-shadow .2s,background .2s; }
+.button:hover { transform: translateY(-2px); box-shadow: 0 5px 22px #78504635; }
+.secondary { border-color: #9a737580; background: #fff4e6a8; color: #352b3d; backdrop-filter: blur(8px); }
+.secondary:hover { background: #fff7e9ed; }
+.leftMantra,.rightMantra { position: absolute; font-family: var(--font-inter),sans-serif; font-size: 10px; line-height: 2.3; letter-spacing: .25em; text-transform: uppercase; }
+.leftMantra { left: 3.5%; top: 45%; padding: 12px 6px; text-shadow: 0 0 8px #fff,0 0 20px #fff; }
+.leftMantra span { display: block; height: 22px; width: 1px; background: #9f7662; margin: 14px 0; }
+.leftMantra small { font-size: 9px; line-height: 2.2; letter-spacing: .2em; }
+.rightMantra { right: 3.5%; bottom: 110px; text-align: center; font-size: 9px; letter-spacing: .2em; padding: 10px; background: #fff7eb60; border-radius: 30px; }
+.journey { position: relative; z-index: 1; margin-top: -65px; padding: 20px 3% 24px; scroll-margin-top: 95px; background: linear-gradient(#f8f3ed00,#f8f3edc9 26%,#f8f3ed 87%); }
+.sectionHeading { text-align: center; margin-bottom: 24px; }
+.sectionHeading h2 { font-family: var(--font-cinzel),serif; font-size: clamp(23px,2.5vw,36px); font-weight: 400; line-height: 1.35; margin-top: 4px; }
+.realmGrid { max-width: 1500px; margin: auto; display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 14px; }
+.realmCard { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #fffaf3; border-bottom: 0; border-radius: 110px 110px 8px 8px; padding: 24px 6px 15px; color: var(--ink); background: radial-gradient(ellipse at 50% 12%,color-mix(in srgb,var(--realm-tint) 15%,#fff8ef),transparent 72%); box-shadow: 0 -5px 17px color-mix(in srgb,var(--realm-tint) 13%,transparent),inset 0 2px 4px #fff9; transition: transform .3s,box-shadow .3s; }
+.realmCard::before { content: ''; position: absolute; inset: 5px 5px 0; border: 1px solid #ffffff70; border-bottom: none; border-radius: inherit; pointer-events: none; }
+.realmCard:hover { transform: translateY(-6px); box-shadow: 0 -4px 25px color-mix(in srgb,var(--realm-tint) 25%,transparent); }
+.realmIcon { width: 55px; height: 55px; display: grid; place-items: center; color: color-mix(in srgb,var(--realm-tint) 72%,#472937); margin-bottom: 7px; border: 1px solid #fff9; border-radius: 50%; }
+.realmNumber,.chakraName { font-family: var(--font-inter),sans-serif; font-size: 8px; text-transform: uppercase; letter-spacing: .26em; line-height: 1.6; color: color-mix(in srgb,var(--realm-tint) 60%,#472937); }
+.realmNumber { font-size: 7px; }
+.realmCard h3 { font-family: var(--font-cinzel),serif; font-size: clamp(16px,1.5vw,23px); font-weight: 400; line-height: 1.5; }
+.realmCard p { font-size: 12px; line-height: 1.45; margin-top: 9px; }
+.realmEnter { display: flex; align-items: center; gap: 6px; font-family: var(--font-inter),sans-serif; font-size: 8px; letter-spacing: .07em; text-transform: uppercase; margin-top: auto; padding-top: 15px; opacity: 0; transition: opacity .2s; }
+.realmCard:is(:hover,:focus-visible) .realmEnter { opacity: 1; }
+.journeyFoot { display: flex; align-items: center; justify-content: center; gap: 17px; margin-top: 6px; color: #9d7055; }
+.journeyFoot p { font-family: var(--font-inter),sans-serif; font-size: 9px; text-transform: uppercase; letter-spacing: .23em; text-align: center; }
+.journeyFoot > span { width: 100px; height: 1px; background: #b68b6b40; }
+.journeyFoot svg { flex-shrink: 0; }
+.approach { position: relative; isolation: isolate; min-height: 650px; display: flex; flex-direction: column; justify-content: space-between; padding: 64px 3% 0; overflow: hidden; }
+.approachArtwork { object-fit: cover; object-position: center 52%; z-index: -3; }
+.approach::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 18% 32%,#fff5e9db,transparent 30%),radial-gradient(ellipse at 85% 30%,#fff5e9b8,transparent 28%); z-index: -2; }
+.approachContent { display: flex; justify-content: space-between; max-width: 1360px; width: 100%; margin: 0 auto; padding: 0 5%; }
+.approachIntro { width: 32%; max-width: 355px; padding: 16px 0; }
+.approachIntro h2 { font-family: var(--font-cinzel),serif; font-size: clamp(21px,2vw,29px); line-height: 1.55; font-weight: 400; text-shadow: 0 1px 15px #fff; }
+.approachIntro h2 span { display: inline-block; margin-left: 40px; }
+.approachIntro > p { font-size: 16px; line-height: 1.5; margin: 18px 0 24px 38px; text-shadow: 0 0 15px #fff,0 0 8px #fff; }
+.approachIntro .button { margin-left: 38px; white-space: nowrap; }
+.offerings { width: 25%; max-width: 270px; padding-top: 7px; }
+.offerings a { display: flex; align-items: center; gap: 22px; padding: 10px 0; }
+.offerings a svg { color: #966b4b; flex-shrink: 0; }
+.offerings a span { font-family: var(--font-inter),sans-serif; text-transform: uppercase; font-size: 10px; letter-spacing: .14em; text-shadow: 0 0 9px #fff; }
+.offerings a:hover span { text-decoration: underline; text-underline-offset: 5px; }
+.offerings > p { font-style: italic; font-size: 20px; line-height: 1.3; margin: 22px 0 0 48px; }
+.offerings > p::before { content: ''; display: block; width: 75px; height: 1px; background: #9e7768; margin-bottom: 15px; }
+.discoverGrid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin: 60px auto 0; width: 100%; max-width: 1500px; }
+.discoverCard { display: flex; align-items: center; gap: 22px; padding: 7px; background: #fcf4e9e8; border: 1px solid #fff9f0; border-radius: 13px 13px 0 0; box-shadow: 0 0 25px #f8ecd682; backdrop-filter: blur(12px); transition: background .2s; }
+.discoverCard:hover { background: #fff9f0; }
+.cardImage { position: relative; width: 36%; height: 158px; flex-shrink: 0; border-radius: 7px; overflow: hidden; background: #ddd1d3; }
+.cardImage img { object-fit: cover; }
+.crystalImage img { object-position: 50% 64%; width: 340% !important; max-width: none; left: -120% !important; height: 190% !important; top: -52% !important; }
+.dawnImage img { object-position: 83% center; }
+.nightImage img { object-position: center top; height: 180% !important; }
+.nightImage > svg { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: #ffd9b2; filter: drop-shadow(0 0 10px #ffc291); }
+.discoverCard h3 { font-family: var(--font-inter),sans-serif; font-size: 13px; font-weight: 400; letter-spacing: .13em; text-transform: uppercase; }
+.discoverCard p { font-size: 15px; line-height: 1.35; margin: 10px 10px 20px 0; }
+.discoverCard > div > span { display: flex; align-items: center; gap: 10px; font-family: var(--font-inter),sans-serif; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #935934; }
+.closing { position: relative; isolation: isolate; }
+.closingArtwork { object-fit: cover; object-position: center center; z-index: -2; }
+.testimonies { position: relative; min-height: 330px; display: flex; align-items: center; justify-content: center; padding: 55px 100px 60px; color: #fff4ec; background: linear-gradient(#121a3038,transparent); }
+.testimonyContent { width: min(690px,100%); text-align: center; text-shadow: 0 2px 10px #131a39; }
+.testimonyContent > svg { margin: 0 auto 14px; color: #ecd1b5; }
+.testimonyContent h2 { font-family: var(--font-cinzel),serif; font-size: clamp(22px,2.4vw,31px); font-weight: 400; }
+.reflection { font-size: 21px; font-style: italic; line-height: 1.5; margin-top: 14px !important; }
+.testimonyContent blockquote { margin: 0; font-size: clamp(19px,2.1vw,28px); line-height: 1.55; font-style: italic; }
+.testimonyContent blockquote p { overflow-wrap: anywhere; }
+.testimonyContent blockquote footer { font-size: 13px; font-style: normal; margin-top: 18px; }
+.testimonyLink { display: inline-flex; gap: 9px; align-items: center; margin-top: 18px; font-family: var(--font-inter),sans-serif; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+.testimonyLink:hover { text-decoration: underline; text-underline-offset: 4px; }
+.previous,.next { position: absolute; top: 50%; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #fff8; border-radius: 50%; background: #ffffff15; cursor: pointer; }
+.previous { left: 5%; }.next { right: 5%; }
+.testimonies :is(a,button):focus-visible { outline-color: #fff2cc; }
+.previous:hover,.next:hover { background: #ffffff35; }
+.dots { position: absolute; display: flex; bottom: 26px; }
+.dots button { display: grid; place-items: center; width: 28px; height: 30px; cursor: pointer; }
+.dots span { width: 8px; height: 8px; border: 1px solid #fff8; border-radius: 50%; }
+.dots button[aria-pressed=true] span { background: #fff5e5; }
+.invitation { text-align: center; padding: 66px 20px 26px; background: linear-gradient(transparent,#fbf2e991 25%,#fbf2e980); }
+.invitation .eyebrow { color: #7c493b; }
+.invitation h2 { font-family: var(--font-cinzel),serif; font-size: clamp(22px,2vw,30px); font-weight: 400; margin: 5px 0 20px; }
+.invitation .ornament { margin-top: 26px; }
+.invitation .ornament span { width: 150px; }
+.footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 14px 4% 24px; background: #fbf2e9b3; font-family: var(--font-inter),sans-serif; font-size: 8px; letter-spacing: .08em; }
+.footer > p:first-child { text-transform: uppercase; letter-spacing: .13em; }
+.footer > div { display: flex; gap: 20px; }
+.footer a:hover { text-decoration: underline; }
+@media(min-width:1600px) { .hero { height: 780px; padding-top: 170px; }.approach { min-height: 740px; }.testimonies { min-height: 380px; } }
+@media(max-width:1100px) {
+  .hero { min-height: 570px; padding-top: 125px; }.heroCenter h1 { font-size: 100px; }
+  .realmGrid { gap: 9px; }.realmCard { padding-top: 18px; }.realmCard p { font-size: 11px; }.realmCard h3 { font-size: 16px; }
+  .approach { padding-top: 45px; min-height: 590px; }.approachContent { padding: 0 3%; }
+  .approachIntro { width: 33%; }.approachIntro > p { margin-left: 10px; font-size: 15px; }.approachIntro h2 span,.approachIntro .button { margin-left: 10px; }
+  .offerings { width: 24%; }.offerings a { gap: 14px; }.offerings a span { font-size: 9px; }.offerings > p { margin-left: 40px; }
+  .discoverCard { gap: 14px; }.cardImage { height: 135px; width: 34%; }.discoverCard h3 { font-size: 11px; }.discoverCard p { font-size: 13px; }.discoverCard > div > span { font-size: 8px; }
+}
+@media(max-width:800px) {
+  .hero { min-height: 570px; padding-top: 145px; }.heroCenter h1 { font-size: 94px; }.heroCenter > .eyebrow { font-size: 9px; }.leftMantra,.rightMantra { display: none; }
+  .realmGrid { grid-template-columns: repeat(4,minmax(0,1fr)); max-width: 650px; gap: 18px 12px; }.realmCard { min-height: 210px; }.realmCard:last-child { grid-column: 3; }.realmEnter { opacity: 1; }.realmCard p { font-size: 12px; }
+  .journey { margin-top: -40px; padding-inline: 5%; }.journeyFoot { margin-top: 25px; gap: 10px; }.journeyFoot > span { width: 30px; }.journeyFoot p { font-size: 8px; }
+  .approach { min-height: 780px; padding-top: 35px; }.approachContent { padding: 0 2%; }.approachIntro { width: 40%; }.offerings { width: 28%; }.approachIntro h2 { font-size: 20px; }.approachIntro .button { padding: 12px 15px; font-size: 8px; }.offerings a { gap: 9px; }.offerings a span { font-size: 8px; }.offerings > p { font-size: 18px; margin-left: 0; }
+  .discoverGrid { grid-template-columns: 1fr; max-width: 600px; margin-top: 50px; gap: 9px; padding-bottom: 15px; }.discoverCard { border-radius: 10px; gap: 22px; }.cardImage { width: 100px; height: 98px; }.discoverCard h3 { font-size: 12px; }.discoverCard p { margin: 7px 0 10px; font-size: 14px; }.discoverCard > div > span { font-size: 9px; }
+  .testimonies { padding: 45px 60px 60px; }.testimonyContent h2 { font-size: 23px; }.reflection { font-size: 20px; }.previous { left: 12px; }.next { right: 12px; }.previous,.next { width: 36px; height: 36px; }
+  .footer { justify-content: center; text-align: center; padding-top: 24px; }
+}
+@media(max-width:520px) {
+  .hero { min-height: 600px; padding: 136px 18px 105px; }.heroArtwork { object-position: 54% center; }.heroVeil { background: linear-gradient(0deg,#f8f3ed,transparent 25%),radial-gradient(ellipse at 50% 40%,#fff6eeb8,transparent 75%); }
+  .heroCenter h1 { font-size: clamp(60px,18vw,90px); letter-spacing: .025em; margin-top: 15px; }.heroCenter h1 span { font-size: .29em; }.heroCenter > .eyebrow { font-size: 8px; letter-spacing: .2em; }.heroDescription { font-size: 21px; }.ornament { margin: 19px auto; }.actions { flex-direction: column; align-items: center; gap: 12px; margin-top: 24px; }.actions .button { width: 235px; }
+  .journey { padding-top: 10px; }.sectionHeading { margin-bottom: 26px; }.sectionHeading .eyebrow { font-size: 8px; letter-spacing: .2em; }.sectionHeading h2 { font-size: 25px; margin: 8px auto 0; max-width: 330px; }.realmGrid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px 13px; }.realmCard { padding: 23px 7px 13px; }.realmCard:last-child { grid-column: 1/-1; width: calc(50% - 7px); justify-self: center; }.realmCard h3 { font-size: 21px; }.realmCard p { font-size: 12px; }.realmIcon { margin-bottom: 9px; }.journeyFoot > span { display: none; }.journeyFoot p { max-width: 220px; line-height: 1.8; }.journeyFoot { margin-top: 20px; }
+  .approach { padding: 35px 18px 0; }.approachArtwork { object-position: center 0; height: 540px !important; }.approach::after { background: linear-gradient(#fff4e91a,#f8f3ed 580px); }.approachContent { display: block; padding: 0; }.approachIntro { width: 100%; max-width: none; padding: 15px 12px 22px; background: #fff7ede0; border: 1px solid #fff8; border-radius: 12px; text-align: center; backdrop-filter: blur(4px); }.approachIntro h2 { font-size: 25px; }.approachIntro h2 span { margin-left: 0; }.approachIntro > p { font-size: 16px; margin: 15px auto 22px; max-width: 310px; }.approachIntro .button { font-size: 9px; margin-left: 0; padding-inline: 20px; }
+  .offerings { margin-top: 205px; width: 100%; max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: 5px 10px; }.offerings a { padding: 10px 4px; gap: 10px; }.offerings a span { font-size: 9px; line-height: 1.5; }.offerings > p { font-size: 18px; margin: 0; align-self: center; text-align: center; }.offerings > p::before { display: none; }
+  .discoverGrid { margin-top: 25px; padding-bottom: 20px; }.discoverCard { gap: 17px; }.cardImage { width: 92px; height: 108px; }.discoverCard p { font-size: 14px; }.discoverCard h3 { font-size: 11px; }.discoverCard > div > span { font-size: 8px; }
+  .closingArtwork { object-position: 50% center; }.testimonies { min-height: 350px; padding: 48px 47px 65px; background: #18213832; }.reflection { font-size: 19px; }.testimonyContent h2 { font-size: 23px; }.testimonyLink { font-size: 8px; letter-spacing: .07em; }.invitation { padding-top: 50px; }.invitation h2 { max-width: 280px; margin: 8px auto 21px; }.footer { font-size: 8px; gap: 18px; }.footer > div { gap: 16px; }
+}
+@media(max-width:520px) {
+  .approachArtwork { top: 290px !important; height: 340px !important; object-position: center 30%; }
+  .approach::after { background: linear-gradient(#f8f3ed 0 290px,transparent 330px,transparent 550px,#f8f3ed 630px); }
+  .offerings { margin-top: 310px; }
+}
+@media(prefers-reduced-motion:reduce) { .button,.realmCard,.realmEnter { transition: none; }.button:hover,.realmCard:hover { transform: none; } }
