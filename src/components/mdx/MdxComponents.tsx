@@ -21,7 +21,7 @@ export const ArcaneHeading = ({ children, level }: { children: React.ReactNode; 
 };
 
 export const CelestialParagraph = ({ children }: { children: React.ReactNode }) => (
-  <p className="font-celestial text-moon-ivory/80 leading-relaxed mb-6 text-lg">
+  <p className="font-celestial text-text leading-relaxed mb-6 text-lg">
     {children}
   </p>
 );
@@ -39,7 +39,7 @@ export const SacredQuote = ({ children }: { children: React.ReactNode }) => (
 export const AlchemicalList = ({ children }: { children: React.ReactNode }) => (
   <ul className="space-y-3 mb-8 list-none">
     {React.Children.map(children, child => (
-      <li className="flex items-start gap-3 font-celestial text-moon-ivory/80">
+      <li className="flex items-start gap-3 font-celestial text-text">
         <span className="text-gold">✧</span>
         {child}
       </li>
@@ -53,7 +53,7 @@ export const ArcaneCallout = ({ children }: { children: React.ReactNode }) => (
       <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
       <span className="font-arcane text-xs uppercase tracking-widest text-gold">Divine Insight</span>
     </div>
-    <div className="font-celestial text-moon-ivory/90 leading-relaxed">
+    <div className="font-celestial text-text leading-relaxed">
       {children}
     </div>
   </div>

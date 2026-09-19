@@ -71,7 +71,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         </header>
 
         {/* Content */}
-        <article className="font-celestial text-moon-ivory/90 leading-relaxed text-lg space-y-6 prose prose-invert max-w-none">
+        <article className="font-celestial text-text leading-relaxed text-lg space-y-6 prose prose-invert max-w-none">
           <MDXRemote
             source={fileContent}
             components={mdxComponents}

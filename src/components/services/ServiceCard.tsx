@@ -17,10 +17,10 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     >
       <div className="flex justify-between items-start mb-6">
         <div>
-          <span className="font-arcane text-xs uppercase tracking-[0.2em] text-gold/60 mb-2 block">
+          <span className="font-arcane text-xs uppercase tracking-[0.2em] text-gold mb-2 block">
             {service.categoryLabel}
           </span>
-          <h3 className="font-arcane text-2xl text-gold group-hover:text-white transition-colors">
+          <h3 className="font-arcane text-2xl text-gold group-hover:text-text transition-colors">
             {service.title}
           </h3>
           <p className="font-celestial text-sm text-muted italic mb-4">
@@ -32,7 +32,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         </div>
       </div>
 
-      <p className="font-celestial text-moon-ivory/80 leading-relaxed mb-8 flex-grow">
+      <p className="font-celestial text-text leading-relaxed mb-8 flex-grow">
         {service.description}
       </p>
 

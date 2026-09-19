@@ -48,7 +48,7 @@ export default function ForgePage() {
         <h1 className="font-arcane text-5xl md:text-7xl text-seraphic-gold mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
           The Forge
         </h1>
-        <p className="font-celestial text-xl text-moon-ivory/60 max-w-2xl mx-auto">
+        <p className="font-celestial text-xl text-muted max-w-2xl mx-auto">
           Digital tools, guided journeys, and alchemical resources to aid in your transformation.
         </p>
       </motion.div>
@@ -68,7 +68,7 @@ export default function ForgePage() {
 
       <div className="mt-20 p-8 rounded-3xl bg-void-purple/20 border border-seraphic-gold/20 text-center max-w-3xl mx-auto">
         <h2 className="font-arcane text-3xl text-seraphic-gold mb-4">Future Creations</h2>
-        <p className="font-celestial text-moon-ivory/60">
+        <p className="font-celestial text-muted">
           The Forge is always burning. New courses on Energy Protection, Practical Magic, and Angelic Practices are currently being distilled.
         </p>
       </div>

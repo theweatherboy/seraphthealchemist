@@ -31,11 +31,11 @@ export default function SupportPage() {
           Feed the Flame
         </h1>
 
-        <p className="font-celestial text-xl text-moon-ivory/80 mb-8 leading-relaxed">
+        <p className="font-celestial text-xl text-text mb-8 leading-relaxed">
           Seraph, The Alchemist is an evolving body of spiritual education, creative work, research, and practice.
         </p>
 
-        <p className="font-celestial text-lg text-moon-ivory/60 mb-12 leading-relaxed">
+        <p className="font-celestial text-lg text-muted mb-12 leading-relaxed">
           If something here has helped you, inspired you, or opened a door of curiosity, you can support the continued creation of this work.
         </p>
 
@@ -57,7 +57,7 @@ export default function SupportPage() {
           SUPPORT THE WORK
         </button>
 
-        <div className="mt-16 flex items-center justify-center gap-2 text-moon-ivory/40 font-celestial text-sm">
+        <div className="mt-16 flex items-center justify-center gap-2 text-muted font-celestial text-sm">
           <Heart size={16} className="text-seraphic-gold" />
           <span>With gratitude and light.</span>
         </div>

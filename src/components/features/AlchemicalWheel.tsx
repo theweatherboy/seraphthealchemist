@@ -76,7 +76,7 @@ export default function AlchemicalWheel() {
               return (
                 <>
                   <h3 className="font-arcane text-2xl text-seraphic-gold mb-1">{service.title}</h3>
-                  <p className="font-celestial text-sm text-moon-ivory/60 mb-3 uppercase tracking-widest">{service.subtitle}</p>
+                  <p className="font-celestial text-sm text-muted mb-3 uppercase tracking-widest">{service.subtitle}</p>
                   <p className="font-celestial text-moon-ivory mb-4">{service.description}</p>
                   <div className="flex items-center justify-between border-t border-seraphic-gold/20 pt-4">
                     <span className="font-arcane text-lg text-seraphic-gold">{service.price}</span>

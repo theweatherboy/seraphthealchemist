@@ -40,7 +40,7 @@ export default function NavigationPopup({ isOpen, onClose }: NavigationPopupProp
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 text-moon-ivory/40 hover:text-seraphic-gold transition-colors"
+              className="absolute top-4 right-4 p-2 text-muted hover:text-seraphic-gold transition-colors"
               aria-label="Close popup"
             >
               <X size={24} />
@@ -57,7 +57,7 @@ export default function NavigationPopup({ isOpen, onClose }: NavigationPopupProp
                 Welcome to the Sanctum
               </h2>
 
-              <div className="space-y-4 font-celestial text-moon-ivory/80 leading-relaxed">
+              <div className="space-y-4 font-celestial text-text leading-relaxed">
                 <p>
                   You have entered a sacred space for spiritual exploration, alchemy, and transformation.
                 </p>
@@ -65,7 +65,7 @@ export default function NavigationPopup({ isOpen, onClose }: NavigationPopupProp
                   To navigate the temple, simply drift. Scroll your wheel to descend through the realms,
                   unveiling the threads of divinity as you move.
                 </p>
-                <div className="pt-4 flex justify-center gap-4 text-sm uppercase tracking-widest text-seraphic-gold/60">
+                <div className="pt-4 flex justify-center gap-4 text-sm uppercase tracking-widest text-gold">
                   <span>✧ Explore ✧</span>
                   <span>✧ Ascend ✧</span>
                   <span>✧ Transform ✧</span>

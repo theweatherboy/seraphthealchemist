@@ -17,7 +17,7 @@ export default function RealmIndicator() {
           onClick={() => setRealm(realm.id)}
           className="group relative flex items-center justify-center w-3 h-3 rounded-full transition-all duration-500"
           style={{
-            backgroundColor: currentRealm.id === realm.id ? realm.color : 'rgba(255,255,255,0.2)',
+            backgroundColor: currentRealm.id === realm.id ? realm.color : 'rgba(112,91,103,0.4)',
             boxShadow: currentRealm.id === realm.id ? `0 0 10px ${realm.color}` : 'none',
             transform: currentRealm.id === realm.id ? 'scale(1.5)' : 'scale(1)'
           }}

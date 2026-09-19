@@ -21,7 +21,7 @@ export default function JourneySection() {
           <h2 className="font-arcane text-4xl md:text-6xl text-seraphic-gold mb-4 tracking-widest">
             THE JOURNEY
           </h2>
-          <p className="font-celestial text-moon-ivory/60 max-w-2xl mx-auto">
+          <p className="font-celestial text-muted max-w-2xl mx-auto">
             From the roots of the earth to the stars above, this is a path of remembrance, transformation, and return.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function JourneySection() {
 
               <div className="mt-6 max-w-[180px]">
                 <h3 className="font-arcane text-xl text-seraphic-gold mb-2">{step.label}</h3>
-                <p className="font-celestial text-sm text-moon-ivory/60 leading-relaxed">
+                <p className="font-celestial text-sm text-muted leading-relaxed">
                   {step.description}
                 </p>
               </div>

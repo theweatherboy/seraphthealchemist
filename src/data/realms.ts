@@ -1,20 +1,24 @@
 export type Chakra =
+  | "earthStar"
   | "root"
   | "sacral"
   | "solar"
   | "heart"
   | "throat"
   | "thirdEye"
-  | "crown";
+  | "crown"
+  | "soulStar";
 
-export const chakraPages: Record<Chakra, { name: string; slug: string }> = {
-  root: { name: "Root", slug: "root" },
-  sacral: { name: "Sacral", slug: "sacral" },
-  solar: { name: "Solar Plexus", slug: "solar-plexus" },
-  heart: { name: "Heart", slug: "heart" },
-  throat: { name: "Throat", slug: "throat" },
-  thirdEye: { name: "Third Eye", slug: "third-eye" },
-  crown: { name: "Crown", slug: "crown" },
+export const chakraPages: Record<Chakra, { name: string; slug: string; number: number }> = {
+  earthStar: { name: "Earth Star", slug: "earth-star", number: 0 },
+  root: { name: "Root", slug: "root", number: 1 },
+  sacral: { name: "Sacral", slug: "sacral", number: 2 },
+  solar: { name: "Solar Plexus", slug: "solar-plexus", number: 3 },
+  heart: { name: "Heart", slug: "heart", number: 4 },
+  throat: { name: "Throat", slug: "throat", number: 5 },
+  thirdEye: { name: "Third Eye", slug: "third-eye", number: 6 },
+  crown: { name: "Crown", slug: "crown", number: 7 },
+  soulStar: { name: "Soul Star", slug: "soul-star", number: 8 },
 };
 
 export interface Realm {
@@ -27,6 +31,13 @@ export interface Realm {
 }
 
 export const realms: Realm[] = [
+  {
+    id: "earth-star",
+    name: "Earth Star",
+    chakra: "earthStar",
+    color: "#79604a",
+    subjects: ["Earth Connection", "Belonging", "Ancestral Reflection", "Embodiment"]
+  },
   {
     id: "earth",
     name: "Earth",
@@ -111,5 +122,17 @@ export const realms: Realm[] = [
       "Mysticism",
       "Higher Consciousness"
     ]
+  },
+  {
+    id: "soul-star",
+    name: "Soul Star",
+    chakra: "soulStar",
+    color: "#b38a43",
+    subjects: ["Soul Purpose", "Higher Self", "Spiritual Connection", "Integration"]
   }
 ];
+
+// Shared order for the homepage, page navigation, and site menu.
+export const chakraNavigation = realms.map(realm => ({
+  ...chakraPages[realm.chakra], color: realm.color,
+}));

@@ -29,7 +29,7 @@ export default function ContactPage() {
         <h1 className="font-arcane text-5xl md:text-7xl text-seraphic-gold mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
           Begin Your Journey
         </h1>
-        <p className="font-celestial text-xl text-moon-ivory/60 mb-12">
+        <p className="font-celestial text-xl text-muted mb-12">
           Reach out to start a session, collaborate, or simply ask a question.
         </p>
 

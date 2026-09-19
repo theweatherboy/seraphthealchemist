@@ -1,6 +1,9 @@
 .header { position: fixed; inset: 0 0 auto; z-index: 60; height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 25px; padding: 10px 2.5%; color: #382c3e; transition: background .25s,box-shadow .25s; font-family: var(--font-inter),sans-serif; }
 .light { background: linear-gradient(#fff7ed24,transparent); }
-.dark { color: #f7eedf; background: #111521d9; backdrop-filter: blur(16px); }
+.light .primary { border-radius: 35px; background: #fff8ebbd; box-shadow: 0 0 24px 16px #fff8ebbd; }
+.light .primary a { color: #352137; font-weight: 500; text-shadow: 0 1px 2px #fff8eb; }
+.light.scrolled .primary { background: transparent; box-shadow: none; }
+.dark { color: var(--color-text); background: #fff7edee; backdrop-filter: blur(16px); box-shadow: 0 1px 0 #b78e6d40; }
 .light.scrolled { background: #fbf5edee; backdrop-filter: blur(18px); box-shadow: 0 1px 0 #8c69572b; }
 .brand { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
 .brand img { width: 54px; height: 54px; object-fit: contain; }
@@ -23,10 +26,14 @@
 .dropdown a { display: block; padding: 12px 15px; border-radius: 7px; font-size: 12px; letter-spacing: .03em; }
 .dropdown a:hover,.dropdown a[aria-current=page] { background: #eee3dd; }
 .dropdown .mobileLink { display: none; }
+.chakraMenu { border-block: 1px solid #a881692c; margin-block: 6px; padding-block: 8px; }
+.chakraMenu > p { padding: 10px 15px; color: #8a5935; text-transform: uppercase; font-size: 9px; letter-spacing: .15em; }
+.chakraMenu a { display: flex; align-items: center; gap: 10px; }
+.chakraMenu a > span { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .skip { position: absolute; left: 15px; top: -100px; padding: 12px 20px; background: #fff9f1; color: #432d3d; border-radius: 8px; }
 .skip:focus { top: 10px; z-index: 2; }
 .header :focus-visible { outline: 2px solid #946276; outline-offset: 4px; }
-.dark :focus-visible { outline-color: #f5d7a4; }
+.dark :focus-visible { outline-color: #8a5935; }
 @media(max-width:1200px) { .header { gap: 20px; padding-inline: 2%; }.brand > span { font-size: 23px; }.brand img { width: 45px; height: 45px; }.primary { gap: 20px; }.primary a { font-size: 9px; }.enter { padding-inline: 17px; font-size: 8px; }.actions { gap: 5px; } }
 @media(max-width:1000px) { .primary { display: none; }.dropdown .mobileLink { display: block; }.header { height: 78px; padding-inline: 4%; }.brand > span { font-size: 26px; }.brand img { width: 50px; height: 50px; }.actions { gap: 14px; }.enter { font-size: 9px; padding-inline: 23px; } }
 @media(max-width:520px) { .header { height: 76px; padding-inline: 14px; gap: 12px; }.brand > span { font-size: 23px; }.brand small { font-size: 8px; }.brand img { width: 43px; height: 43px; }.enter { display: none; }.menu summary { width: 44px; height: 44px; background: #fff6e9b0; color: #432d3d; border-color: #a8816940; }.dropdown { width: min(300px,calc(100vw - 28px)); }.light:not(.scrolled) .brand { color: #fff9ec; }.light.scrolled .brand { color: #432d3d; } }

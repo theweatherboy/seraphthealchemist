@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ArrowRight, Menu } from 'lucide-react';
+import { chakraNavigation } from '@/data/realms';
 import styles from './navigation.module.css';
 
 const primaryLinks = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/reviews', 'Testimonies'], ['/grimoire', 'Grimoire'], ['/contact', 'Contact']] as const;
@@ -59,6 +60,10 @@ export default function GlobalNavigation() {
         <summary aria-label="Open navigation menu"><Menu size={21} strokeWidth={1.5} /></summary>
         <nav className={styles.dropdown} aria-label="Additional navigation" onClick={close}>
           {primaryLinks.filter(([href]) => show(href)).map(([href, label]) => <Link className={styles.mobileLink} href={href} key={href} aria-current={pathname === href ? 'page' : undefined}>{label}</Link>)}
+          <div className={styles.chakraMenu} role="group" aria-label="Chakras">
+            <p>Explore the chakras</p>
+            {chakraNavigation.map(chakra => <Link href={`/chakras/${chakra.slug}`} key={chakra.slug} prefetch={false} aria-current={pathname === `/chakras/${chakra.slug}` ? 'page' : undefined}><span style={{ backgroundColor: chakra.color }} aria-hidden="true" />{chakra.name}</Link>)}
+          </div>
           {extraLinks.filter(([href]) => show(href)).map(([href, label]) => <Link href={href} key={href} prefetch={href === '/account' ? false : undefined} aria-current={pathname === href ? 'page' : undefined}>{label}</Link>)}
         </nav>
       </details>

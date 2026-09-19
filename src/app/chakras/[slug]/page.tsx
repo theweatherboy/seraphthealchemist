@@ -27,21 +27,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ChakraPage({ params }: Props) {
   const chakra = findChakra((await params).slug);
   if (!chakra) notFound();
-  const next = chakras[chakra.number % chakras.length];
+  const next = chakras[(chakras.indexOf(chakra) + 1) % chakras.length];
 
   return (
     <article className={styles.page} style={{ '--chakra-color': chakra.color } as CSSProperties}>
       <ChakraAtmosphere realmId={chakra.realmId} />
-      <Link href="/#journey" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All seven paths</Link>
+      <Link href="/#journey" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All nine paths</Link>
       <header className={styles.header}>
         <div className={styles.sigil} aria-hidden="true"><Sparkles size={38} strokeWidth={1} /></div>
-        <p className="eyebrow">0{chakra.number} / {chakra.realmName} realm</p>
+        <p className="eyebrow">{String(chakra.number).padStart(2, '0')} / {chakra.realmName} realm</p>
         <h1>{chakra.name} <span>chakra</span></h1>
-        <p className={styles.intro}>A spiritual and symbolic guide for reflection.</p>
+        <p className={styles.intro}>{chakra.overview ?? 'A spiritual and symbolic guide for reflection.'}</p>
         <a href="#important-context" className={styles.contextLink}>About these correspondences</a>
       </header>
 
-      <nav className={styles.chakraNav} aria-label="Explore the seven chakras">
+      <nav className={styles.chakraNav} aria-label="Explore the chakras">
         {chakras.map(item => <Link key={item.slug} href={`/chakras/${item.slug}`} aria-current={item.slug === chakra.slug ? 'page' : undefined} style={{ '--link-color': item.color } as CSSProperties}><span aria-hidden="true" />{item.name}</Link>)}
       </nav>
 
@@ -59,7 +59,7 @@ export default async function ChakraPage({ params }: Props) {
         <dl className={styles.correspondences}>
           <div className={styles.card}><dt>Crystals</dt><dd>{chakra.crystals}</dd></div>
           <div className={styles.card}><dt>Food options</dt><dd>{chakra.foods}</dd></div>
-          <div className={styles.card}><dt>Frequency options</dt><dd><span className={styles.frequency}>{chakra.frequency} Hz <span aria-hidden="true">·</span> {chakra.note} note</span><a href="#important-context" className={styles.contextLink}>Symbolic sound associations</a></dd></div>
+          <div className={styles.card}><dt>Frequency options</dt><dd><span className={styles.frequency}>{chakra.frequency} Hz <span aria-hidden="true">·</span> {chakra.note} note</span>{chakra.frequencyContext && <p>{chakra.frequencyContext}</p>}<a href="#important-context" className={styles.contextLink}>Symbolic sound associations</a></dd></div>
           <div className={styles.card}><dt>Balancing practices</dt><dd>{chakra.practices}</dd></div>
         </dl>
       </section>
@@ -72,9 +72,13 @@ export default async function ChakraPage({ params }: Props) {
         </div>
       </section>
 
-      <aside id="important-context" className={styles.context} aria-labelledby="context-title"><h2 id="context-title">Important context</h2><p>{chakraContext}</p></aside>
+      <aside id="important-context" className={styles.context} aria-labelledby="context-title"><h2 id="context-title">Important context</h2><p>{chakraContext}</p>{chakra.editorialNote && <p>{chakra.editorialNote}</p>}</aside>
+      {chakra.sources && <section className={styles.sources} aria-labelledby="sources-title">
+        <h2 id="sources-title">Sources &amp; further reading</h2>
+        <ul>{chakra.sources.map(source => <li key={source.href}><a href={source.href}>{source.label}</a><p>{source.description}</p></li>)}</ul>
+      </section>}
       <footer className={styles.footer}>
-        <Link href="/#journey"><ArrowLeft size={15} aria-hidden="true" /> Return to the seven paths</Link>
+        <Link href="/#journey"><ArrowLeft size={15} aria-hidden="true" /> Return to the nine paths</Link>
         <Link href={`/chakras/${next.slug}`}>Explore {next.name} <ArrowRight size={15} aria-hidden="true" /></Link>
       </footer>
     </article>

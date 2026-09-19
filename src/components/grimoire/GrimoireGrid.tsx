@@ -16,13 +16,13 @@ export default function GrimoireGrid({ articles }: { articles: GrimoireArticle[]
           transition={{ delay: idx * 0.1 }}
           className="group relative p-8 rounded-[var(--border-radius-lg)] bg-glass border border-glass-border backdrop-blur-[var(--blur-glass)] hover:border-gold/50 transition-all duration-500"
         >
-          <span className="font-arcane text-xs uppercase tracking-widest text-gold/60 mb-3 block">
+          <span className="font-arcane text-xs uppercase tracking-widest text-gold mb-3 block">
             {article.category}
           </span>
-          <h3 className="font-arcane text-2xl text-gold mb-4 group-hover:text-white transition-colors">
+          <h3 className="font-arcane text-2xl text-gold mb-4 group-hover:text-text transition-colors">
             {article.title}
           </h3>
-          <p className="font-celestial text-moon-ivory/70 mb-6 line-clamp-3">
+          <p className="font-celestial text-muted mb-6 line-clamp-3">
             {article.description}
           </p>
           <Link

@@ -17,7 +17,7 @@ export default function ServiceDetailContent({ service }: { service: Service }) 
         >
           {/* Header */}
           <div className="text-center mb-16">
-            <span className="font-arcane text-xs uppercase tracking-[0.3em] text-gold/60 mb-4 block">
+            <span className="font-arcane text-xs uppercase tracking-[0.3em] text-gold mb-4 block">
               {service.categoryLabel}
             </span>
             <h1 className="font-arcane text-4xl md:text-6xl text-gold mb-4 tracking-wider">
@@ -33,21 +33,21 @@ export default function ServiceDetailContent({ service }: { service: Service }) 
             <div className="md:col-span-2 space-y-12">
               <section>
                 <h2 className="font-arcane text-2xl text-gold mb-4 border-b border-gold/20 pb-2">The Offering</h2>
-                <p className="font-celestial text-lg text-moon-ivory/80 leading-relaxed">
+                <p className="font-celestial text-lg text-text leading-relaxed">
                   {service.description}
                 </p>
               </section>
 
               <section>
                 <h2 className="font-arcane text-2xl text-gold mb-4 border-b border-gold/20 pb-2">The Approach</h2>
-                <p className="font-celestial text-lg text-moon-ivory/80 leading-relaxed">
+                <p className="font-celestial text-lg text-text leading-relaxed">
                   {service.approach}
                 </p>
               </section>
 
               <section>
                 <h2 className="font-arcane text-2xl text-gold mb-4 border-b border-gold/20 pb-2">What to Expect</h2>
-                <p className="font-celestial text-lg text-moon-ivory/80 leading-relaxed">
+                <p className="font-celestial text-lg text-text leading-relaxed">
                   {service.whatToExpect}
                 </p>
               </section>

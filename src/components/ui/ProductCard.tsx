@@ -34,7 +34,7 @@ export default function ProductCard({ title, category, description, price }: Pro
         <h3 className="font-arcane text-2xl text-moon-ivory mb-3 group-hover:text-seraphic-gold transition-colors">
           {title}
         </h3>
-        <p className="font-celestial text-moon-ivory/60 mb-6 leading-relaxed">
+        <p className="font-celestial text-muted mb-6 leading-relaxed">
           {description}
         </p>
 
