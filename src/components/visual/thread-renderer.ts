@@ -1,4 +1,5 @@
 export type ThreadScene = 'dawn' | 'portal' | 'starlight';
+export type ThreadPointer = { x: number; y: number; strength: number; radius: number };
 type Point = readonly [number, number];
 type Guide = { x: number; y: number; nx: number; ny: number };
 
@@ -18,8 +19,9 @@ const routes: Record<ThreadScene, Point[][]> = {
         [[-100, 650], [200, 585], [440, 553], [710, 585], [920, 580], [1220, 514], [1620, 600]],
     ],
 };
-const colors = ['255,190,91', '130,211,255', '220,167,255'];
-const pearls = ['255,248,219', '231,249,255', '255,234,255'];
+const colors = ['196,212,228', '178,214,235', '209,196,231'];
+const pearls = ['240,247,255', '230,246,255', '245,234,255'];
+const shadows = ['131,150,170', '112,147,170', '145,130,172'];
 const samples = 160;
 const tau = Math.PI * 2;
 
@@ -70,13 +72,26 @@ function lightSprite(color: string) {
     canvas.width = canvas.height = 64;
     const ctx = canvas.getContext('2d')!;
     const glow = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    glow.addColorStop(0, 'rgba(255,255,241,1)');
-    glow.addColorStop(.06, 'rgba(255,255,241,.95)');
-    glow.addColorStop(.18, `rgba(${color},.65)`);
-    glow.addColorStop(.45, `rgba(${color},.16)`);
+    glow.addColorStop(0, 'rgba(240,249,255,.45)');
+    glow.addColorStop(.18, `rgba(${color},.2)`);
+    glow.addColorStop(.45, `rgba(${color},.06)`);
     glow.addColorStop(1, `rgba(${color},0)`);
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, 64, 64);
+    const facet = ctx.createLinearGradient(20, 18, 43, 46);
+    facet.addColorStop(0, '#9ac8e4');
+    facet.addColorStop(.47, '#f0f8ff');
+    facet.addColorStop(.5, '#c0c9e3');
+    facet.addColorStop(1, '#e7d2f2');
+    ctx.fillStyle = facet;
+    ctx.beginPath();
+    ctx.moveTo(32, 8); ctx.lineTo(44, 32); ctx.lineTo(32, 56); ctx.lineTo(20, 32);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(244,250,255,.8)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(32, 5); ctx.lineTo(32, 59); ctx.moveTo(14, 32); ctx.lineTo(50, 32);
+    ctx.stroke();
     return canvas;
 }
 
@@ -101,7 +116,31 @@ function silkPath(points: Point[], time: number, phase: number, width: number) {
     return path;
 }
 
-/** Braided silk, tapered highlights, and suspended gold dust, with no baked-in motion. */
+function attract(point: [number, number], depth: number, pointer: ThreadPointer) {
+    const dx = pointer.x - point[0], dy = pointer.y - point[1];
+    const distance = Math.min(1, Math.hypot(dx, dy) / pointer.radius);
+    const falloff = 1 - distance * distance * (3 - 2 * distance);
+    const pull = falloff * falloff * pointer.strength * (.28 + .37 * depth);
+    point[0] += dx * pull;
+    point[1] += dy * pull;
+}
+
+function refractedGradient(context: CanvasRenderingContext2D, points: Point[], phase: number, opacity = .5) {
+    const start = points[0], end = points[samples];
+    const gradient = context.createLinearGradient(start[0], start[1], end[0], end[1]);
+    const offset = (phase % tau) / tau;
+    const colors = [
+        [0, `rgba(226,201,156,${opacity})`],
+        [.36, `rgba(168,216,237,${opacity})`],
+        [.69, `rgba(215,195,236,${opacity})`],
+        [1, `rgba(226,201,156,${opacity})`],
+    ] as const;
+    for (const [position, color] of colors)
+        gradient.addColorStop((position + offset * .06) % 1, color);
+    return gradient;
+}
+
+/** Translucent braided fibers with refracted highlights and small crystal glints. */
 export function createThreadRenderer(context: CanvasRenderingContext2D, scene: ThreadScene) {
     const random = randomGenerator();
     const sprites = colors.map(lightSprite);
@@ -121,19 +160,20 @@ export function createThreadRenderer(context: CanvasRenderingContext2D, scene: T
                 frequency: 13 + random() * 23,
                 width: .25 + random() * .6,
                 alpha: .23 + random() * .45,
+                depth: i < 2 ? .8 + random() * .2 : .15 + random() * .6,
                 wisp: i > 9,
                 core: i < 2,
                 points: curve.map(() => [0, 0] as [number, number]),
-            })),
+            })).sort((a, b) => a.depth - b.depth),
         })),
-        dust: Array.from({ length: 120 }, () => ({
+        dust: Array.from({ length: 80 }, () => ({
             u: random(), group: Math.floor(random() * 3), phase: random() * tau,
             offset: (random() - .5) * (random() < .8 ? 65 : 150),
             size: .3 + random() ** 3 * 1.35, speed: .008 + random() * .018,
         })),
     }));
 
-    return (time: number) => {
+    return (time: number, pointer: ThreadPointer) => {
         context.save();
         context.lineCap = context.lineJoin = 'round';
 
@@ -158,67 +198,65 @@ export function createThreadRenderer(context: CanvasRenderingContext2D, scene: T
                         const offset = group.centers[i] + fiber.offset * group.spread[i] * (fiber.wisp ? 2.5 : 1) + detail + braid;
                         fiber.points[i][0] = g.x + g.nx * offset;
                         fiber.points[i][1] = g.y + g.ny * offset;
+                        attract(fiber.points[i], fiber.depth, pointer);
                     }
                     const path = threadPath(fiber.points);
-                    context.strokeStyle = `rgba(${color},${fiber.alpha * (fiber.wisp ? .45 : 1)})`;
-                    context.lineWidth = fiber.width;
+                    context.strokeStyle = refractedGradient(context, fiber.points, fiber.phase,
+                        Math.min(.9, fiber.alpha * (fiber.wisp ? .35 : .8) * (.5 + fiber.depth * .5) * 1.1));
+                    context.lineWidth = fiber.width * (.7 + fiber.depth * .5);
                     context.stroke(path);
 
                     if (fiber.core) {
-                        // Color is in the sheath; the brightest center is pearly white.
-                        context.strokeStyle = `rgba(${color},.22)`;
-                        context.lineWidth = 3.5;
-                        context.stroke(path);
-                        context.strokeStyle = `rgba(${pearl},.9)`;
-                        context.lineWidth = 1.05;
-                        context.stroke(path);
+                        // Keep a shaded transparent body underneath the refracted edge.
+                        context.fillStyle = `rgba(${shadows[group.color]},.23)`;
+                        context.fill(silkPath(fiber.points, time, fiber.phase, 2.6));
+                        context.fillStyle = `rgba(${color},.4)`;
+                        context.fill(silkPath(fiber.points, time, fiber.phase, 1.8));
+                        const refraction = refractedGradient(context, fiber.points, fiber.phase, .47 * fiber.depth);
+                        context.fillStyle = refraction;
+                        context.fill(silkPath(fiber.points, time, fiber.phase, .55));
                     }
                 }
             }
         }
 
         for (const { curve, groups, dust } of bundles) {
-            for (const group of groups) {
-                for (const fiber of group.fibers) {
-                    if (!fiber.core) continue;
-                    context.fillStyle = `rgba(${colors[group.color]},.3)`;
-                    context.fill(silkPath(fiber.points, time, fiber.phase, 2.7));
-                    context.fillStyle = `rgba(${pearls[group.color]},.88)`;
-                    context.fill(silkPath(fiber.points, time, fiber.phase, 1.15));
-                    context.fillStyle = 'rgba(255,255,246,.85)';
-                    context.fill(silkPath(fiber.points, time, fiber.phase, .38));
-                }
-            }
-            // Tiny flakes travel alongside the braid, with uneven spacing and glints.
+            // Faceted specks catch the light at irregular intervals along the braid.
             for (const mote of dust) {
                 const u = (mote.u + time * mote.speed) % 1;
                 const index = u * samples, i = Math.min(samples - 1, Math.floor(index)), f = index - i;
                 const a = curve[i], b = curve[i + 1], group = groups[mote.group];
                 const offset = group.centers[i] * .8 + mote.offset + Math.sin(time * .3 + mote.phase) * 5;
-                const x = a.x + (b.x - a.x) * f + a.nx * offset;
-                const y = a.y + (b.y - a.y) * f + a.ny * offset;
+                const point: [number, number] = [a.x + (b.x - a.x) * f + a.nx * offset, a.y + (b.y - a.y) * f + a.ny * offset];
+                attract(point, .55, pointer);
+                const [x, y] = point;
                 const glint = Math.sin(mote.phase + time * .85) ** 8;
-                context.fillStyle = `rgba(185,121,43,${.4 + glint * .5})`;
+                context.fillStyle = `rgba(194,219,242,${.2 + glint * .35})`;
                 context.beginPath();
-                context.ellipse(x, y, mote.size * 1.6, mote.size * .55, Math.atan2(b.y - a.y, b.x - a.x) - .45, 0, tau);
-                context.fill();
+                context.moveTo(x, y - mote.size * 1.6);
+                context.lineTo(x + mote.size * .7, y);
+                context.lineTo(x, y + mote.size * 1.6);
+                context.lineTo(x - mote.size * .7, y);
+                context.closePath(); context.fill();
                 if (mote.size > 1.5) {
-                    context.globalAlpha = .35 + glint * .65;
+                    context.globalAlpha = .2 + glint * .3;
                     const radius = 2 + glint * 4;
                     context.drawImage(sprites[0], x - radius, y - radius, radius * 2, radius * 2);
                     context.globalAlpha = 1;
                 } else if (glint > .65) {
-                    context.fillStyle = 'rgba(255,254,235,.9)';
+                    context.fillStyle = 'rgba(240,249,255,.5)';
                     context.fillRect(x, y, 1.1, .7);
                 }
             }
             for (const group of groups) {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 2; i++) {
                     const index = Math.floor(((i * .213 + group.phase * .073 + time * .038) % 1) * samples);
                     const [x, y] = group.fibers[i % 3].points[index];
                     const radius = 5 + 5 * Math.sin(time * .6 + i) ** 2;
+                    context.globalAlpha = .3;
                     context.drawImage(sprites[group.color], x - radius, y - radius, radius * 2, radius * 2);
-                    context.strokeStyle = 'rgba(255,255,240,.8)';
+                    context.globalAlpha = 1;
+                    context.strokeStyle = 'rgba(240,249,255,.35)';
                     context.lineWidth = .45;
                     context.beginPath();
                     context.moveTo(x - radius * .7, y); context.lineTo(x + radius * .7, y);

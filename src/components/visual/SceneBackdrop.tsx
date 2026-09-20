@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Pause, Play } from 'lucide-react';
-import { createThreadRenderer, type ThreadScene } from './thread-renderer';
+import { createThreadRenderer, type ThreadPointer, type ThreadScene } from './thread-renderer';
 import { createSilkRenderer } from './silk-renderer';
 import styles from './scene-backdrop.module.css';
 type SceneBackdropProps = {
@@ -28,22 +28,31 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
             return;
         const render = context ? createThreadRenderer(context, scene) : null;
         const preference = matchMedia('(prefers-reduced-motion: reduce)');
+        const region = element.closest('section');
+        const pointer: ThreadPointer = { x: 0, y: 0, strength: 0, radius: 180 };
+        const target = { x: 0, y: 0, strength: 0 };
         let visible = false, frame = 0, last = 0, elapsed = 0;
         let width = 1, height = 1, ratio = 1, positionX = .5, positionY = .5;
         const draw = () => {
             const scale = Math.max(width / 1536, height / 1024);
             const x = (width - 1536 * scale) * positionX * ratio;
             const y = (height - 1024 * scale) * positionY * ratio;
-            if (silk) silk.draw(elapsed, { scale: ratio * scale, x, y });
+            if (silk) silk.draw(elapsed, { scale: ratio * scale, x, y }, pointer);
             else if (context && render) {
                 context.setTransform(1, 0, 0, 1, 0, 0);
                 context.clearRect(0, 0, element.width, element.height);
                 context.setTransform(ratio * scale, 0, 0, ratio * scale, x, y);
-                render(elapsed);
+                render(elapsed, pointer);
             }
         };
         const tick = (now: number) => {
-            elapsed += last ? Math.min((now - last) / 1000, .05) : 0;
+            const delta = last ? Math.min((now - last) / 1000, .05) : 0;
+            // Slow the ambient flow without making the cursor response sluggish.
+            elapsed += delta * .4;
+            const follow = 1 - Math.exp(-delta * 7);
+            pointer.x += (target.x - pointer.x) * follow;
+            pointer.y += (target.y - pointer.y) * follow;
+            pointer.strength += (target.strength - pointer.strength) * (1 - Math.exp(-delta * 4));
             last = now;
             draw();
             frame = requestAnimationFrame(tick);
@@ -53,11 +62,29 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
             frame = 0;
             last = 0;
             const running = visible && !pausedRef.current && !preference.matches && !document.hidden;
+            if (!running) target.strength = 0;
             element.dataset.running = String(running);
             if (running)
                 frame = requestAnimationFrame(tick);
         };
         sync.current = update;
+        const leave = () => { target.strength = 0; };
+        const move = (event: PointerEvent) => {
+            if (event.pointerType === 'touch' || !visible || pausedRef.current || preference.matches || document.hidden)
+                return;
+            const bounds = element.getBoundingClientRect();
+            const localX = event.clientX - bounds.left, localY = event.clientY - bounds.top;
+            if (localX < 0 || localX > width || localY < 0 || localY > height) {
+                leave();
+                return;
+            }
+            const scale = Math.max(width / 1536, height / 1024);
+            target.x = (localX - (width - 1536 * scale) * positionX) / scale;
+            target.y = (localY - (height - 1024 * scale) * positionY) / scale;
+            // Start the attraction where the pointer enters, then follow with inertia.
+            if (pointer.strength < .001) { pointer.x = target.x; pointer.y = target.y; }
+            target.strength = 1;
+        };
         const resize = () => {
             const bounds = element.getBoundingClientRect();
             width = bounds.width;
@@ -68,6 +95,8 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
             const position = getComputedStyle(element).objectPosition.split(' ');
             positionX = Number.isFinite(parseFloat(position[0])) ? parseFloat(position[0]) / 100 : .5;
             positionY = Number.isFinite(parseFloat(position[1])) ? parseFloat(position[1]) / 100 : .5;
+            pointer.radius = 190 / Math.max(width / 1536, height / 1024);
+            target.strength = pointer.strength = 0;
             draw();
         };
         const observer = new IntersectionObserver(entries => {
@@ -81,6 +110,11 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
         preference.addEventListener('change', update);
         document.addEventListener('visibilitychange', update);
         window.addEventListener('resize', resize);
+        // Listen on the scene, keeping the canvas transparent to links and buttons.
+        region?.addEventListener('pointermove', move, { passive: true });
+        region?.addEventListener('pointerleave', leave);
+        window.addEventListener('scroll', leave, { passive: true });
+        window.addEventListener('blur', leave);
         return () => {
             cancelAnimationFrame(frame);
             observer.disconnect();
@@ -88,6 +122,10 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
             preference.removeEventListener('change', update);
             document.removeEventListener('visibilitychange', update);
             window.removeEventListener('resize', resize);
+            region?.removeEventListener('pointermove', move);
+            region?.removeEventListener('pointerleave', leave);
+            window.removeEventListener('scroll', leave);
+            window.removeEventListener('blur', leave);
             silk?.dispose();
             sync.current = () => { };
         };
