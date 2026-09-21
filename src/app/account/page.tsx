@@ -43,6 +43,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     <p className="eyebrow">Your sanctuary</p><h1>My account</h1><p>Signed in as <strong>{user.email}</strong>. This email is private.</p><p className="account-fine-print">For a past session, share your account ID with Seraph so the service can be confirmed: <code>{user.id}</code></p>
     {params.error && <p role="alert" className="account-notice">{errors[params.error] ?? 'Something went wrong. Please try again.'}</p>}
     {params.saved === '1' && <p role="status" className="account-notice">Your display name has been saved.</p>}
+    <div className="account-next"><h2>Your birth details</h2><p>Saving your birth date, time, and birthplace is optional. You can load, replace, or delete saved details on the birth-chart page.</p><Link href="/birth-chart#saved-birth-details">Manage saved birth details</Link></div>
     {params.saved === 'review' && <p role="status" className="account-notice">Your testimony was submitted for review.</p>}
     {params.saved === 'preferences' && <p role="status" className="account-notice">Marketing email and text permission has been withdrawn for your existing bookings.</p>}
     {params.saved === 'request' && <p role="status" className="account-notice">Your appointment time is reserved. Seraph will verify payment and send confirmation details.</p>}

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Sprout, Leaf, Moon, Sun, Heart, Eye, Orbit, Star } from 'lucide-react';
 import ChakraAtmosphere from '@/components/chakras/ChakraAtmosphere';
 import { chakras, chakraContext, findChakra } from '@/data/chakras';
 import styles from './chakra.module.css';
@@ -28,15 +28,19 @@ export default async function ChakraPage({ params }: Props) {
   const chakra = findChakra((await params).slug);
   if (!chakra) notFound();
   const next = chakras[(chakras.indexOf(chakra) + 1) % chakras.length];
+  const symbols = [Sprout, Leaf, Moon, Sun, Heart, Moon, Eye, Orbit, Star];
+  const Sigil = symbols[chakras.indexOf(chakra)] ?? Sparkles;
+  const affirmations = ['I belong', 'I am', 'I feel', 'I do', 'I love', 'I speak', 'I see', 'I understand', 'I connect'];
 
   return (
     <article className={styles.page} style={{ '--chakra-color': chakra.color } as CSSProperties}>
       <ChakraAtmosphere realmId={chakra.realmId} />
       <Link href="/#journey" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All nine paths</Link>
       <header className={styles.header}>
-        <div className={styles.sigil} aria-hidden="true"><Sparkles size={38} strokeWidth={1} /></div>
+        <div className={styles.sigil} aria-hidden="true"><Sigil size={48} strokeWidth={1} /></div>
         <p className="eyebrow">{String(chakra.number).padStart(2, '0')} / {chakra.realmName} realm</p>
         <h1>{chakra.name} <span>chakra</span></h1>
+        <p className={styles.affirmation}>{affirmations[chakras.indexOf(chakra)]}</p>
         <p className={styles.intro}>{chakra.overview ?? 'A spiritual and symbolic guide for reflection.'}</p>
         <a href="#important-context" className={styles.contextLink}>About these correspondences</a>
       </header>

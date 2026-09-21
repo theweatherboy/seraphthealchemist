@@ -3,6 +3,12 @@
 export type Database = {
   public: {
     Tables: {
+      birth_profiles: {
+        Row: { user_id: string; birth_date: string; birth_time: string; place_label: string; latitude: number; longitude: number; timezone: string; storage_consent: boolean; consent_version: string; consent_granted_at: string; updated_at: string };
+        Insert: { user_id: string; birth_date: string; birth_time: string; place_label: string; latitude: number; longitude: number; timezone: string; storage_consent: boolean; consent_version: string; consent_granted_at?: string; updated_at?: string };
+        Update: { birth_date?: string; birth_time?: string; place_label?: string; latitude?: number; longitude?: number; timezone?: string; storage_consent?: boolean; consent_version?: string; consent_granted_at?: string; updated_at?: string };
+        Relationships: [];
+      };
       navigation_visibility: {
         Row: { href: string; label: string; is_visible: boolean; sort_order: number; updated_at: string };
         Insert: { href: string; label: string; is_visible?: boolean; sort_order: number; updated_at?: string };

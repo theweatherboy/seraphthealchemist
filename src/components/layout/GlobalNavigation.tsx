@@ -8,7 +8,7 @@ import { ArrowRight, Menu } from 'lucide-react';
 import { chakraNavigation } from '@/data/realms';
 import styles from './navigation.module.css';
 
-const primaryLinks = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/reviews', 'Testimonies'], ['/grimoire', 'Grimoire'], ['/contact', 'Contact']] as const;
+const primaryLinks = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/birth-chart', 'Birth Chart'], ['/reviews', 'Testimonies'], ['/grimoire', 'Grimoire'], ['/contact', 'Contact']] as const;
 const extraLinks = [['/account', 'Your account'], ['/forge', 'Offerings'], ['/support', 'Support'], ['/terms-of-service', 'Terms of Service'], ['/privacy-policy', 'Privacy Policy']] as const;
 
 export default function GlobalNavigation() {
@@ -43,14 +43,14 @@ export default function GlobalNavigation() {
   return <header className={[styles.header, home ? styles.light : styles.dark, scrolled ? styles.scrolled : ''].join(' ')}>
     <a href="#main-content" className={styles.skip}>Skip to content</a>
     <Link href="/" className={styles.brand} aria-label="Seraph the Alchemist home" onClick={close}>
-      <Image src="/logo.png" width={56} height={56} alt="" />
+      <Image src="/seraph-earthly-logo-v1.png" width={72} height={72} sizes="(max-width: 1000px) 58px, 72px" alt="" />
       <span>Seraph<small>The Alchemist</small></span>
     </Link>
     <nav className={styles.primary} aria-label="Main navigation">
       {primaryLinks.filter(([href]) => show(href)).map(([href, label]) => <Link href={href} key={href} aria-current={pathname === href ? 'page' : undefined}>{label}</Link>)}
     </nav>
     <div className={styles.actions}>
-      <Link className={styles.enter} href={home ? '#journey' : '/#journey'}>Enter the sanctuary <ArrowRight size={15} /></Link>
+      <Link className={styles.enter} href="/services">Book a reading <ArrowRight size={15} /></Link>
       <details ref={menu} className={styles.menu} key={pathname} onKeyDown={event => {
         if (event.key === 'Escape') {
           close();

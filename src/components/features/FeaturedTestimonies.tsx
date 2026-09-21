@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
-import styles from '@/app/home.module.css';
+import styles from '@/app/earthly-home.module.css';
 
 export type FeaturedTestimony = { id: string; body: string };
 

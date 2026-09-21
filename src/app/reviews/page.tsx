@@ -44,7 +44,7 @@ export default async function ReviewsPage() {
   }
   return (
     <section className="reviews-page">
-      <div className="reviews-header">
+      <div className="reviews-header folio-opening">
         <p className="eyebrow">Words from the weave</p>
         <h1>Testimonies</h1>
         <p>Reflections from people who have walked a path with Seraph.</p>

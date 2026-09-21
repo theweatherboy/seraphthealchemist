@@ -26,14 +26,16 @@ export default function ContactPage() {
         transition={{ duration: 0.8 }}
         className="max-w-2xl w-full text-center"
       >
+        <header className="folio-opening">
         <h1 className="font-arcane text-5xl md:text-7xl text-seraphic-gold mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]">
           Begin Your Journey
         </h1>
         <p className="font-celestial text-xl text-muted mb-12">
           Reach out to start a session, collaborate, or simply ask a question.
         </p>
+        </header>
 
-        <form action="https://formsubmit.co/seraphthealchemist@gmail.com" method="POST" className="text-left space-y-6">
+        <form action="https://formsubmit.co/seraphthealchemist@gmail.com" method="POST" className="parchment-panel text-left space-y-6">
           <input type="hidden" name="_subject" value="New inquiry — Seraph, The Alchemist" />
           <input type="hidden" name="_template" value="table" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -27,7 +27,7 @@ export default async function GrimoirePage() {
   return (
     <div className="relative pt-32 pb-20 px-4 w-full min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
+        <div className="folio-opening text-center mb-20">
           <h1 className="font-arcane text-5xl md:text-7xl text-gold mb-6 tracking-widest">
             THE GRIMOIRE
           </h1>

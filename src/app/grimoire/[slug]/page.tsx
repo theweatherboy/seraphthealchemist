@@ -21,8 +21,8 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const contentDir = path.join(process.cwd(), 'content/grimoire');
 
   if (!fs.existsSync(contentDir)) {
@@ -49,6 +49,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   }
 
   const fileContent = fs.readFileSync(path.join(contentDir, `${slug}.mdx`), 'utf8');
+  const { content } = matter(fileContent);
 
   return (
     <div className="relative pt-32 pb-20 px-4 w-full min-h-screen">
@@ -61,7 +62,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         </nav>
 
         {/* Header */}
-        <header className="text-center mb-16">
+        <header className="folio-opening text-center mb-16">
           <h1 className="font-arcane text-4xl md:text-6xl text-gold mb-6 tracking-wider">
             {article.title}
           </h1>
@@ -71,9 +72,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         </header>
 
         {/* Content */}
-        <article className="font-celestial text-text leading-relaxed text-lg space-y-6 prose prose-invert max-w-none">
+        <article className="parchment-panel font-celestial text-text leading-relaxed text-lg space-y-6 prose prose-invert max-w-none">
           <MDXRemote
-            source={fileContent}
+            source={content}
             components={mdxComponents}
           />
         </article>

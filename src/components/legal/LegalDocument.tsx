@@ -6,7 +6,7 @@ export type LegalSection = { id: string; title: string; content: ReactNode };
 
 export default function LegalDocument({ title, introduction, sections }: { title: string; introduction: string; sections: LegalSection[] }) {
   return <article className={styles.document}>
-    <header id="top" className={styles.header}>
+    <header id="top" className={`${styles.header} folio-opening folio-legal`}>
       <p className="eyebrow">Seraph, The Alchemist</p>
       <h1>{title}</h1>
       <p>{introduction}</p>
