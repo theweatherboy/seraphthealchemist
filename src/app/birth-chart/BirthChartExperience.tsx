@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import styles from './birth-chart.module.css';
-import BirthChartAssistant from './BirthChartAssistant';
 import SavedBirthDetails from './SavedBirthDetails';
 import type { BirthDetails } from '@/lib/birth-profile';
 
@@ -68,16 +67,15 @@ export default function BirthChartExperience() {
   const resultsRef = useRef<HTMLElement>(null);
   const chartRequest = useRef<AbortController | null>(null);
   const cityRequest = useRef<AbortController | null>(null);
-  const [contextRevision, setContextRevision] = useState(0);
   useEffect(() => () => { chartRequest.current?.abort(); cityRequest.current?.abort(); }, []);
   const clearDetails = useCallback(() => {
     chartRequest.current?.abort(); chartRequest.current = null; cityRequest.current?.abort(); cityRequest.current = null;
-    setLoading(false); setSearching(false); setContextRevision(value => value + 1);
+    setLoading(false); setSearching(false);
     setBirthDate(''); setBirthTime(''); setCityQuery(''); setSelectedPlace(null); setPlaces([]); setReading(null); setError(''); setLocationError('');
   }, []);
   function loadDetails(details: BirthDetails) {
     chartRequest.current?.abort(); chartRequest.current = null; cityRequest.current?.abort(); cityRequest.current = null;
-    setLoading(false); setSearching(false); setContextRevision(value => value + 1);
+    setLoading(false); setSearching(false);
     setBirthDate(details.date); setBirthTime(details.time); setSelectedPlace(details.place); setCityQuery(details.place.label); setPlaces([]); setReading(null); setError(''); setLocationError('');
   }
 
@@ -163,7 +161,6 @@ export default function BirthChartExperience() {
       {error && <p className={styles.error} role="alert">{error}</p>}
     </section>
 
-    {!reading && <BirthChartAssistant key={contextRevision} reading={null} />}
     {reading && <section ref={resultsRef} className={styles.results} aria-live="polite" tabIndex={-1}>
       <div className={styles.resultHeading}><p className={styles.eyebrow}>Your celestial blueprint</p><h2>Your year ahead</h2><p>{formatDate(reading.from)} – {formatDate(reading.to)} · {reading.place}{reading.timezone ? ` · ${reading.timezone}` : ''}</p></div>
       <div className={styles.angles}>
@@ -171,7 +168,6 @@ export default function BirthChartExperience() {
         <article><span>Rising sign</span><strong>{zodiac(reading.chart.ascendant)}</strong><p>The horizon at your birth</p></article>
         <article><span>Midheaven</span><strong>{zodiac(reading.chart.midheaven)}</strong><p>Your public path and calling</p></article>
       </div>
-      <BirthChartAssistant key={contextRevision + reading.from + reading.chart.ascendant} reading={reading} />
       <div className={styles.sectionTitle}><p className={styles.eyebrow}>The wandering lights</p><h2>Your planetary placements</h2></div>
       <div className={styles.planetGrid}>{planets.map(([name, planet]) => <article className={styles.planet} key={name}>
         <span className={styles.glyph} aria-hidden="true">{symbols[name] ?? '✧'}</span><div><h3>{name} in {planet.sign}</h3><p>{planet.sign} shapes your {meanings[name] ?? name.toLowerCase()}{planet.house ? ` through the themes of house ${planet.house}` : ''}.</p><small>{Math.floor(planet.degInSign)}° {String(Math.floor((planet.degInSign % 1) * 60)).padStart(2, '0')}′{planet.house ? ` · House ${planet.house}` : ''}{planet.retrograde ? ' · Retrograde' : ''}</small></div>

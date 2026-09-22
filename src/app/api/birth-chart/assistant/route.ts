@@ -9,12 +9,14 @@ const headers = { 'Cache-Control': 'private, no-store' };
 const requests = new Map<string, { count: number; expires: number }>();
 let active = 0;
 function reply(error: string, status: number) { return NextResponse.json({ error }, { status, headers }); }
+const assistantEnabled = () => process.env.BIRTH_CHART_AI_ENABLED === 'true' && Boolean(process.env.GROQ_API_KEY?.trim());
 
 export async function GET() {
-  return NextResponse.json({ available: Boolean(process.env.GROQ_API_KEY?.trim()) }, { headers });
+  return NextResponse.json({ available: assistantEnabled() }, { headers });
 }
 
 export async function POST(request: Request) {
+  if (!assistantEnabled()) return reply('The birth-chart assistant is currently unavailable.', 404);
   const origin = request.headers.get('origin');
   if (origin && origin !== new URL(request.url).origin) return reply('Please use the assistant on this website.', 403);
   if (!request.headers.get('content-type')?.startsWith('application/json')) return reply('Expected a JSON request.', 415);
