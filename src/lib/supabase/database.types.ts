@@ -16,9 +16,9 @@ export type Database = {
         Relationships: [];
       };
       service_catalog: {
-        Row: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string };
-        Insert: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string };
-        Update: { title?: string; subtitle?: string; description?: string; price?: number; duration?: string };
+        Row: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string; category: 'seer' | 'healer' | 'alchemist' | 'oracle' | 'journey' | null; category_label: string | null; who_it_is_for: string | null; approach: string | null; what_to_expect: string | null; preparation: string | null; deliverables: string[] | null; realm_id: string | null; chakra: string | null; color: string | null; is_active: boolean; is_deleted: boolean };
+        Insert: { slug: string; title: string; subtitle: string; description: string; price: number; duration: string; category?: 'seer' | 'healer' | 'alchemist' | 'oracle' | 'journey' | null; category_label?: string | null; who_it_is_for?: string | null; approach?: string | null; what_to_expect?: string | null; preparation?: string | null; deliverables?: string[] | null; realm_id?: string | null; chakra?: string | null; color?: string | null; is_active?: boolean; is_deleted?: boolean };
+        Update: { title?: string; subtitle?: string; description?: string; price?: number; duration?: string; category?: 'seer' | 'healer' | 'alchemist' | 'oracle' | 'journey' | null; category_label?: string | null; who_it_is_for?: string | null; approach?: string | null; what_to_expect?: string | null; preparation?: string | null; deliverables?: string[] | null; realm_id?: string | null; chakra?: string | null; color?: string | null; is_active?: boolean; is_deleted?: boolean };
         Relationships: [];
       };
       profiles: {

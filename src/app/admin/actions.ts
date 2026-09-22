@@ -18,30 +18,96 @@ export async function updateNavigationVisibility(formData: FormData) {
   return { ok: true as const, visible: data.is_visible as boolean };
 }
 
+const categoryLabels = { seer: 'THE SEER', healer: 'THE HEALER', alchemist: 'THE ALCHEMIST', oracle: 'THE ORACLE', journey: 'THE JOURNEY' } as const;
+type ServiceCategory = keyof typeof categoryLabels;
+const isServiceCategory = (value: string): value is ServiceCategory => value in categoryLabels;
+const catalogPayload = (service: Awaited<ReturnType<typeof getServices>>[number], isActive: boolean, isDeleted: boolean) => ({
+  slug: service.slug, title: service.title, subtitle: service.subtitle, description: service.description,
+  price: service.price, duration: service.duration, category: service.category, category_label: service.categoryLabel,
+  who_it_is_for: service.whoItIsFor, approach: service.approach, what_to_expect: service.whatToExpect,
+  preparation: service.preparation, deliverables: service.deliverables, realm_id: service.realmId,
+  chakra: service.chakra, color: service.color, is_active: isActive, is_deleted: isDeleted,
+});
+const refreshServicePages = () => {
+  revalidatePath('/', 'layout'); revalidatePath('/services', 'layout'); revalidatePath('/account'); revalidatePath('/admin', 'layout');
+};
+
 export async function saveService(formData: FormData) {
   const { client } = await requireAdmin();
-  const slug = String(formData.get('slug') ?? '');
+  const slug = String(formData.get('slug') ?? '').trim();
   const title = String(formData.get('title') ?? '').trim();
   const subtitle = String(formData.get('subtitle') ?? '').trim();
   const description = String(formData.get('description') ?? '').trim();
   const duration = String(formData.get('duration') ?? '').trim();
   const priceText = String(formData.get('price') ?? '').trim();
   const price = Number(priceText);
-  const services = await getServices();
-  if (!services.some(service => service.slug === slug) ||
-      title.length < 2 || title.length > 120 || subtitle.length < 2 || subtitle.length > 200 ||
-      description.length < 10 || description.length > 3000 || duration.length < 2 || duration.length > 80 ||
-      !/^\d+(\.\d{1,2})?$/.test(priceText) || !Number.isFinite(price) || price < 0 || price > 999999) {
-    redirect('/admin/services?error=catalog');
-  }
-  const { error } = await client.from('service_catalog').upsert({ slug, title, subtitle, description, price, duration });
+  const category = String(formData.get('category') ?? 'journey');
+  const services = await getServices({ includeInactive: true });
+  const service = services.find(item => item.slug === slug);
+  if (!service || !isServiceCategory(category) || title.length < 2 || title.length > 120 || subtitle.length < 2 || subtitle.length > 200 || description.length < 10 || description.length > 3000 || duration.length < 2 || duration.length > 80 || !/^\d+(\.\d{1,2})?$/.test(priceText) || !Number.isFinite(price) || price < 0 || price > 999999) redirect('/admin/services?error=catalog');
+  const textField = (name: string, fallback: string, max = 2000) => {
+    const value = String(formData.get(name) ?? fallback).trim();
+    return value.length <= max ? value : '';
+  };
+  const whoItIsFor = textField('who_it_is_for', service.whoItIsFor);
+  const approach = textField('approach', service.approach);
+  const whatToExpect = textField('what_to_expect', service.whatToExpect);
+  const preparation = textField('preparation', service.preparation);
+  const deliverables = String(formData.get('deliverables') ?? service.deliverables.join('\n')).split('\n').map(item => item.trim()).filter(Boolean).slice(0, 12);
+  const realmId = textField('realm_id', service.realmId, 120);
+  const chakra = textField('chakra', service.chakra, 80);
+  const color = textField('color', service.color, 7);
+  if (!whoItIsFor || !approach || !whatToExpect || !preparation || !realmId || !chakra || !/^#[0-9a-f]{6}$/i.test(color)) redirect('/admin/services?error=catalog');
+  const next = { ...service, title, subtitle, description, duration, price, category, categoryLabel: categoryLabels[category], whoItIsFor, approach, whatToExpect, preparation, deliverables: deliverables.length ? deliverables : service.deliverables, realmId, chakra, color };
+  const { error } = await client.from('service_catalog').upsert(catalogPayload(next, service.isActive, service.isDeleted));
   if (error) redirect('/admin/services?error=catalog');
-  revalidatePath('/services', 'layout');
-  revalidatePath('/account');
-  revalidatePath('/admin', 'layout');
+  refreshServicePages();
   redirect('/admin/services?saved=catalog');
 }
 
+export async function addService(formData: FormData) {
+  const { client } = await requireAdmin();
+  const slug = String(formData.get('slug') ?? '').trim().toLowerCase();
+  const title = String(formData.get('title') ?? '').trim();
+  const subtitle = String(formData.get('subtitle') ?? '').trim();
+  const description = String(formData.get('description') ?? '').trim();
+  const duration = String(formData.get('duration') ?? '').trim();
+  const priceText = String(formData.get('price') ?? '').trim();
+  const price = Number(priceText);
+  const category = String(formData.get('category') ?? '');
+  const services = await getServices({ includeInactive: true });
+  if (!/^[a-z0-9-]{2,120}$/.test(slug) || services.some(service => service.slug === slug) || !isServiceCategory(category) || title.length < 2 || title.length > 120 || subtitle.length < 2 || subtitle.length > 200 || description.length < 10 || description.length > 3000 || duration.length < 2 || duration.length > 80 || !/^\d+(\.\d{1,2})?$/.test(priceText) || !Number.isFinite(price) || price < 0 || price > 999999) redirect('/admin/services?error=catalog');
+  const text = (field: string, fallback: string) => String(formData.get(field) ?? fallback).trim();
+  const deliverables = String(formData.get('deliverables') ?? 'Personal guidance').split('\n').map(item => item.trim()).filter(Boolean).slice(0, 12);
+  const payload = {
+    slug, title, subtitle, description, duration, price, category, category_label: categoryLabels[category],
+    who_it_is_for: text('who_it_is_for', 'Those seeking thoughtful, personalized support.'),
+    approach: text('approach', 'A grounded, intuitive approach shaped around your intention.'),
+    what_to_expect: text('what_to_expect', 'A welcoming session centered on your questions and next steps.'),
+    preparation: text('preparation', 'Bring any questions or intentions you would like to explore.'),
+    deliverables: deliverables.length ? deliverables : ['Personal guidance'],
+    realm_id: text('realm_id', 'healing'), chakra: text('chakra', 'heart'), color: text('color', '#3f8f68'),
+    is_active: true, is_deleted: false,
+  };
+  const { error } = await client.from('service_catalog').insert(payload);
+  if (error) redirect('/admin/services?error=catalog');
+  refreshServicePages();
+  redirect('/admin/services?saved=catalog');
+}
+
+export async function setServiceCatalogStatus(formData: FormData) {
+  const { client } = await requireAdmin();
+  const slug = String(formData.get('slug') ?? '').trim();
+  const operation = String(formData.get('operation') ?? '');
+  const service = (await getServices({ includeInactive: true })).find(item => item.slug === slug);
+  if (!service || !['hide', 'show', 'delete', 'restore'].includes(operation)) redirect('/admin/services?error=catalog');
+  const isDeleted = operation === 'delete' ? true : operation === 'restore' ? false : service.isDeleted;
+  const isActive = operation === 'hide' ? false : operation === 'show' ? true : isDeleted ? false : service.isActive;
+  const { error } = await client.from('service_catalog').upsert(catalogPayload(service, isActive, isDeleted));
+  if (error) redirect('/admin/services?error=catalog');
+  refreshServicePages();
+  redirect('/admin/services?saved=catalog');
+}
 export async function addServiceInstance(formData: FormData) {
   const { client, user } = await requireAdmin();
   const customerId = String(formData.get('customer_id') ?? '');
@@ -181,7 +247,7 @@ export async function saveServiceSchedulePolicy(formData: FormData) {
   const services = await getServices();
   const service = services.find(item => item.slug === serviceSlug);
   if (!service || !Number.isInteger(durationMinutes) || durationMinutes < 5 || durationMinutes > 480 || !Number.isInteger(bufferMinutes) || bufferMinutes < 0 || bufferMinutes > 180 || [maxPerDay, maxPerWeek, maxPerMonth].some(Number.isNaN)) redirect('/admin/services?error=policy');
-  const { error } = await client.from('service_schedule_policies').upsert({ service_slug: serviceSlug, duration_minutes: durationMinutes, buffer_minutes: bufferMinutes, max_per_day: maxPerDay, max_per_week: maxPerWeek, max_per_month: maxPerMonth, is_bookable: formData.get('is_bookable') === 'on', updated_by: user.id }, { onConflict: 'service_slug' });
+  const { error } = await client.from('service_schedule_policies').upsert({ service_slug: serviceSlug, duration_minutes: durationMinutes, buffer_minutes: bufferMinutes, max_per_day: maxPerDay, max_per_week: maxPerWeek, max_per_month: maxPerMonth, is_bookable: formData.get('is_bookable') === 'on' && service.isActive && !service.isDeleted, updated_by: user.id }, { onConflict: 'service_slug' });
   if (error) {
     console.error('[admin/policies] Could not save service policy:', error.code, error.message);
     redirect('/admin/services?error=policy');

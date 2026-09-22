@@ -27,7 +27,7 @@ export default async function Management({ searchParams, section }: { searchPara
   const { client, user } = await requireAccount('/admin');
   const { data, error } = await client.from('admin_memberships').select('user_id').eq('user_id', user.id).maybeSingle();
   if (error || !data) notFound();
-  const services = await getServices();
+  const services = await getServices({ includeInactive: true });
   const catalogResult = await client.from('service_catalog').select('slug').limit(1);
   const params = await searchParams;
   const [profilesResult, reviewsResult, availabilityResult, blocksResult, policiesResult] = await Promise.all([
