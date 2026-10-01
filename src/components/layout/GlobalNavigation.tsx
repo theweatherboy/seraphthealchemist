@@ -43,7 +43,7 @@ export default function GlobalNavigation() {
   return <header className={[styles.header, home ? styles.light : styles.dark, scrolled ? styles.scrolled : ''].join(' ')}>
     <a href="#main-content" className={styles.skip}>Skip to content</a>
     <Link href="/" className={styles.brand} aria-label="Seraph the Alchemist home" onClick={close}>
-      <Image src="/seraph-earthly-logo-v1.png" width={72} height={72} sizes="(max-width: 1000px) 58px, 72px" alt="" />
+      <Image src="/seraph-golden-logo-v1.png" width={48} height={72} sizes="(max-width: 1000px) 39px, 48px" alt="" />
       <span>Seraph<small>The Alchemist</small></span>
     </Link>
     <nav className={styles.primary} aria-label="Main navigation">

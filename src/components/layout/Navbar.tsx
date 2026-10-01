@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
@@ -28,7 +29,7 @@ export default function Navbar() {
         href="/"
         className="font-arcane text-2xl text-seraphic-gold flex items-center gap-2 group"
       >
-        <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+        <Image src="/seraph-golden-logo-v1.png" width={40} height={60} alt="" className="h-[60px] w-[40px] object-contain" />
         <span>Seraph, The Alchemist</span>
       </Link>
 

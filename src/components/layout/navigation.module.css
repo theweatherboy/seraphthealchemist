@@ -67,6 +67,6 @@
 .light .menu summary { border:1px solid #e5c18aaa; width:42px; height:42px; }
 .light .brand small { font-family:var(--font-inter),sans-serif; font-size:9px; letter-spacing:.23em; }
 .light.scrolled { background:#0c1711f0; }
-.brand img { width:72px; height:72px; object-fit:contain; filter:none; border-radius:4px; }
-@media(max-width:1000px) { .brand img { width:58px; height:58px; } }
-@media(max-width:520px) { .brand img { width:58px; height:58px; }.brand > span { font-size:21px; } }
+.brand img { width:48px; height:72px; object-fit:contain; filter:none; border-radius:4px; }
+@media(max-width:1000px) { .brand img { width:39px; height:58px; } }
+@media(max-width:520px) { .brand img { width:39px; height:58px; }.brand > span { font-size:21px; } }

@@ -25,13 +25,13 @@ export const metadata: Metadata = {
     siteName: "Seraph, The Alchemist",
     title: "Seraph, The Alchemist",
     description: "Sacred knowledge and healing for the seeker. A thread back to yourself.",
-    images: [{ url: "/seraph-celestial-share-v1.png", width: 1200, height: 1200, alt: "Seraph the Alchemist celestial sigil with golden stars and iridescent moons" }],
+    images: [{ url: "/seraph-golden-share-v1.png", width: 1200, height: 1200, alt: "Seraph the Alchemist golden sigil with iridescent wings, a crescent moon, and radiant stars" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Seraph, The Alchemist",
     description: "Sacred knowledge and healing for the seeker. A thread back to yourself.",
-    images: ["/seraph-celestial-share-v1.png"],
+    images: ["/seraph-golden-share-v1.png"],
   },
 };
 
