@@ -1,6 +1,7 @@
 ﻿import 'server-only';
 import { services as defaults, type Service } from '@/data/services';
 import { createClient } from '@/lib/supabase/server';
+import { readCatalogWithRetry } from '@/lib/catalog-query';
 
 export type ManagedService = Service & { isActive: boolean; isDeleted: boolean; hasCatalogRecord: boolean };
 
@@ -19,9 +20,12 @@ const categoryLabels: Record<Service['category'], string> = {
 export async function getServices(options: { includeInactive?: boolean } = {}): Promise<ManagedService[]> {
   const client = await createClient();
   if (!client) return defaults.map(service => ({ ...service, isActive: true, isDeleted: false, hasCatalogRecord: false }));
-  const { data, error } = await client.from('service_catalog').select('*');
+  const { data, error, status } = await readCatalogWithRetry(() => client.from('service_catalog').select('*').abortSignal(AbortSignal.timeout(8000)));
   if (error?.code === 'PGRST205' || error?.code === '42P01') return defaults.map(service => ({ ...service, isActive: true, isDeleted: false, hasCatalogRecord: false }));
-  if (error) throw new Error('The service catalog could not be loaded. Please try again.');
+  if (error) {
+    console.error('[services] Catalog read failed', { status, code: error.code });
+    throw new Error('The service catalog could not be loaded. Please try again.');
+  }
 
   const saved = new Map(((data ?? []) as CatalogService[]).map(service => [service.slug, service]));
   const merged: ManagedService[] = defaults.map(service => {

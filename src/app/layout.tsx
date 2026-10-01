@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Cinzel, Inter } from "next/font/google";
+import { Cinzel, Inter, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import "@/components/layout/sanctuary-interiors.css";
+import "@/components/layout/ethereal-glass.css";
 import AppShell from "@/components/layout/AppShell";
 
 const cinzel = Cinzel({
@@ -12,6 +13,12 @@ const cinzel = Cinzel({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const glassFont = Nunito_Sans({
+  variable: "--font-glass",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -39,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${inter.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${inter.variable} ${glassFont.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-obsidian text-moon-ivory">
         <AppShell>

@@ -10,6 +10,7 @@ const details = [
   { icon: House, description: 'Main landing page of the site.' },
   { icon: UserRound, description: 'Your story, mission, and what Seraph is about.' },
   { icon: Sprout, description: 'Explore all offerings and sessions.' },
+  { icon: MoonStar, description: 'Explore your natal chart and astrological placements.' },
   { icon: BookOpen, description: 'Insights, teachings, and sacred knowledge.' },
   { icon: MessageCircle, description: 'Client experiences and kind words.' },
   { icon: Sparkles, description: 'Special offerings, creations, and extras.' },

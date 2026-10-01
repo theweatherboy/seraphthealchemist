@@ -18,12 +18,27 @@ export default function GlobalNavigation() {
   const pathname = usePathname();
   const home = pathname === '/';
   useEffect(() => {
-    const controller = new AbortController();
-    fetch('/api/navigation', { cache: 'no-store', signal: controller.signal })
-      .then(response => response.ok ? response.json() : null)
-      .then(payload => payload && setVisible(payload.items.filter((item: { is_visible?: boolean }) => item.is_visible !== false).map((item: { href: string }) => item.href)))
-      .catch(() => {});
-    return () => controller.abort();
+    let controller: AbortController | undefined;
+    const refresh = () => {
+      controller?.abort();
+      controller = new AbortController();
+      const signal = controller.signal;
+      fetch('/api/navigation', { cache: 'no-store', signal })
+        .then(response => response.ok ? response.json() : null)
+        .then(payload => {
+          if (!signal.aborted && payload) setVisible(payload.items.filter((item: { is_visible?: boolean }) => item.is_visible !== false).map((item: { href: string }) => item.href));
+        })
+        .catch(() => {});
+    };
+    const onVisible = () => { if (document.visibilityState === 'visible') refresh(); };
+    refresh();
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      controller?.abort();
+      window.removeEventListener('focus', refresh);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [pathname]);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);

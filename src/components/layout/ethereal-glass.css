@@ -1,0 +1,224 @@
+/* Shared materials: warm ivory glass, restrained prism edges, readable ink. */
+:root {
+  --pearl-ink: #453626;
+  --pearl-muted: #685744;
+  --pearl-edge: linear-gradient(125deg,#fff7dc88,#dec29655 24%,#ded5f366 43%,#c7e3e655 58%,#fff6e588 74%,#c7a67766);
+  --pearl-fill: linear-gradient(135deg,#fffcf1bf,#f0e4d7a3 55%,#fbf6efbf);
+  --pearl-shadow: 0 14px 40px #49341c14,inset 0 1px 1px #fffefa,inset 0 -1px 3px #b99a6b33;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.bg-glass,.account-panel,.review-group,.reviews-empty,.parchment-panel),
+.admin-shell .admin-card {
+  border:1px solid transparent;
+  background:var(--pearl-fill) padding-box,var(--pearl-edge) border-box;
+  border-radius:22px;
+  box-shadow:var(--pearl-shadow);
+  backdrop-filter:blur(18px) saturate(115%);
+  color:var(--pearl-ink);
+}
+.sanctuary-interiors.parchment-site #main-content :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea),
+.admin-shell :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea) {
+  color:var(--pearl-ink); background:#fffaf0ad; border:1px solid #ab92716b;
+  border-radius:10px; box-shadow:inset 0 1px 4px #7453380a,0 1px #fff9;
+}
+.sanctuary-interiors.parchment-site #main-content :is(input,textarea)::placeholder { color:#786957; opacity:1; }
+.sanctuary-interiors.parchment-site #main-content :is(.account-button,.pearl-button,.contact-glass button[type=submit]),
+.admin-shell :is(.account-button,.admin-search-form > button) {
+  color:var(--pearl-ink); border:1px solid transparent; border-radius:999px;
+  background:linear-gradient(110deg,#fffbebdf,#e5d3bbca 48%,#faf5edee) padding-box,var(--pearl-edge) border-box;
+  box-shadow:inset 0 1px 3px #fff,0 3px 12px #9e754929;
+  backdrop-filter:blur(12px); transition:box-shadow .2s,background-color .2s;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.account-button,.pearl-button,.contact-glass button[type=submit]):hover,
+.admin-shell .account-button:hover { box-shadow:inset 0 1px 4px #fff,0 4px 20px #ad874947; }
+.sanctuary-interiors.parchment-site #main-content .service-glass { border-radius:24px; }
+.service-glass h3 { font-weight:400; letter-spacing:.025em; }
+.service-glass .pearl-button { margin-top:auto; }
+.contact-glass-stage { position:relative; isolation:isolate; padding:22px; margin-bottom:32px; }
+.contact-glass-stage::before { content:''; position:absolute; inset:0; z-index:-1; border:1px solid transparent; border-radius:30px; background:linear-gradient(120deg,#fffaed66,#e6d9f344,#fdf4df66) padding-box,var(--pearl-edge) border-box; box-shadow:var(--pearl-shadow); }
+.sanctuary-interiors.parchment-site #main-content .contact-glass { position:relative; padding:clamp(22px,4vw,40px); }
+.contact-silk { z-index:-1; inset:-65px!important; opacity:.65; mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent); }
+.contact-silk-control { top:auto!important; bottom:-25px; right:20px!important; background:#fff6e6e0!important; }
+.sanctuary-interiors.parchment-site[data-folio='contact'] #main-content { background:linear-gradient(#f0e8dc33,#f0e8dca6),var(--folio-art) center / cover fixed; }
+.sanctuary-interiors.parchment-site[data-folio='contact'] #main-content::after { display:none; }
+.sanctuary-interiors.parchment-site[data-folio='contact'] #main-content .folio-opening { min-height:350px; padding-bottom:45px; }
+.sanctuary-interiors.parchment-site[data-folio='contact'] #main-content .folio-opening h1 { color:#fff7e7; }
+.sanctuary-interiors.parchment-site #main-content .folio-opening h1 { font-weight:400; letter-spacing:.035em; }
+.admin-shell .admin-sidebar { background:linear-gradient(140deg,#fff8e3e8,#e8ddcee8),url('/images/sanctuary-hero-v3.webp') center / cover; border-color:#c9ad805e; }
+.admin-shell :is(.admin-brand,.admin-sidebar nav svg,.admin-site-link,.admin-sidebar-bottom p) { color:#795b35; }
+.admin-shell .admin-sidebar nav a { color:#554631; border-radius:14px; }
+.admin-shell .admin-sidebar nav a:hover { background:#fff8e780; }
+.admin-shell .admin-sidebar nav a[aria-current] { color:#493820; background:linear-gradient(120deg,#fffbedc9,#e9ddce99); border-color:#bc9d6866; box-shadow:inset 0 1px #fff; }
+.admin-shell .admin-heading { border-radius:26px; }
+.admin-shell .admin-sidebar :focus-visible { outline-color:#795b35; }
+@media(max-width:650px) {
+  .contact-glass-stage { padding:12px; }
+  .contact-silk { inset:-20px!important; opacity:.4; }
+  .sanctuary-interiors.parchment-site[data-folio='contact'] #main-content { background-attachment:scroll; }
+  .sanctuary-interiors.parchment-site #main-content .contact-glass { padding:22px 18px; }
+}
+@media(prefers-reduced-motion:reduce) { .pearl-button { transition:none!important; } }
+@media print { .contact-silk,.contact-silk-control { display:none; } }
+
+/* Separate optical rim: the prism is confined to the bevel, not the text surface. */
+:root {
+ --pearl-rim: conic-gradient(from 35deg,#fff5cb,#efb88d 9%,#eec7e9 17%,#aebef2 24%,#c6f6f0 32%,#fffde5 39%,#d7ad69 47%,#fff3bf 54%,#edb9ce 63%,#b1c0f4 72%,#aee7dc 80%,#fffef0 89%,#deb477);
+ --pearl-lustre: radial-gradient(ellipse at 8% 0%,#fffef3cc,transparent 35%),radial-gradient(ellipse at 90% 100%,#dbc9ed55,transparent 42%),linear-gradient(120deg,#fff6e9b3,#e3d9c4a6 47%,#fff9edbd);
+ --pearl-shadow: 0 12px 34px #49341c21,inset 0 2px 3px #fffefa,inset 0 -2px 4px #bc946966;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.bg-glass,.account-panel,.review-group,.reviews-empty,.parchment-panel),.admin-shell .admin-card {
+ background:var(--pearl-lustre); border:1px solid #fff4d8; box-shadow:var(--pearl-shadow),0 0 0 1px #c8b7de88; backdrop-filter:blur(22px) saturate(125%);
+}
+.service-glass,.contact-glass { position:relative; isolation:isolate; }
+.service-glass::before,.contact-glass::before {
+ content:''; position:absolute; inset:-2px; padding:2px; border-radius:inherit; pointer-events:none;
+ background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude;
+}
+.contact-glass-stage::before { background:var(--pearl-lustre); border:1px solid #fff2d8; box-shadow:inset 0 0 18px #fff7e777,0 10px 35px #72513033; }
+.contact-glass-stage::after { content:''; position:absolute; inset:0; padding:3px; border-radius:30px; pointer-events:none; background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude; box-shadow:0 0 12px #fff; }
+.sanctuary-interiors.parchment-site #main-content :is(.account-button,.pearl-button,.contact-glass button[type=submit]),.admin-shell :is(.account-button,.admin-search-form > button) {
+ position:relative; isolation:isolate; background:var(--pearl-lustre); border:1px solid #ffe7b6; box-shadow:inset 0 2px 5px #fff,inset 0 -3px 7px #ae834c55,0 3px 12px #9e754933;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.account-button,.pearl-button,.contact-glass button[type=submit])::before,.admin-shell .account-button::before {
+ content:''; position:absolute; inset:-2px; padding:2px; border-radius:inherit; pointer-events:none; background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude;
+}
+
+/* Champagne glass: neutral transparent bodies with gold reflected in the edges. */
+:root {
+ --pearl-ink:#55472e;
+ --pearl-muted:#706044;
+ --pearl-lustre:radial-gradient(ellipse at 10% 0%,#ffffff9e,transparent 38%),radial-gradient(ellipse at 95% 100%,#c9c9e83d,transparent 45%),linear-gradient(120deg,#f7f5ed70,#cfcac16b 48%,#f5eee37a);
+ --champagne-gold:linear-gradient(115deg,#72501f 0%,#a47a37 28%,#78521e 43%,#b78a42 51%,#6e4c20 68%,#92703a 100%);
+}
+.sanctuary-interiors.parchment-site:not([data-folio='contact']):not([data-folio='account']):not([data-folio='support']) #main-content,
+.admin-shell { background:radial-gradient(ellipse at 0 20%,#f8f6eeaa,transparent 60%),radial-gradient(ellipse at 100% 80%,#d7d4e655,transparent 55%),#dedcd5; }
+.sanctuary-interiors.parchment-site #main-content :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea),
+.admin-shell :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea) {
+ background:#f7f6f080; border-color:#b6a07780; color:#55472e; box-shadow:inset 0 1px 5px #76654c12,0 1px #ffffffa3;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.service-glass h3,.service-glass .text-gold,.contact-glass label),
+.admin-shell :is(.admin-card h2,.stat-card > strong) {
+ color:#8b682e; background-image:var(--champagne-gold); background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 1px #fff5;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.pearl-button,.account-button,.contact-glass button[type=submit]) { color:#805e28; }
+.admin-shell .admin-sidebar { background:linear-gradient(140deg,#f1efe1ce,#d8d4c6bd),url('/images/sanctuary-hero-v3.webp') center / cover; }
+.sanctuary-interiors.parchment-site[data-folio='contact'] #main-content { background:linear-gradient(#dbd9d21a,#dfddd666),var(--folio-art) center / cover fixed; }
+@media(max-width:650px) { .sanctuary-interiors.parchment-site[data-folio='contact'] #main-content { background-attachment:scroll; } }
+@media(forced-colors:active) { .sanctuary-interiors.parchment-site #main-content :is(.service-glass h3,.service-glass .text-gold,.contact-glass label),.admin-shell :is(.admin-card h2,.stat-card > strong) { background:none; -webkit-text-fill-color:CanvasText; } }
+
+/* Lavender ink preserves the light glass while making its text easy to read. */
+:root { --pearl-ink:#493653; --pearl-muted:#5d4e65; }
+.sanctuary-interiors.parchment-site #main-content :is(.service-glass h3,.service-glass .text-gold,.contact-glass label),
+.admin-shell :is(.admin-card h2,.stat-card > strong) {
+ color:#493653; background-image:none; -webkit-text-fill-color:currentColor; text-shadow:none;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.service-glass,.contact-glass,.account-panel,.review-group),
+.sanctuary-interiors.parchment-site #main-content :is(.service-glass,.contact-glass,.account-panel,.review-group) .text-text { color:#493653; }
+.sanctuary-interiors.parchment-site #main-content :is(.service-glass,.contact-glass,.account-panel,.review-group) .text-muted { color:#5d4e65; }
+.sanctuary-interiors.parchment-site #main-content .contact-glass label { font-weight:600; }
+.sanctuary-interiors.parchment-site #main-content :is(.pearl-button,.account-button,.contact-glass button[type=submit]),
+.admin-shell :is(.account-button,.admin-search-form > button) { color:#493653; -webkit-text-fill-color:currentColor; font-weight:500; text-shadow:none; }
+.sanctuary-interiors.parchment-site #main-content :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea) { color:#493653; }
+
+/* Clearer frosted glass: less pigment, more diffusion of the artwork beneath. */
+:root {
+ --pearl-lustre:radial-gradient(ellipse at 10% 0%,#ffffff66,transparent 38%),radial-gradient(ellipse at 95% 100%,#d4d5f026,transparent 45%),linear-gradient(120deg,#ffffff38,#e3e4e133 48%,#faf9f040);
+}
+.sanctuary-interiors.parchment-site #main-content :is(.bg-glass,.account-panel,.review-group,.reviews-empty,.parchment-panel),.admin-shell .admin-card {
+ backdrop-filter:blur(28px) saturate(110%); -webkit-backdrop-filter:blur(28px) saturate(110%);
+}
+.sanctuary-interiors.parchment-site #main-content :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea),
+.admin-shell :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea) { background:#ffffff59; }
+.contact-glass-stage::before { backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+
+/* Continuous, light frosted administration panel with a separate optical rim. */
+.admin-shell .admin-sidebar {
+ isolation:isolate; margin:0; top:0; height:100svh; min-height:0; overflow-y:auto;
+ border:1px solid #fff8e5b3; border-left:0; border-radius:0 24px 24px 0;
+ background:radial-gradient(ellipse at 0 12%,#ffffff99,transparent 48%),radial-gradient(ellipse at 100% 80%,#d1cfef55,transparent 55%),linear-gradient(130deg,#ffffff33,#e9e4d638);
+ backdrop-filter:blur(30px) saturate(125%); -webkit-backdrop-filter:blur(30px) saturate(125%);
+ box-shadow:inset 0 1px 4px #fff,inset -3px 0 14px #ffffff66,8px 0 28px #9788ae1f;
+ scrollbar-width:thin; scrollbar-color:#baa77e transparent;
+}
+.admin-shell .admin-sidebar::before {
+ content:''; position:absolute; inset:0; padding:2px; border-radius:inherit; pointer-events:none;
+ background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude;
+}
+.admin-shell .admin-sidebar::after { content:none; }
+.admin-shell .admin-sidebar .admin-brand { border-bottom-color:#c4ab7d55; padding-top:0; }
+.admin-shell .admin-sidebar :is(nav a,nav a[aria-current],nav svg,.admin-site-link,.admin-sidebar-bottom p,.account-button) {
+ color:#fff0bd; -webkit-text-fill-color:#fff0bd; font-weight:600;
+ text-shadow:0 1px 2px #594222,0 0 2px #594222,0 0 1px #594222;
+}
+.admin-shell .admin-sidebar nav a,.admin-shell .admin-sidebar .admin-site-link,
+.admin-shell .admin-sidebar .account-button {
+ background:linear-gradient(115deg,#ffffff5c,#ebdfc326,#e0ddf33b);
+ border:1px solid #fff5d980; box-shadow:inset 0 1px 3px #fff9,0 2px 8px #ad978318;
+}
+.admin-shell .admin-sidebar nav a:hover { background:#ffffff80; border-color:#ddc596; }
+.admin-shell .admin-sidebar nav a[aria-current] {
+ background:linear-gradient(120deg,#fff6df99,#ffffff4d);
+ border-color:#ddbf82; box-shadow:inset 3px 0 #e1bc71,inset 0 1px #fff,0 0 12px #f4d19026;
+}
+.admin-shell .admin-sidebar .admin-site-link { padding:10px 6px; border-radius:12px; }
+.admin-shell .admin-sidebar :focus-visible { outline:2px solid #805ba1; outline-offset:3px; }
+@media(max-width:700px) {
+ .admin-shell .admin-sidebar { margin:10px; top:auto; height:auto; overflow:visible; border-radius:22px; border-left:1px solid #fff8e5b3; }
+ .admin-shell .admin-sidebar-bottom { gap:12px; }
+ .admin-shell .admin-sidebar .admin-site-link { margin:0; }
+}
+
+/* A softer, rounded reading face across the glass interface. */
+:root { --glass-type:var(--font-glass),var(--font-inter),sans-serif; }
+.sanctuary-interiors.parchment-site #main-content :is(.bg-glass,.account-panel,.review-group,.reviews-empty,.parchment-panel),
+.admin-shell { font-family:var(--glass-type); }
+.sanctuary-interiors.parchment-site #main-content :is(.bg-glass,.account-panel,.review-group,.parchment-panel) :is(p,a,button,label,input,select,textarea,small,summary,h2,h3),
+.admin-shell :is(nav a,button,label,input,select,textarea,small,.admin-card h2,.admin-card h3,.admin-card p,.admin-card a) {
+ font-family:var(--glass-type); letter-spacing:.015em;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.service-glass h3,.account-panel h2,.review-group summary strong),
+.admin-shell :is(.admin-card h2,.admin-card h3) { font-family:var(--glass-type); font-weight:650; line-height:1.35; }
+.sanctuary-interiors.parchment-site #main-content :is(.pearl-button,.account-button,.contact-glass button[type=submit]) { text-transform:none; font-size:15px; letter-spacing:.025em; }
+/* The account shell and its individual booking/profile cards share one material. */
+.sanctuary-interiors.parchment-site #main-content .account-panel {
+ position:relative; isolation:isolate; border:1px solid #fff5dda6; border-radius:26px;
+ background:radial-gradient(ellipse at 0 0,#ffffffa3,transparent 65%),linear-gradient(130deg,#f0efeb99,#e5e2ed80);
+ box-shadow:var(--pearl-shadow); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);
+}
+.sanctuary-interiors.parchment-site #main-content .account-panel::before,
+.admin-shell .admin-card::before {
+ content:''; position:absolute; inset:-1px; padding:1.5px; border-radius:inherit; pointer-events:none;
+ background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude;
+}
+.sanctuary-interiors.parchment-site #main-content :is(.account-next,.eligible-services > div,.account-notice),
+.admin-shell :is(.admin-card,.admin-management-body > .account-next,.admin-management-body > .account-next > .account-next,.queue-filter-tabs,.queue-search,.date-filter) {
+ position:relative; border:1px solid #e9dfd3b3; border-radius:20px;
+ background:var(--pearl-lustre); box-shadow:var(--pearl-shadow);
+ backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+}
+.sanctuary-interiors.parchment-site #main-content .account-next { padding:22px; margin-top:24px; }
+.sanctuary-interiors.parchment-site #main-content .account-panel :is(p,label,h2,small) { color:#493b54; }
+.sanctuary-interiors.parchment-site #main-content .account-panel :is(a,button) { font-weight:650; }
+.admin-shell .admin-card :is(p,small) { line-height:1.65; }
+.admin-shell .admin-heading { border:1px solid #fff1cc80; box-shadow:var(--pearl-shadow); }
+.admin-shell .admin-card :is(input,select,textarea),.sanctuary-interiors.parchment-site #main-content .account-panel :is(input,select,textarea) { font-family:var(--glass-type); }
+@media(max-width:650px) { .sanctuary-interiors.parchment-site #main-content .account-next { padding:18px 14px; }.sanctuary-interiors.parchment-site #main-content .account-panel { padding:26px 18px; } }
+
+/* My Account mirrors the bright lettering and optical rims of the navigation. */
+.sanctuary-interiors.parchment-site #main-content .my-account :is(.account-panel,.account-next,.eligible-services > div,.account-notice) { position:relative; border:1px solid #fff0d6a6; }
+.sanctuary-interiors.parchment-site #main-content .my-account :is(.account-panel,.account-next,.eligible-services > div,.account-notice)::before {
+ content:''; position:absolute; inset:-1px; padding:2px; border-radius:inherit; pointer-events:none;
+ background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude;
+}
+.sanctuary-interiors.parchment-site #main-content .my-account .account-panel {
+ background:radial-gradient(ellipse at 0 0,#ffffff47,transparent 60%),linear-gradient(130deg,#e7e4eb38,#ded9ce33);
+}
+.sanctuary-interiors.parchment-site #main-content .my-account .account-panel :is(h1,h2,h3,p,label,small,strong,code,span,a,button) {
+ color:#fff8e8; -webkit-text-fill-color:currentColor; background-image:none;
+ text-shadow:0 1px 2px #342a20,0 0 3px #342a20b3;
+}
+.sanctuary-interiors.parchment-site #main-content .my-account .account-panel :is(h1,h2,h3,label) { color:#fff0bd; }
+.sanctuary-interiors.parchment-site #main-content .my-account .account-panel :is(input,select,textarea,option) { color:#493653; -webkit-text-fill-color:currentColor; text-shadow:none; }
+.sanctuary-interiors.parchment-site #main-content .my-account a:hover { color:#fff; text-decoration-thickness:2px; }
+@media(forced-colors:active) {
+ .sanctuary-interiors.parchment-site #main-content .my-account .account-panel :is(h1,h2,h3,p,label,small,strong,code,span,a,button) { color:CanvasText; text-shadow:none; }
+}

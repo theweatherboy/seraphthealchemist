@@ -70,3 +70,76 @@
 .brand img { width:48px; height:72px; object-fit:contain; filter:none; border-radius:4px; }
 @media(max-width:1000px) { .brand img { width:39px; height:58px; } }
 @media(max-width:520px) { .brand img { width:39px; height:58px; }.brand > span { font-size:21px; } }
+
+/* Floating pearl-glass navigation, shared across light and scenic pages. */
+.header { inset:12px 20px auto; width:auto; height:80px; padding:7px 22px; border:1px solid transparent; border-radius:999px; color:#493820; background:linear-gradient(115deg,#fff9e999,#e7dfd680 55%,#fff8ec99) padding-box,var(--pearl-edge) border-box; backdrop-filter:blur(22px) saturate(120%); box-shadow:var(--pearl-shadow); }
+.light,.dark,.light.scrolled { color:#493820; background:linear-gradient(115deg,#fff9e9a6,#e7dfd688 55%,#fff8eca6) padding-box,var(--pearl-edge) border-box; box-shadow:var(--pearl-shadow); }
+.light:not(.scrolled) .brand,.light.scrolled .brand { color:#70532e; text-shadow:none; }
+.brand { color:#70532e; gap:12px; }
+.brand img { width:40px; height:60px; }
+.brand > span { font-size:24px; font-weight:400; letter-spacing:.15em; }
+.brand small,.light .brand small { font-size:8px; letter-spacing:.24em; }
+.primary a,.light .primary a { color:#493e31; text-shadow:none; font-family:var(--font-inter),sans-serif; font-size:10px; letter-spacing:.06em; }
+.enter,.light .enter { color:#55422b; border:1px solid transparent; background:linear-gradient(110deg,#fffbeddd,#e5d5bd9c,#fff8edcf) padding-box,var(--pearl-edge) border-box; box-shadow:inset 0 1px 3px #fff,0 2px 9px #7a603320; font-family:var(--font-inter),sans-serif; }
+.enter:hover { background:linear-gradient(110deg,#fffbed,#eddfca,#fff8ed) padding-box,var(--pearl-edge) border-box; box-shadow:0 3px 15px #b79c6540; }
+.menu summary,.light .menu summary { width:42px; height:42px; color:#655035; border:1px solid #bca17488; background:#fff5e84a; box-shadow:inset 0 1px #fff9; }
+.menu summary:hover,.menu[open] summary { background:#fff8e5aa; }
+.dropdown { top:58px; width:278px; padding:15px; max-height:calc(100svh - 118px); border:1px solid transparent; border-radius:22px; color:#4d402f; background:var(--pearl-fill) padding-box,var(--pearl-edge) border-box; backdrop-filter:blur(24px); box-shadow:0 18px 45px #32261630,inset 0 0 0 5px #fff9ed55; }
+.dropdown a { border-radius:10px; min-height:44px; }
+.dropdown a:hover,.dropdown a[aria-current=page] { background:#fff9e8c4; }
+.chakraMenu { border-color:#bca17455; }.chakraMenu > p { color:#795e38; }
+.header :focus-visible,.dark :focus-visible { outline-color:#886337; }
+@media(max-width:1000px) { .header { inset:10px 12px auto; height:72px; padding:6px 16px; }.brand img { width:36px; height:54px; }.brand > span { font-size:23px; } }
+@media(max-width:520px) { .header { inset:9px 9px auto; height:68px; padding:6px 12px; gap:8px; }.brand { gap:8px; }.brand img { width:32px; height:48px; }.brand > span { font-size:20px; }.brand small,.light .brand small { font-size:7px; }.light:not(.scrolled) .brand,.light.scrolled .brand { color:#70532e; }.dropdown { right:-3px; width:min(278px,calc(100vw - 32px)); }.menu summary,.light .menu summary { width:44px; height:44px; } }
+
+/* Luminous beveled glass, with a quiet ivory reading surface inside the menu. */
+.header,.light,.dark,.light.scrolled { background:var(--pearl-lustre); border-color:#fff4d8b3; box-shadow:var(--pearl-shadow),0 0 16px #dac6ed33; backdrop-filter:blur(16px) saturate(135%); }
+.header::before,.dropdown::before,.enter::before,.menu summary::before { content:''; position:absolute; inset:-2px; padding:2px; border-radius:inherit; pointer-events:none; background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude; }
+.header::after { content:''; position:absolute; inset:4px; border-radius:inherit; border-top:1px solid #fff9; border-bottom:1px solid #fff6; pointer-events:none; }
+.enter,.light .enter { position:relative; background:var(--pearl-lustre); border:1px solid #ffe7b6; box-shadow:inset 0 2px 4px #fff,inset 0 -3px 6px #ae834c44,0 3px 12px #9e754929; }
+.menu summary { position:relative; border-radius:50%; }
+.dropdown { padding:19px; border:2px solid #fff1d8; background:linear-gradient(135deg,#fff7e9f5,#eee3d6f2 55%,#fcf5eaf5); box-shadow:inset 0 0 0 7px #fff9ef55,inset 0 0 0 8px #d6bfa855,0 18px 45px #32261640; scrollbar-width:thin; scrollbar-color:#bda985 #f5eadb; }
+.dropdown a { color:#4b3e2e; }.dropdown a:hover,.dropdown a[aria-current=page] { background:#fffcf1; box-shadow:inset 0 1px #fff; }
+.dropdown::before { inset:0; padding:3px; }
+/* Keep underlying headings from ghosting through the nested menu's reading area. */
+.dropdown { background:radial-gradient(ellipse at 0 0,#fffdf3c9,transparent 65%),radial-gradient(ellipse at 100% 100%,#d9d5ee55,transparent 55%),linear-gradient(130deg,#f5eddf,#eee3d3); backdrop-filter:none; }
+
+/* Champagne tint and metallic lettering. Keep the menu sufficiently frosted to read. */
+.dropdown { background:radial-gradient(ellipse at 0 0,#ffffff99,transparent 55%),radial-gradient(ellipse at 100% 100%,#c9cbe34d,transparent 55%),linear-gradient(130deg,#e5e2d9ed,#d3cfc5f0); box-shadow:inset 0 0 0 7px #ffffff2e,inset 0 0 0 8px #c4b69e66,0 18px 45px #32261640; scrollbar-color:#a9926d #e3dfd6; }
+.dropdown a { color:#715627; }
+.dropdown a:hover,.dropdown a[aria-current=page] { background:#ffffff66; color:#62471c; }
+.brand > span { background-image:var(--champagne-gold); background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 1px #fff5; }
+.primary a,.light .primary a,.enter,.light .enter,.chakraMenu > p { color:#735425; }
+.menu summary,.light .menu summary { color:#8b692e; background:#f3f1e63d; }
+@media(forced-colors:active) { .brand > span { background:none; -webkit-text-fill-color:LinkText; } }
+
+/* Deep lavender lettering on the original light champagne glass. */
+.brand > span,.light:not(.scrolled) .brand,.light.scrolled .brand { color:#493653; background-image:none; -webkit-text-fill-color:currentColor; text-shadow:0 1px 1px #ffffff66; }
+.primary a,.light .primary a,.enter,.light .enter,.chakraMenu > p { color:#493653; font-weight:500; text-shadow:none; }
+.menu summary,.light .menu summary { color:#493653; }
+.dropdown a { color:#493653; font-weight:500; }
+.dropdown a:hover,.dropdown a[aria-current=page] { color:#35263e; }
+.header :focus-visible,.dark :focus-visible { outline-color:#604572; }
+
+/* Frosted, low-tint glass with a little extra diffusion behind the lettering. */
+.header,.light,.dark,.light.scrolled { backdrop-filter:blur(26px) saturate(110%); -webkit-backdrop-filter:blur(26px) saturate(110%); }
+.dropdown { background:radial-gradient(ellipse at 0 0,#ffffff66,transparent 60%),linear-gradient(130deg,#f0f0eecc,#e1e2e0c9); box-shadow:inset 0 0 0 7px #ffffff1f,inset 0 0 0 8px #e0d8ce55,0 18px 45px #32261630; }
+.dropdown a:hover,.dropdown a[aria-current=page] { background:#ffffff4d; }
+
+/* Readable at rest over scenic glass; hover changes the rim, not legibility. */
+.brand > span,.light:not(.scrolled) .brand,.light.scrolled .brand,
+.primary a,.light .primary a,.enter,.light .enter,
+.menu summary,.light .menu summary {
+ color:#fff8e8; -webkit-text-fill-color:currentColor;
+ text-shadow:0 1px 2px #342a20,0 0 3px #342a20b3; font-weight:600;
+}
+.brand > span { background-image:none; font-weight:400; }
+.enter:hover,.primary a:hover,.light .primary a:hover { color:#fffdf5; }
+.header :focus-visible,.dark :focus-visible { outline-color:#fff0c3; }
+
+/* Friendly rounded menus; the established logo remains a serif wordmark. */
+.primary a,.light .primary a,.enter,.light .enter,.dropdown a,.chakraMenu > p { font-family:var(--glass-type); font-weight:650; text-transform:none; letter-spacing:.025em; }
+.primary a,.light .primary a { font-size:13px; }
+.enter,.light .enter { font-size:13px; letter-spacing:.025em; }
+.dropdown a { font-size:14px; }
+.chakraMenu > p { font-size:12px; }

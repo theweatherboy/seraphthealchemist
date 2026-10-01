@@ -19,3 +19,8 @@
 .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 28px 0; font-size: 14px; }
 @media (max-width: 600px) { .document { padding: 110px 16px 50px; } .contents ol { columns: 1; } }
 @media print { .document { padding: 0; color: #111; max-width: none; } .header, .contents, .body { background: white; border-color: #ccc; } .document h1, .document h2, .document a, .document strong, .date { color: #111; } .links, .contents, .footer { display: none; } }
+
+/* Shared frosted reading panels. */
+.header,.contents,.body { background:var(--pearl-lustre); border:1px solid #eadfd1; border-radius:22px; box-shadow:var(--pearl-shadow); backdrop-filter:blur(24px); }
+.document { font-family:var(--glass-type); }
+@media print { .header,.contents,.body { background:white; box-shadow:none; backdrop-filter:none; } }

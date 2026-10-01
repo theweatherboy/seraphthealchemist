@@ -39,7 +39,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
   const errors: Record<string, string> = { phone: 'Enter a valid phone number to opt in to marketing texts, or leave the text permission unchecked.', preferences: 'Your marketing preferences could not be updated. Please try again or contact Seraph.', name: 'Choose a name between 2 and 60 characters.', save: 'Your name could not be saved.', review: 'Please write 20–1,600 characters.', request: 'We could not reserve that appointment. The time may have just become unavailable; choose another open time and try again.' };
   const reviews = reviewsResult.data ?? [];
 
-  return <section className="account-page"><div className="account-panel">
+  return <section className="account-page my-account"><div className="account-panel">
     <p className="eyebrow">Your sanctuary</p><h1>My account</h1><p>Signed in as <strong>{user.email}</strong>. This email is private.</p><p className="account-fine-print">For a past session, share your account ID with Seraph so the service can be confirmed: <code>{user.id}</code></p>
     {params.error && <p role="alert" className="account-notice">{errors[params.error] ?? 'Something went wrong. Please try again.'}</p>}
     {params.saved === '1' && <p role="status" className="account-notice">Your display name has been saved.</p>}

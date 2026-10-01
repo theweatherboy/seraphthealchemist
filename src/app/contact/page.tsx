@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { useScrollNavigation } from '@/hooks/useScrollNavigation';
+import SceneBackdrop from '@/components/visual/SceneBackdrop';
 
 const SITE_SEQUENCE = ['/', '/grimoire', '/services', '/forge', '/support', '/legal', '/contact'];
 
@@ -35,7 +36,9 @@ export default function ContactPage() {
         </p>
         </header>
 
-        <form action="https://formsubmit.co/seraphthealchemist@gmail.com" method="POST" className="parchment-panel text-left space-y-6">
+        <section className="contact-glass-stage" aria-label="Contact Seraph">
+        <SceneBackdrop scene="vision" className="contact-silk" label="contact silk" speed={.15} controlClassName="contact-silk-control" />
+        <form action="https://formsubmit.co/seraphthealchemist@gmail.com" method="POST" className="contact-glass parchment-panel text-left space-y-6">
           <input type="hidden" name="_subject" value="New inquiry — Seraph, The Alchemist" />
           <input type="hidden" name="_template" value="table" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,6 +100,7 @@ export default function ContactPage() {
           </button>
         <p className="text-sm text-muted">Your message is processed by FormSubmit and sent to Seraph. Read our <Link className="underline" href="/privacy-policy">Privacy Policy</Link>. You can also email <a className="underline" href="mailto:seraphthealchemist@gmail.com">seraphthealchemist@gmail.com</a>.</p>
         </form>
+        </section>
       </motion.div>
     </div>
   );

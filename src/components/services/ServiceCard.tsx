@@ -13,7 +13,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   return (
     <motion.div
       whileHover={{ y: -10 }}
-      className="group relative p-8 rounded-[var(--border-radius-lg)] bg-glass border border-glass-border backdrop-blur-[var(--blur-glass)] shadow-2xl flex flex-col h-full transition-all duration-500 hover:border-gold/50"
+      className="service-glass group relative p-8 rounded-[var(--border-radius-lg)] bg-glass border border-glass-border backdrop-blur-[var(--blur-glass)] shadow-2xl flex flex-col h-full transition-all duration-500 hover:border-gold/50"
     >
       <div className="flex justify-between items-start mb-6">
         <div>
@@ -38,7 +38,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
 
       <Link
         href={`/services/${service.slug}`}
-        className="inline-block text-center px-6 py-3 font-arcane text-sm uppercase tracking-widest text-gold border border-gold/30 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full"
+        className="pearl-button inline-block text-center px-6 py-3 font-arcane text-sm uppercase tracking-widest text-gold border border-gold/30 hover:bg-gold hover:text-obsidian transition-all duration-300 rounded-full"
       >
         Discover the Path
       </Link>

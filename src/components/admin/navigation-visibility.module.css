@@ -35,3 +35,10 @@
 @container (max-width:680px) { .header { padding:8px 4px 20px; }.row { grid-template-columns:42px minmax(0,1fr) 125px; gap:12px; min-height:83px; }.description,.preview { display:none; }.identity { border:0; padding:0; }.locked .lock { grid-column:3; }.list { padding:7px; }.footer { flex-wrap:wrap; justify-content:center; text-align:center; gap:15px; }.moon { flex:0 0 100%; order:2; }.footer>span:last-child { order:3; }.panel .header .legal { letter-spacing:.12em; } }
 @container (max-width:380px) { .row { grid-template-columns:32px minmax(0,1fr) 99px; gap:8px; padding:10px 8px; }.icon { width:31px; height:31px; }.icon svg { width:21px; height:21px; }.panel .identity h3 { font-size:16px; }.identity small { font-size:10px; }.panel .toggle { gap:8px; font-size:11px; }.track { width:46px; }.toggle[aria-checked=true] .thumb { transform:translateX(17px); }.lock { font-size:10px; gap:5px; } }
 @media (prefers-reduced-motion:reduce) { .track,.thumb { transition:none; }.spinner { animation:none; } }
+
+/* Match the shared frosted cards without changing visibility states. */
+.panel { font-family:var(--glass-type); }
+.list,.row,.locked { background:var(--pearl-lustre); border-color:#e8ddcfb3; box-shadow:var(--pearl-shadow); backdrop-filter:blur(20px); }
+.row::before,.locked::before { background:none; }
+.identity h3,.panel .toggle,.description { font-family:var(--glass-type); }
+.identity h3 { font-weight:650; }

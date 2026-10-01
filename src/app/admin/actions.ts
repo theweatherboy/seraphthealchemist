@@ -12,8 +12,9 @@ export async function updateNavigationVisibility(formData: FormData) {
   const href = String(formData.get('href') ?? '');
   const value = formData.get('is_visible');
   if (!defaultNavigation.some(item => item.href === href) || href === '/terms-of-service' || href === '/privacy-policy' || !['true', 'false'].includes(String(value))) return { ok: false as const, error: 'This menu setting cannot be changed.' };
-  const { data, error } = await client.from('navigation_visibility').update({ is_visible: value === 'true' }).eq('href', href).select('is_visible').single();
-  if (error || !data) return { ok: false as const, error: 'Menu visibility could not be saved. Please try again.' };
+  const { data, error } = await client.from('navigation_visibility').update({ is_visible: value === 'true' }).eq('href', href).select('is_visible').maybeSingle();
+  if (error) return { ok: false as const, error: 'Menu visibility could not be saved. Please try again.' };
+  if (!data) return { ok: false as const, error: 'This menu item is missing from the database. Apply the latest navigation migration, then try again.' };
   revalidatePath('/'); revalidatePath('/admin', 'layout');
   return { ok: true as const, visible: data.is_visible as boolean };
 }

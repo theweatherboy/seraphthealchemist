@@ -105,3 +105,32 @@
  .intro { font-size:13px; }
 }
 @media print { .page { background:white; }.page::before { display:none; }.header { min-height:0; padding:20px 0; }.header h1,.header > :global(.eyebrow),.affirmation { color:#222; text-shadow:none; }.back { display:none; } }
+
+/* Selective iridescent glass; the artwork and chakra accents remain individual. */
+.introduction,.card,.context,.sources,.chakraNav {
+ position:relative; isolation:isolate; background:var(--pearl-lustre);
+ border:1px solid color-mix(in srgb,var(--chakra-color) 25%,#fff5df);
+ border-radius:22px; box-shadow:var(--pearl-shadow);
+ backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+ font-family:var(--glass-type); color:#493653;
+}
+.introduction::after,.card::after,.context::after,.sources::after,.chakraNav::after {
+ content:''; position:absolute; inset:-1px; padding:1.5px; border-radius:inherit; pointer-events:none;
+ background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude;
+}
+.card h3,.card dt,.context h2,.sources h2 { font-family:var(--glass-type); color:#493653; font-weight:650; }
+.intro,.card p,.card dd,.context p,.sources p,.sources a,.contextLink,.frequency { color:#493653; }
+.chakraNav a { color:#493653; font-family:var(--glass-type); font-weight:650; font-size:13px; }
+.chakraNav a:hover { color:#35243e; background:#ffffff66; }
+.chakraNav a[aria-current='page'] {
+ background:color-mix(in srgb,var(--chakra-color) 13%,#ffffffb3);
+ color:#35243e; border-color:var(--chakra-color); box-shadow:inset 0 1px #fff;
+}
+.balanced { border-top:3px solid var(--chakra-color); }
+.sectionHeading { border-left-color:var(--chakra-color); }
+.sectionHeading h2 { color:#493653; }
+.back { background:var(--pearl-lustre); backdrop-filter:blur(18px); color:#fff8e8; font-family:var(--glass-type); font-weight:650; text-shadow:0 1px 2px #342a20,0 0 3px #342a20b3; }
+.header h1,.affirmation { color:#fff0cf; text-shadow:0 2px 8px #10140f; }
+.footer { background:var(--pearl-lustre); border-radius:18px; border:1px solid #fff0d680; backdrop-filter:blur(20px); }
+.footer a { color:#493653; font-family:var(--glass-type); font-weight:650; }
+@media print { .introduction,.card,.context,.sources,.chakraNav,.footer { background:white; color:#222; backdrop-filter:none; box-shadow:none; }.introduction::after,.card::after,.context::after,.sources::after,.chakraNav::after { display:none; } }

@@ -47,10 +47,10 @@ export function createRibbonRenderer(context: CanvasRenderingContext2D, scene: T
                     const sheen = Math.pow(Math.max(0, ridge), 8);
                     const pearl = Math.pow(Math.abs(v), 5) * .12 + sheen * .62;
                     const prism = u * 39 + v * 5 - time * .75;
-                    const red = Math.round(211 + 34 * Math.sin(prism) + sheen * 10);
-                    const green = Math.round(201 + 30 * Math.sin(prism + 2.1) + sheen * 20);
-                    const blue = Math.round(188 + 45 * Math.sin(prism + 4.2) + sheen * 20);
-                    light.addColorStop(u, `rgba(${red},${green},${blue},${.14 + pearl})`);
+                    const red = Math.round(224 + 20 * Math.sin(prism) + sheen * 10);
+                    const green = Math.round(216 + 21 * Math.sin(prism + 2.1) + sheen * 16);
+                    const blue = Math.round(213 + 26 * Math.sin(prism + 4.2) + sheen * 16);
+                    light.addColorStop(u, `rgba(${red},${green},${blue},${.11 + pearl})`);
                 }
                 // Continuous strips avoid the visible tessellation of individually filled cells.
                 trace([...mesh[b], ...mesh[b + 1].slice().reverse()]);

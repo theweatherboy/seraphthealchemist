@@ -85,3 +85,46 @@
  .visionControl { bottom:195px; font-size:9px!important; }.footer { grid-template-columns:1fr; text-align:center; gap:21px; }.footer nav { flex-wrap:wrap; }.legal { flex-wrap:wrap; font-size:8px; gap:10px; }
 }
 @media(prefers-reduced-motion:reduce) { .portal,.portalArt,.button { transition:none; }.portal:hover { transform:none; } }
+
+/* Pearl surfaces echo the glass navigation while the scenic artwork stays intact. */
+.button { color:#4f3b23; border:1px solid transparent; background:linear-gradient(115deg,#fff7e6eb,#e7d9c7d4,#fff8e6eb) padding-box,var(--pearl-edge) border-box; border-radius:999px; backdrop-filter:blur(14px); box-shadow:inset 0 1px 3px #fff,0 4px 18px #080f0826; }
+.button:hover { background:linear-gradient(115deg,#fff7e6,#efe3d3,#fff8e6) padding-box,var(--pearl-edge) border-box; box-shadow:inset 0 1px 3px #fff,0 4px 24px #e5c18a40; }
+.heroCopy h1 { text-transform:none; letter-spacing:.015em; font-weight:400; }
+.script { color:#f1dab4; }
+.portals { gap:14px; }
+.portal { padding-bottom:18px; }
+.portalCopy { padding:20px 14px 16px; margin-top:-35px; border:1px solid transparent; border-radius:22px; background:var(--pearl-fill) padding-box,var(--pearl-edge) border-box; backdrop-filter:blur(12px); box-shadow:var(--pearl-shadow); }
+.portalAction { border-top:1px solid #ba9b6655; padding-top:13px; }
+.motionControl,.visionControl { color:#574129!important; border:1px solid #ddc395!important; background:#fff3dcdb!important; backdrop-filter:blur(12px); }
+@media(max-width:650px) { .portals { gap:22px 12px; }.portal:last-child { width:calc(50% - 6px); }.portalCopy { padding:18px 9px 14px; }.portalCopy h3 { font-size:15px; }.portalAction { font-size:8px; gap:4px; }.motionControl { top:90px!important; } }
+
+.button { position:relative; background:var(--pearl-lustre); border:1px solid #ffedc6; box-shadow:inset 0 2px 4px #fff,inset 0 -3px 7px #bc946966,0 4px 16px #080f0826; }
+.button::before,.portalCopy::before { content:''; position:absolute; inset:-2px; padding:2px; border-radius:inherit; pointer-events:none; background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude; }
+.portalCopy { background:var(--pearl-lustre); border:1px solid #fff4d8; }
+
+/* Clear champagne beneath the illustrated portals, with metallic gold headings. */
+.offerings { background:radial-gradient(ellipse at 10% 0%,#fffff5b3,transparent 55%),radial-gradient(ellipse at 90% 80%,#d9d6e45c,transparent 60%),#dedcd5; }
+.sectionHeading h2,.portalCopy h3 { background-image:var(--champagne-gold); background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 1px #fff5; }
+.heroCopy h1,.visionCopy h2,.script { background-image:linear-gradient(115deg,#e9c77d 0%,#fff3ce 29%,#d9b76a 46%,#fff1c8 55%,#d3af65 78%,#f4dda0); background-clip:text; -webkit-text-fill-color:transparent; }
+.button,.portalAction { color:#795924; }
+.hero::after { background:linear-gradient(transparent,#dedcd5); }
+.vision::before { background:linear-gradient(#dedcd5,transparent); }
+@media(forced-colors:active) { .sectionHeading h2,.portalCopy h3,.heroCopy h1,.visionCopy h2,.script { background:none; -webkit-text-fill-color:CanvasText; } }
+
+/* Lavender ink on light champagne controls and portal panels. */
+.button,.button:hover { color:#493653; font-weight:500; text-shadow:none; }
+.sectionHeading h2,.portalCopy h3 { color:#493653; background-image:none; -webkit-text-fill-color:currentColor; text-shadow:none; }
+.portalCopy p,.portalAction { color:#493653; }
+
+/* Let the illustrated portals show through their frosted captions. */
+.portalCopy { backdrop-filter:blur(24px) saturate(110%); -webkit-backdrop-filter:blur(24px) saturate(110%); }
+.button { backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); }
+
+/* Keep hero actions and type legible before hover without darkening the glass. */
+.button,.button:hover { color:#fff8e8; -webkit-text-fill-color:currentColor; font-weight:600; text-shadow:0 1px 2px #342a20,0 0 3px #342a20b3; }
+.heroCopy h1,.visionCopy h2,.script { color:#fff0cc; background-image:none; -webkit-text-fill-color:currentColor; text-shadow:0 2px 8px #11190cd9; }
+
+.button,.portalCopy,.portalCopy h3,.portalAction,.furtherPaths { font-family:var(--glass-type); }
+.button { font-size:13px; letter-spacing:.035em; text-transform:none; }
+.portalCopy h3 { font-weight:650; letter-spacing:.015em; }
+.portalAction { text-transform:none; font-size:12px; letter-spacing:.02em; }
