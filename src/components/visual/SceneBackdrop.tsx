@@ -4,16 +4,19 @@ import Image from 'next/image';
 import { Pause, Play } from 'lucide-react';
 import { createThreadRenderer, type ThreadPointer, type ThreadScene } from './thread-renderer';
 import { createSilkRenderer } from './silk-renderer';
+import { createRibbonRenderer } from './ribbon-renderer';
 import styles from './scene-backdrop.module.css';
 type SceneBackdropProps = {
-    poster: string;
+    poster?: string;
     scene: ThreadScene;
     className: string;
     label: string;
     priority?: boolean;
+    speed?: number;
+    controlClassName?: string;
 };
 /** Sharp still artwork with independently rendered, continuous flowing light. */
-export default function SceneBackdrop({ poster, scene, className, label, priority = false }: SceneBackdropProps) {
+export default function SceneBackdrop({ poster, scene, className, label, priority = false, speed = .4, controlClassName = '' }: SceneBackdropProps) {
     const canvas = useRef<HTMLCanvasElement>(null);
     const pausedRef = useRef(false);
     const sync = useRef<() => void>(() => { });
@@ -22,11 +25,12 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
         const element = canvas.current;
         if (!element)
             return;
-        const silk = createSilkRenderer(element, scene);
+        const ribbons = ['sanctuary', 'offerings', 'vision'].includes(scene);
+        const silk = ribbons ? null : createSilkRenderer(element, scene);
         const context = silk ? null : element.getContext('2d');
         if (!silk && !context)
             return;
-        const render = context ? createThreadRenderer(context, scene) : null;
+        const render = context ? (ribbons ? createRibbonRenderer(context, scene) : createThreadRenderer(context, scene)) : null;
         const preference = matchMedia('(prefers-reduced-motion: reduce)');
         const region = element.closest('section');
         const pointer: ThreadPointer = { x: 0, y: 0, strength: 0, radius: 180 };
@@ -48,7 +52,7 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
         const tick = (now: number) => {
             const delta = last ? Math.min((now - last) / 1000, .05) : 0;
             // Slow the ambient flow without making the cursor response sluggish.
-            elapsed += delta * .4;
+            elapsed += delta * speed * (ribbons ? 3 : 1);
             const follow = 1 - Math.exp(-delta * 7);
             pointer.x += (target.x - pointer.x) * follow;
             pointer.y += (target.y - pointer.y) * follow;
@@ -129,14 +133,14 @@ export default function SceneBackdrop({ poster, scene, className, label, priorit
             silk?.dispose();
             sync.current = () => { };
         };
-    }, [scene]);
+    }, [scene, speed]);
     const toggle = () => { pausedRef.current = !pausedRef.current; setPaused(pausedRef.current); sync.current(); };
     return <>
     <div className={className + ' ' + styles.backdrop} aria-hidden="true">
-      <Image src={poster} alt="" fill sizes="100vw" loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined}/>
+      {poster && <Image src={poster} alt="" fill sizes="100vw" loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined}/>}
       <canvas ref={canvas} className={styles.threads} data-scene={scene}/>
     </div>
-    <button type="button" className={styles.control} data-hero={priority || undefined} aria-label={(paused ? 'Play ' : 'Pause ') + label + ' animation'} aria-pressed={paused} onClick={toggle}>
+    <button type="button" className={styles.control + ' ' + controlClassName} data-hero={priority || undefined} aria-label={(paused ? 'Play ' : 'Pause ') + label + ' animation'} aria-pressed={paused} onClick={toggle}>
       {paused ? <Play size={13} aria-hidden="true"/> : <Pause size={13} aria-hidden="true"/>}<span>{paused ? 'Play motion' : 'Pause motion'}</span>
     </button>
   </>;

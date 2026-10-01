@@ -41,7 +41,7 @@ export default function ServicesContent({ services }: { services: Service[] }) {
             if (categoryServices.length === 0) return null;
 
             return (
-              <div key={cat.id} className="relative">
+              <div id={cat.id} key={cat.id} className="relative scroll-mt-28">
                 <div className="text-center mb-12">
                   <h2 className="font-arcane text-3xl md:text-5xl text-gold mb-2 tracking-wider">
                     {cat.label}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import "./globals.css";
+import "@/components/layout/sanctuary-interiors.css";
 import AppShell from "@/components/layout/AppShell";
 
 const cinzel = Cinzel({

@@ -136,6 +136,7 @@ void main() {
 
 /** Static meshes, animated on the GPU; no full-resolution canvas blur per frame. */
 export function createSilkRenderer(canvas: HTMLCanvasElement, scene: ThreadScene) {
+    const warm = ['sanctuary', 'vision', 'offerings'].includes(scene);
     const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true, preserveDrawingBuffer: true });
     if (!gl) return null;
     const shaders: WebGLShader[] = [], programs: WebGLProgram[] = [], buffers: WebGLBuffer[] = [];
@@ -175,8 +176,8 @@ export function createSilkRenderer(canvas: HTMLCanvasElement, scene: ThreadScene
             for (let strand = 0; strand < 14; strand++) {
                 const offset = (random() - .5) * (strand > 10 ? 3.8 : 2);
                 const twist = random() * 6.28;
-                const width = strand < 3 ? 2.5 + random() * 2 : .45 + random() * 1.15;
-                const alpha = strand < 3 ? .9 : .45 + random() * .4;
+                const width = strand < 3 ? (warm ? 10 : 2.5) + random() * 2 : .45 + random() * 1.15;
+                const alpha = strand < 3 ? (warm ? .55 : .9) : .45 + random() * .4;
                 const depth = strand < 3 ? .72 + random() * .28 : .12 + random() * .78;
                 strands.push({ guide, phase, frequency, amplitude, color: (family + bundle) % 3, offset, twist, width, alpha, depth });
             }

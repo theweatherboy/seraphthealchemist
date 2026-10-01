@@ -1,5 +1,13 @@
 # Illustrated parchment pages
 
+## September 24 sanctuary continuation
+
+The current interior treatment follows the homepage's marble, ivy, forest green, and candlelit gold. `pageArtworkSource` in `src/lib/page-artwork.ts` is the shared source of image URLs for AppShell and EnvironmentBackground. Services and Grimoire use the marble artwork directly under `/images/` (not `/images/pages/`). About and account use the homepage statue scene; contact, testimonies, support, and administration use the sunset sanctuary scene. Journal, birth chart, and offerings reuse the marble library illustration. Policies retain their scales illustration, and chakras retain their individual artwork and colors.
+
+`src/components/layout/sanctuary-interiors.css` supplies scoped reading surfaces, scenic openings, account/support backgrounds, and the custom 404. Admin styling in `src/app/admin/admin.css` carries the same materials into its sidebar, page headers, cards, forms, calendar, and status labels. No authorization or data mutations were changed. The historical asset descriptions below document the earlier parchment set, which remains available.
+
+Validation: TypeScript and targeted ESLint passed. Public routes were checked at 1440px and 390px with no horizontal overflow or runtime exceptions. Admin's presentation was checked with a browser-only sample-content fixture at 1440px, 390px, and 320px; authenticated admin workflows still require a signed-in admin session.
+
 Eight original text-free images were generated with the built-in imagegen tool using the supplied `backgrounds_for_diff_pages.png` collage as the visual reference. Each is stored under `public/images/pages/{name}-v1.webp`, 1536 by 1024 pixels, WebP quality 88. Only the current route's image is requested. The generated PNG masters remain in the Codex generated-images directory.
 
 | Image | Page |

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Sparkles, Sprout, Leaf, Moon, Sun, Heart, Eye, Orbit, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import ChakraAtmosphere from '@/components/chakras/ChakraAtmosphere';
 import { chakras, chakraContext, findChakra } from '@/data/chakras';
 import styles from './chakra.module.css';
@@ -28,24 +28,22 @@ export default async function ChakraPage({ params }: Props) {
   const chakra = findChakra((await params).slug);
   if (!chakra) notFound();
   const next = chakras[(chakras.indexOf(chakra) + 1) % chakras.length];
-  const symbols = [Sprout, Leaf, Moon, Sun, Heart, Moon, Eye, Orbit, Star];
-  const Sigil = symbols[chakras.indexOf(chakra)] ?? Sparkles;
   const affirmations = ['I belong', 'I am', 'I feel', 'I do', 'I love', 'I speak', 'I see', 'I understand', 'I connect'];
 
   return (
-    <article className={styles.page} style={{ '--chakra-color': chakra.color } as CSSProperties}>
+    <article className={styles.page} style={{ '--chakra-color': chakra.color, '--chakra-art': `url('/images/chakras/${chakra.slug}-v2.webp')` } as CSSProperties}>
       <ChakraAtmosphere realmId={chakra.realmId} />
-      <Link href="/#journey" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All nine paths</Link>
+      <Link href="#chakra-paths" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All nine paths</Link>
       <header className={styles.header}>
-        <div className={styles.sigil} aria-hidden="true"><Sigil size={48} strokeWidth={1} /></div>
         <p className="eyebrow">{String(chakra.number).padStart(2, '0')} / {chakra.realmName} realm</p>
         <h1>{chakra.name} <span>chakra</span></h1>
         <p className={styles.affirmation}>{affirmations[chakras.indexOf(chakra)]}</p>
+      </header>
+      <div className={styles.introduction}>
         <p className={styles.intro}>{chakra.overview ?? 'A spiritual and symbolic guide for reflection.'}</p>
         <a href="#important-context" className={styles.contextLink}>About these correspondences</a>
-      </header>
-
-      <nav className={styles.chakraNav} aria-label="Explore the chakras">
+      </div>
+      <nav id="chakra-paths" className={styles.chakraNav} aria-label="Explore the chakras">
         {chakras.map(item => <Link key={item.slug} href={`/chakras/${item.slug}`} aria-current={item.slug === chakra.slug ? 'page' : undefined} style={{ '--link-color': item.color } as CSSProperties}><span aria-hidden="true" />{item.name}</Link>)}
       </nav>
 
@@ -82,7 +80,7 @@ export default async function ChakraPage({ params }: Props) {
         <ul>{chakra.sources.map(source => <li key={source.href}><a href={source.href}>{source.label}</a><p>{source.description}</p></li>)}</ul>
       </section>}
       <footer className={styles.footer}>
-        <Link href="/#journey"><ArrowLeft size={15} aria-hidden="true" /> Return to the nine paths</Link>
+        <Link href="#chakra-paths"><ArrowLeft size={15} aria-hidden="true" /> Return to the nine paths</Link>
         <Link href={`/chakras/${next.slug}`}>Explore {next.name} <ArrowRight size={15} aria-hidden="true" /></Link>
       </footer>
     </article>

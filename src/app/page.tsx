@@ -1,130 +1,71 @@
-import type { CSSProperties } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Compass, Eye, Heart, Leaf, Moon, Orbit, Sparkles, Sprout, Sun, Star } from 'lucide-react';
-import { chakraPages, realms } from '@/data/realms';
-import { createClient } from '@/lib/supabase/server';
-import FeaturedTestimonies, { type FeaturedTestimony } from '@/components/features/FeaturedTestimonies';
+import Image from 'next/image';
+import { Italianno } from 'next/font/google';
+import { ArrowRight, Moon, Sun, Compass, Triangle, Infinity as InfinityIcon, Sparkle } from 'lucide-react';
+import SceneBackdrop from '@/components/visual/SceneBackdrop';
+import PortalLink from '@/components/ui/PortalLink';
 import styles from './earthly-home.module.css';
 
-const realmIcons = [Sprout, Leaf, Moon, Sun, Heart, Moon, Eye, Orbit, Star];
-const realmDescriptions = [
-  ['Earth Connection', 'Belonging · Embodiment'],
-  ['Grounding · Protection', 'Presence · Energy Hygiene'],
-  ['Emotion · Creativity', 'Energy · Movement'],
-  ['Transformation · Will', 'Shadow Work · Alchemy'],
-  ['Compassion · Integration', 'Reiki · Inner Union'],
-  ['Mysticism · Symbolism', 'Spiritual Study'],
-  ['Intuition · Dreams', 'Divination · Astral'],
-  ['Angels · Seraphim', 'Higher Consciousness'],
-  ['Soul Purpose · Higher Self', 'Spiritual Integration'],
-];
+const script = Italianno({ weight: '400', subsets: ['latin'], variable: '--font-sanctuary-script' });
+const portalArtwork = ['divination', 'healing', 'journeys', 'teachings', 'loom'];
 const offerings = [
-  { name: 'Personal readings', icon: Leaf, href: '/services' },
-  { name: 'Energy healing', icon: Sun, href: '/services' },
-  { name: 'Teachings & activations', icon: Sparkles, href: '/grimoire' },
-  { name: 'Divine guidance', icon: Compass, href: '/services' },
-  { name: 'Community', icon: Orbit, href: '/contact' },
+  { name: 'Divination', copy: 'Clarity through tarot, oracle, and astrology.', href: '/services#seer', icon: Moon },
+  { name: 'Healing', copy: 'Energetic clearing, Reiki, and quantum alignment.', href: '/services#healer', icon: Sun },
+  { name: 'Journeys', copy: 'Guided experiences, deeper connection, and soul remembrance.', href: '/services#journey', icon: Compass },
+  { name: 'Teachings', copy: 'Tools, practices, and wisdom for everyday alchemy.', href: '/grimoire', icon: Triangle },
+  { name: 'The Alchemist’s Loom', copy: 'Custom experiences to weave it all together.', href: '/contact', icon: InfinityIcon },
 ];
 
-async function getFeaturedTestimonies(): Promise<FeaturedTestimony[]> {
-  try {
-    const client = await createClient();
-    if (!client) return [];
-    const { data, error } = await client.from('reviews')
-      .select('id,approved_revision_id')
-      .eq('status', 'approved').order('updated_at', { ascending: false }).limit(5);
-    if (error || !data?.length) return [];
-    const revisionIds = data.flatMap(review => review.approved_revision_id ? [review.approved_revision_id] : []);
-    if (!revisionIds.length) return [];
-    const { data: revisions, error: revisionError } = await client.from('review_revisions')
-      .select('id,body').in('id', revisionIds).eq('moderation_status', 'approved');
-    if (revisionError) return [];
-    const approvedBodies = new Map((revisions ?? []).map(revision => [revision.id, revision.body]));
-    return data.flatMap(review => {
-      const body = review.approved_revision_id ? approvedBodies.get(review.approved_revision_id) : undefined;
-      return body ? [{ id: review.id, body }] : [];
-    });
-  } catch {
-    return [];
-  }
-}
-
-function Ornament() {
-  return <div className={styles.ornament} aria-hidden="true"><span /><Sparkles size={25} strokeWidth={1} /><span /></div>;
-}
-
-export default async function Home() {
-  const testimonies = await getFeaturedTestimonies();
-  return <div className={styles.home}>
+export default function Home() {
+  return <div className={styles.home + ' ' + script.variable}>
     <section className={styles.hero} aria-labelledby="sanctuary-title">
-      <Image src="/images/earthly-sanctuary-v1.webp" alt="" fill sizes="100vw" className={styles.heroArtwork} priority />
-      <div className={styles.heroVeil} />
-      <div className={styles.heroCenter}>
-        <div className={styles.sunSeal} aria-hidden="true"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="27" /><circle cx="60" cy="60" r="22" />{Array.from({ length:32 },(_,i)=>{const angle=i*Math.PI/16;const radius=i%4===0?58:i%2===0?47:36;return <line key={i} x1={60+29*Math.cos(angle)} y1={60+29*Math.sin(angle)} x2={60+radius*Math.cos(angle)} y2={60+radius*Math.sin(angle)}/>;})}<path d="M60 39 65 55 81 60 65 65 60 81 55 65 39 60 55 55Z"/><circle cx="60" cy="60" r="9"/></svg></div>
-        <p className={styles.eyebrow}>Sacred knowledge &amp; healing</p>
-        <h1 id="sanctuary-title">Seraph<span>The Alchemist</span></h1>
-        <Ornament />
-        <p className={styles.heroDescription}>A sanctuary for the seeker.<br />A thread back to yourself.</p>
-        <div className={styles.actions}>
-          <Link className={styles.button} href="/services">Begin the journey <ArrowRight size={15} /></Link>
-          <a className={styles.button + ' ' + styles.secondary} href="#journey">Explore the paths</a>
-        </div>
-      </div>
-      <aside className={styles.leftMantra} aria-label="Our intention"><p>Rooted<br />in the earth,<br />guided<br />by the stars.</p><Sparkles size={24} strokeWidth={1} /></aside>
-      <p className={styles.rightMantra}>Seek<br />Heal<br />Align<br />Transform<br />Remember<br />Return</p>
-    </section>
-    <div className={styles.parchment}>
-    <section id="journey" className={styles.journey} aria-labelledby="journey-title">
-      <header className={styles.sectionHeading}><p className={styles.eyebrow}>Nine realms. One continuous thread.</p><h2 id="journey-title">Where does your journey begin?</h2></header>
-      <div className={styles.realmGrid}>{realms.map((realm, index) => {
-        const Icon = realmIcons[index];
-        return <Link key={realm.id} href={'/chakras/' + chakraPages[realm.chakra].slug} className={styles.realmCard} style={{ '--realm-tint': realm.color } as CSSProperties}>
-          <span className={styles.realmIcon}><Icon size={40} strokeWidth={1} /></span>
-          <span className={styles.realmNumber}>{String(chakraPages[realm.chakra].number).padStart(2, '0')}</span><span className={styles.chakraName}>{chakraPages[realm.chakra].name}</span>
-          <h3>{realm.chakra === 'root' ? 'Root' : realm.name}</h3><p>{realmDescriptions[index][0]}<br />{realmDescriptions[index][1]}</p>
-          <span className={styles.realmEnter}>Explore this realm <ArrowRight size={12} /></span>
-        </Link>;
-      })}</div>
-      <div className={styles.journeyFoot}><span /><Sparkles size={23} strokeWidth={1} /><p>From the roots of the earth to the stars above.</p><Sparkles size={23} strokeWidth={1} /><span /></div>
-    </section>
-    <section className={styles.approach} aria-labelledby="approach-title">
-      <div className={styles.approachContent}>
-        <div className={styles.approachIntro}>
-          <h2 id="approach-title">More than healing. <span>A remembering.</span></h2>
-          <p>Through ancient wisdom and modern tools, we weave together the seen and unseen — helping you heal, transform, and return to the truth of who you are.</p>
-          <Link href="/about" className={styles.button + ' ' + styles.secondary}>Explore my approach <ArrowRight size={15} /></Link>
-        </div>
-        <div className={styles.offerings}>
-          {offerings.map(({ name, icon: Icon, href }) => <Link href={href} key={name}><Icon size={27} strokeWidth={1} /><span>{name}</span></Link>)}
-          <p>Different paths.<br />The same light.</p>
-        </div>
+      <SceneBackdrop poster="/images/sanctuary-hero-v3.webp" scene="sanctuary" className={styles.heroArt} label="sanctuary" priority speed={.23} controlClassName={styles.motionControl} />
+      <div className={styles.heroShade} />
+      <aside className={styles.marginNote} aria-hidden="true">Same<br />soul<br />more<br />magic<span>✦</span></aside>
+      <div className={styles.heroCopy}>
+        <p className={styles.eyebrow}>A bridge between worlds</p>
+        <h1 id="sanctuary-title">Sacred<br />knowledge</h1>
+        <p className={styles.script}>for a More Aligned You</p>
+        <p className={styles.description}>Ancient wisdom. Modern tools.<br />A sanctuary for multi-dimensional souls where the mystical meets the practical, and your soul’s wisdom finds a home in the here and now.</p>
+        <a className={styles.button} href="#offerings">Explore the path <ArrowRight size={19} strokeWidth={1} /></a>
+        <p className={styles.values}>Heal <Sparkle /> Align <Sparkle /> Evolve <Sparkle /> Belong</p>
       </div>
     </section>
-    <section className={styles.discover} aria-labelledby="discover-title">
-      <header className={styles.discoverHeading}><p className={styles.eyebrow}>Begin your journey</p><h2 id="discover-title">Explore what calls to you</h2></header>
-      <div className={styles.discoveryCards}>
-        {[
-          { title: 'New here?', copy: 'Start with a reading and discover where you are on your path.', action: 'Begin your journey', href: '/services', image: 'portal', emblem: Sparkles },
-          { title: 'Explore services', copy: 'Readings, healing, teachings, and more.', action: 'View all services', href: '/services', image: 'dawn', emblem: Sun },
-          { title: 'Real experiences', copy: 'Stories from souls on the path.', action: 'Read testimonies', href: '/reviews', image: 'starlight', emblem: Moon },
-        ].map(({title,copy,action,href,image,emblem:Emblem},index) => <Link className={styles.discoveryCard} href={href} key={title}>
-          <div className={styles.discoveryFrame}>
-            <div className={styles.discoveryImage} data-art={image}><Image src={image === 'dawn' ? '/images/earthly-sanctuary-v1.webp' : '/images/earthly-homecoming-v1.webp'} alt="" fill sizes="(max-width: 600px) 40vw, 220px" />{image==='starlight' && <Moon size={45} strokeWidth={.7}/>}</div>
-            <Emblem className={styles.discoveryEmblem} size={31} strokeWidth={1} aria-hidden="true" />
-            <span className={styles.discoveryJewel} aria-hidden="true">✧</span>
+    <section id="offerings" className={styles.offerings} aria-labelledby="offerings-title">
+      <SceneBackdrop scene="offerings" className={styles.portalThreads} label="portals" speed={.23} controlClassName={styles.portalControl} />
+      <header className={styles.sectionHeading}>
+        <p className={styles.eyebrow}>The offerings</p>
+        <h2 id="offerings-title">One soul with infinite journeys.</h2>
+        <p>Explore the paths, tools, and teachings that support you — wherever you are on your journey.</p>
+      </header>
+      <div className={styles.portals}>
+        {offerings.map(({ name, copy, href, icon: Icon }, index) => <PortalLink className={styles.portal} href={href} key={name}>
+          <div className={styles.portalArt} aria-hidden="true"><Image src={'/images/portal-' + portalArtwork[index] + '-v4.webp'} alt="" width={680} height={1020} sizes="(max-width: 650px) 48vw, (max-width: 1600px) 19vw, 292px" /></div>
+          <div className={styles.portalCopy}>
+            <h3>{name}</h3><p>{copy}</p><Icon className={styles.portalSymbol} size={31} strokeWidth={1} aria-hidden="true" />
+            <span className={styles.portalAction}>Enter the portal <ArrowRight size={13} /></span>
           </div>
-          <div className={styles.discoveryCopy}><span className={styles.discoveryNumber}>0{index+1}<i/></span><h3>{title}</h3><p>{copy}</p><span className={styles.discoveryAction}>{action}<ArrowRight size={17}/></span></div>
-        </Link>)}
+        </PortalLink>)}
       </div>
-      <footer className={styles.discoveryFoot}><span aria-hidden="true">☽ · ☼ · ☾</span><p>Different paths. The same light.</p></footer>
+      <div className={styles.furtherPaths}><Link href="/birth-chart">Your birth chart <ArrowRight size={13} /></Link><span aria-hidden="true">✦</span><Link href="/chakras/earth-star">Explore the nine chakras <ArrowRight size={13} /></Link></div>
     </section>
-    </div>
-    <section className={styles.closing} aria-label="The thread continues">
-      <Image src="/images/earthly-homecoming-v1.webp" alt="" fill sizes="100vw" className={styles.closingArtwork} />
-      <FeaturedTestimonies testimonies={testimonies} />
-      <div className={styles.invitation}><Link className={styles.button} href="/services">Begin your journey <ArrowRight size={15} /></Link><Ornament /></div>
-      <footer className={styles.footer}><p>Heal · Explore · Integrate · Return</p><div><Link href="/terms-of-service">Terms of Service</Link><Link href="/privacy-policy">Privacy Policy</Link><Link href="/account" prefetch={false}>Your account</Link></div><p>© {new Date().getFullYear()} Seraph the Alchemist</p></footer>
+    <section className={styles.vision} aria-labelledby="vision-title">
+      <SceneBackdrop poster="/images/sanctuary-vision-v3.webp" scene="vision" className={styles.visionArt} label="vision" speed={.23} controlClassName={styles.visionControl} />
+      <div className={styles.visionShade} />
+      <div className={styles.visionCopy}>
+        <p className={styles.eyebrow}>The vision</p>
+        <h2 id="vision-title">A world in harmony</h2>
+        <p className={styles.script}>Within and Without</p>
+        <p className={styles.description}>I believe in a world where spiritual wisdom and everyday life exist in harmony — not as an escape, but as a return. And where your soul’s gifts are meant to be lived, not just explored.</p>
+        <Link href="/about" className={styles.button}>Learn more <ArrowRight size={19} strokeWidth={1} /></Link>
+      </div>
+      <aside className={styles.visionNote} aria-hidden="true">People<br />Places<br />Practices<br />Possibilities<span>✦</span></aside>
+      <footer className={styles.footer}>
+        <Link href="/" className={styles.wordmark}>Seraph<small>The Alchemist</small></Link>
+        <p>Not to escape, but to be more present.</p>
+        <nav aria-label="Footer"><Link href="/reviews">Testimonies</Link><Link href="/contact">Connect</Link><Link href="/account" prefetch={false}>Account</Link></nav>
+        <div className={styles.legal}><span>© {new Date().getFullYear()} Seraph the Alchemist</span><Link href="/privacy-policy">Privacy</Link><Link href="/terms-of-service">Terms</Link></div>
+      </footer>
     </section>
   </div>;
 }

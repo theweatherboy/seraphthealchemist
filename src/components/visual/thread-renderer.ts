@@ -1,10 +1,22 @@
-export type ThreadScene = 'dawn' | 'portal' | 'starlight';
+export type ThreadScene = 'dawn' | 'portal' | 'starlight' | 'sanctuary' | 'vision' | 'offerings';
 export type ThreadPointer = { x: number; y: number; strength: number; radius: number };
 type Point = readonly [number, number];
 type Guide = { x: number; y: number; nx: number; ny: number };
 
 // The artwork and threads share this 1536 x 1024 coordinate plane and cover crop.
 const routes: Record<ThreadScene, Point[][]> = {
+    offerings: [
+        [[-80, 340], [140, 240], [340, 360], [550, 240], [750, 350], [980, 240], [1200, 350], [1450, 240], [1620, 350]],
+        [[-80, 890], [240, 855], [540, 930], [860, 900], [1110, 950], [1430, 845], [1620, 890]],
+    ],
+    sanctuary: [
+        [[-100, 610], [140, 790], [380, 860], [620, 820], [830, 890], [1050, 845], [1300, 950], [1640, 920]],
+        [[-100, 155], [260, 180], [580, 290], [820, 460], [1030, 420], [1260, 335], [1430, 455], [1370, 620], [1640, 710]],
+    ],
+    vision: [
+        [[-100, 90], [190, 135], [470, 130], [750, 225], [1130, 170], [1400, 90], [1640, 200]],
+        [[-100, 870], [280, 930], [600, 910], [1000, 940], [1330, 840], [1640, 900]],
+    ],
     dawn: [
         [[-100, 235], [100, 300], [210, 510], [470, 700], [800, 727], [1120, 739], [1420, 575], [1650, 430]],
         [[-100, 865], [210, 813], [520, 744], [790, 695], [1120, 772], [1390, 815], [1650, 850]],
@@ -20,7 +32,6 @@ const routes: Record<ThreadScene, Point[][]> = {
     ],
 };
 const colors = ['196,212,228', '178,214,235', '209,196,231'];
-const pearls = ['240,247,255', '230,246,255', '245,234,255'];
 const shadows = ['131,150,170', '112,147,170', '145,130,172'];
 const samples = 160;
 const tau = Math.PI * 2;
@@ -142,6 +153,7 @@ function refractedGradient(context: CanvasRenderingContext2D, points: Point[], p
 
 /** Translucent braided fibers with refracted highlights and small crystal glints. */
 export function createThreadRenderer(context: CanvasRenderingContext2D, scene: ThreadScene) {
+    const warm = ['sanctuary', 'vision', 'offerings'].includes(scene);
     const random = randomGenerator();
     const sprites = colors.map(lightSprite);
     const curves = getThreadGuides(scene);
@@ -179,7 +191,7 @@ export function createThreadRenderer(context: CanvasRenderingContext2D, scene: T
 
         for (const { curve, groups } of bundles) {
             for (const group of groups) {
-                const color = colors[group.color], pearl = pearls[group.color];
+                const color = warm ? '232,195,137' : colors[group.color];
                 for (let i = 0; i <= samples; i++) {
                     const u = i / samples, phase = group.phase;
                     group.centers[i] = Math.sin(u * group.frequency - time * .65 + phase) * group.amplitude +
@@ -209,9 +221,9 @@ export function createThreadRenderer(context: CanvasRenderingContext2D, scene: T
                     if (fiber.core) {
                         // Keep a shaded transparent body underneath the refracted edge.
                         context.fillStyle = `rgba(${shadows[group.color]},.23)`;
-                        context.fill(silkPath(fiber.points, time, fiber.phase, 2.6));
+                        context.fill(silkPath(fiber.points, time, fiber.phase, warm ? 12 : 2.6));
                         context.fillStyle = `rgba(${color},.4)`;
-                        context.fill(silkPath(fiber.points, time, fiber.phase, 1.8));
+                        context.fill(silkPath(fiber.points, time, fiber.phase, warm ? 7 : 1.8));
                         const refraction = refractedGradient(context, fiber.points, fiber.phase, .47 * fiber.depth);
                         context.fillStyle = refraction;
                         context.fill(silkPath(fiber.points, time, fiber.phase, .55));

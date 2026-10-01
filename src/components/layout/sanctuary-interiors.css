@@ -1,0 +1,43 @@
+/* Scoped to interior routes; the homepage and chakra colors remain independent. */
+.sanctuary-interiors.parchment-site #main-content { width:100%; border:0; box-shadow:none; background:#e6dfd2 url('/images/seraph-marble-surface.webp') center / 720px auto; }
+.sanctuary-interiors.parchment-site #main-content::before { display:none; }
+.sanctuary-interiors.parchment-site[data-folio] #main-content::after { top:76px; height:650px; mask-image:linear-gradient(#000 0%,#000 74%,transparent); }
+.sanctuary-interiors.parchment-site[data-folio] #main-content .folio-opening { min-height:555px; padding-top:35px; }
+.sanctuary-interiors.parchment-site[data-folio] #main-content .folio-opening > p { font-family:var(--font-inter),sans-serif; font-size:16px; line-height:1.8; }
+.sanctuary-interiors.parchment-site[data-folio] #main-content .folio-opening > .eyebrow { letter-spacing:.2em; text-transform:uppercase; }
+.sanctuary-interiors.parchment-site[data-scenic] #main-content::after { background-image:linear-gradient(90deg,#07110cdc,#0b150c66 58%,#0b150c26),var(--folio-art); }
+.sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening { max-width:1100px; text-align:left; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding-bottom:100px; }
+.sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening h1 { color:#f5eddc; text-shadow:0 2px 14px #07110c80; max-width:650px; }
+.sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening h1::after { margin-left:0; color:#e5c18a; }
+.sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening > p { color:#f0dfc0; text-shadow:0 1px 8px #07110c; margin-inline:0; }
+.sanctuary-interiors.parchment-site #main-content :is(.bg-glass,.account-panel,.review-group,.reviews-empty,.parchment-panel) { background:linear-gradient(#f7f2e9eb,#f0e9def5),var(--paper-texture); background-size:auto,720px auto; border-color:#a58a5a66; border-radius:12px; box-shadow:0 12px 32px #30251a0d,inset 0 1px #fff9; }
+.sanctuary-interiors.parchment-site #main-content :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea) { background:#fbf7ef; border-color:#9f896b88; border-radius:8px; box-shadow:none; }
+.sanctuary-interiors.parchment-site #main-content :is(a,button,input,select,textarea,summary):focus-visible { outline:2px solid #916a31; outline-offset:4px; }
+.sanctuary-interiors.parchment-site[data-folio='account'] #main-content,.sanctuary-interiors.parchment-site[data-folio='support'] #main-content { background:linear-gradient(90deg,#08110dcc,#08110d44),var(--folio-art) center / cover fixed; }
+.sanctuary-interiors.parchment-site:is([data-folio='account'],[data-folio='support']) #main-content::after { display:none; }
+.sanctuary-interiors.parchment-site[data-folio='account'] .account-page { padding-top:150px; padding-bottom:90px; }
+.sanctuary-interiors.parchment-site[data-folio='account'] .account-panel { border-top:3px solid #b9975e; }
+.sanctuary-interiors.parchment-site[data-folio='support'] #main-content > div { padding-block:150px 90px; }
+.sanctuary-interiors.parchment-site[data-folio='support'] #main-content > div > div { background:#f3ecdef2; padding:clamp(24px,5vw,56px); border:1px solid #b9975e; border-radius:120px 120px 14px 14px; }
+.sanctuary-lost { min-height:100svh; padding:180px 8% 100px; display:flex; align-items:center; background:linear-gradient(90deg,#07110dea,#07110d33),url('/images/sanctuary-vision-v3.webp') center / cover; color:#f5eddc; }
+.sanctuary-lost-copy { max-width:600px; }
+.sanctuary-lost .eyebrow { color:#e5c18a; font-size:11px; letter-spacing:.22em; text-transform:uppercase; }
+.sanctuary-interiors.parchment-site #main-content .sanctuary-lost h1,.sanctuary-lost h1 { font:400 clamp(36px,5vw,66px)/1.15 var(--font-cinzel),serif; color:#f5eddc; margin:24px 0; text-shadow:none; }
+.sanctuary-interiors.parchment-site #main-content .sanctuary-lost h1::after { display:none; }
+.sanctuary-lost-copy > p:not(.eyebrow) { max-width:430px; line-height:1.8; color:#e6dcca; }
+.sanctuary-lost a { display:inline-flex; gap:32px; align-items:center; margin-top:30px; padding:15px 24px; border:1px solid #e5c18a; border-radius:18px; color:#f3d4a0; }
+@media(max-width:600px) {
+  .sanctuary-interiors.parchment-site[data-folio] #main-content::after { height:580px; background-size:cover; }
+  .sanctuary-interiors.parchment-site[data-folio] #main-content .folio-opening { min-height:490px; padding-top:22px; }
+  .sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening { padding:32px 10px 65px; }
+  .sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening h1 { font-size:clamp(30px,9vw,46px); }
+  .sanctuary-interiors.parchment-site[data-folio='account'] .account-page { padding:110px 14px 50px; }
+  .sanctuary-interiors.parchment-site[data-folio='support'] #main-content > div { padding:110px 14px 50px; }
+  .sanctuary-interiors.parchment-site:is([data-folio='account'],[data-folio='support']) #main-content { background-attachment:scroll; }
+}
+@media print {
+  .sanctuary-interiors.parchment-site #main-content { background:white; }
+  .sanctuary-interiors.parchment-site[data-folio] #main-content::after { display:none; }
+  .sanctuary-interiors.parchment-site[data-folio] #main-content .folio-opening { min-height:0; padding:0; }
+  .sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening h1,.sanctuary-interiors.parchment-site[data-scenic] #main-content .folio-opening > p { color:#111; text-shadow:none; }
+}
