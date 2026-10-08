@@ -5,6 +5,7 @@ import { ArrowRight, Moon, Sun, Compass, Triangle, Infinity as InfinityIcon, Spa
 import SceneBackdrop from '@/components/visual/SceneBackdrop';
 import PortalLink from '@/components/ui/PortalLink';
 import styles from './earthly-home.module.css';
+import portals from './offerings.module.css';
 
 const script = Italianno({ weight: '400', subsets: ['latin'], variable: '--font-sanctuary-script' });
 const portalArtwork = ['divination', 'healing', 'journeys', 'teachings', 'loom'];
@@ -19,7 +20,7 @@ const offerings = [
 export default function Home() {
   return <div className={styles.home + ' ' + script.variable}>
     <section className={styles.hero} aria-labelledby="sanctuary-title">
-      <SceneBackdrop poster="/images/sanctuary-hero-v3.webp" scene="sanctuary" className={styles.heroArt} label="sanctuary" priority speed={.23} controlClassName={styles.motionControl} />
+      <SceneBackdrop poster="/images/sanctuary-moonlit-extended-v1.png" scene="sanctuary" className={styles.heroArt} label="sanctuary" priority speed={.23} controlClassName={styles.motionControl} />
       <div className={styles.heroShade} />
       <aside className={styles.marginNote} aria-hidden="true">Same<br />soul<br />more<br />magic<span>✦</span></aside>
       <div className={styles.heroCopy}>
@@ -31,26 +32,27 @@ export default function Home() {
         <p className={styles.values}>Heal <Sparkle /> Align <Sparkle /> Evolve <Sparkle /> Belong</p>
       </div>
     </section>
-    <section id="offerings" className={styles.offerings} aria-labelledby="offerings-title">
-      <SceneBackdrop scene="offerings" className={styles.portalThreads} label="portals" speed={.23} controlClassName={styles.portalControl} />
-      <header className={styles.sectionHeading}>
+    <section id="offerings" className={portals.section} aria-labelledby="offerings-title">
+      <SceneBackdrop scene="offerings" className={portals.threads} label="portals" speed={.23} controlClassName={portals.motionControl} />
+      <header className={portals.heading}>
         <p className={styles.eyebrow}>The offerings</p>
         <h2 id="offerings-title">One soul with infinite journeys.</h2>
-        <p>Explore the paths, tools, and teachings that support you — wherever you are on your journey.</p>
+        <div className={portals.ornament} aria-hidden="true"><span /><Sparkle size={16} strokeWidth={1} /><span /></div>
       </header>
-      <div className={styles.portals}>
-        {offerings.map(({ name, copy, href, icon: Icon }, index) => <PortalLink className={styles.portal} href={href} key={name}>
-          <div className={styles.portalArt} aria-hidden="true"><Image src={'/images/portal-' + portalArtwork[index] + '-v4.webp'} alt="" width={680} height={1020} sizes="(max-width: 650px) 48vw, (max-width: 1600px) 19vw, 292px" /></div>
-          <div className={styles.portalCopy}>
-            <h3>{name}</h3><p>{copy}</p><Icon className={styles.portalSymbol} size={31} strokeWidth={1} aria-hidden="true" />
-            <span className={styles.portalAction}>Enter the portal <ArrowRight size={13} /></span>
+      <div className={portals.grid}>
+        {offerings.map(({ name, copy, href, icon: Icon }, index) => <PortalLink className={portals.card} href={href} key={name} aria-describedby={'portal-description-' + index}>
+          <div className={portals.art} aria-hidden="true"><Image src={'/images/portal-' + portalArtwork[index] + '-v5.webp'} alt="" fill sizes="(max-width: 650px) 46vw, (max-width: 1000px) 30vw, 19vw" /></div>
+          <div className={portals.caption}>
+            <Icon className={portals.symbol} size={36} strokeWidth={1} aria-hidden="true" />
+            <h3>{name}</h3><p className={portals.srOnly} id={'portal-description-' + index}>{copy}</p>
+            <span className={portals.action} aria-hidden="true"><ArrowRight size={21} strokeWidth={1} /></span>
           </div>
         </PortalLink>)}
       </div>
-      <div className={styles.furtherPaths}><Link href="/birth-chart">Your birth chart <ArrowRight size={13} /></Link><span aria-hidden="true">✦</span><Link href="/chakras/earth-star">Explore the nine chakras <ArrowRight size={13} /></Link></div>
+      <div className={portals.furtherPaths}><Link href="/birth-chart">Your birth chart <Sun size={20} strokeWidth={1} /></Link><span aria-hidden="true">✦</span><Link href="/chakras/earth-star"><Sparkle size={20} strokeWidth={1} />Explore the nine chakras</Link></div>
     </section>
     <section className={styles.vision} aria-labelledby="vision-title">
-      <SceneBackdrop poster="/images/sanctuary-vision-v3.webp" scene="vision" className={styles.visionArt} label="vision" speed={.23} controlClassName={styles.visionControl} />
+      <SceneBackdrop poster="/images/sanctuary-alchemy-v5.webp" scene="vision" className={styles.visionArt} label="vision" speed={.23} controlClassName={styles.visionControl} />
       <div className={styles.visionShade} />
       <div className={styles.visionCopy}>
         <p className={styles.eyebrow}>The vision</p>

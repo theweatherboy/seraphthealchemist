@@ -2,7 +2,7 @@
 .hero,.vision { position:relative; isolation:isolate; }
 .hero { min-height:760px; height:min(880px,68vw); padding:165px 0 145px; display:flex; align-items:center; }
 .heroArt,.visionArt { z-index:-3; }
-.heroArt { object-position:50% 50%; }
+.heroArt { object-position:50% 0%; }
 .heroArt canvas,.visionArt canvas { opacity:.95; }
 .heroShade,.visionShade { position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(90deg,#080f0899 0%,#080e0833 38%,transparent 62%); }
 .hero::after { content:''; position:absolute; bottom:-1px; inset-inline:0; height:110px; background:linear-gradient(transparent,#e8d2b0); pointer-events:none; }
@@ -64,7 +64,7 @@
 @media(max-width:650px) {
  .hero { min-height:830px; height:auto; padding:315px 24px 95px; align-items:flex-end; }
  .heroArt { object-position:68% 0; }
- .heroArt img { object-fit:cover; height:550px; }
+ .heroArt img { object-fit:cover; height:100%; }
  .heroShade { background:linear-gradient(0deg,#09100bf5 5%,#09100bea 35%,#09100b44 61%,transparent 80%); }
  .hero::after { height:65px; }
  .heroCopy { width:100%; max-width:450px; margin:0; }
@@ -128,3 +128,14 @@
 .button { font-size:13px; letter-spacing:.035em; text-transform:none; }
 .portalCopy h3 { font-weight:650; letter-spacing:.015em; }
 .portalAction { text-transform:none; font-size:12px; letter-spacing:.02em; }
+
+/* Keep the moon and arch in view when the extended foreground is cropped. */
+@media(min-width:1600px) { .heroArt { object-position:50% 0%; } }
+
+/* Shared warm stone at both boundaries joins the three sanctuary scenes. */
+.home { background:#2b211c; }
+.hero::after { height:170px; background:linear-gradient(transparent,#2b211c); }
+.vision::before { height:180px; background:linear-gradient(#2b211c,transparent); }
+.visionShade { mask-image:linear-gradient(transparent,#000 180px); background:linear-gradient(90deg,#20150b55,transparent 65%),linear-gradient(0deg,#17120fe6,transparent 40%); }
+@media(max-width:650px) { .hero::after { height:100px; }.vision::before { height:140px; } }
+@media(max-width:650px) { .visionArt { object-position:78% 50%; }.visionShade { background:linear-gradient(90deg,#20150bcc,#20150b55),linear-gradient(0deg,#17120ff5,transparent 75%); } }

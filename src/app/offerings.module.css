@@ -1,0 +1,54 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  padding: 62px 3.5% 76px;
+  margin-top: -1px;
+  color: #f7e4bd;
+  scroll-margin-top: 105px;
+  background: linear-gradient(#2b211c, transparent 180px, transparent calc(100% - 160px), #2b211c), linear-gradient(#59351d55, #372419aa), url('/images/seraph-worn-stone-v1.webp') center / 900px 900px repeat;
+}
+.heading { position: relative; z-index: 4; text-align: center; margin: 0 auto 38px; }
+.heading > p { color: #edd0a1; font-size: 11px; letter-spacing: .36em; margin: 0 0 18px; }
+.heading h2 { font-family: var(--font-cinzel), serif; text-transform: uppercase; font-size: clamp(25px, 2.8vw, 43px); line-height: 1.4; font-weight: 400; letter-spacing: .055em; margin: 0; color: #ffebc7; }
+.ornament { display: flex; justify-content: center; align-items: center; gap: 12px; color: #d6ad70; margin-top: 18px; }
+.ornament span { width: 85px; height: 1px; background: linear-gradient(90deg, transparent, #d6ad70); }
+.ornament span:last-child { transform: rotate(180deg); }
+.grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 30px); max-width: 1540px; margin: auto; }
+.card { position: relative; display: flex; align-items: flex-end; justify-content: center; min-width: 0; aspect-ratio: 1 / 2.16; border-radius: 50% 50% 3px 3px / 24% 24% 3px 3px; border: 1px solid #d7ad73; background: #291b15; box-shadow: 0 12px 35px #130d0a55, inset 0 0 0 5px #b68c5040; color: #ffebc7; transition: transform .3s, box-shadow .3s; }
+.card::before { content: ''; position: absolute; inset: -9px -7px -5px; border: 1px solid #cda66b7a; border-radius: inherit; pointer-events: none; }
+.card::after { content: '✧'; position: absolute; left: 50%; top: -24px; transform: translateX(-50%); font-size: 23px; color: #e5bd7f; z-index: 4; }
+.card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px #130d0a80, 0 0 20px #efc08426; }
+.card:focus-visible { outline: 2px solid #fff0cb; outline-offset: 12px; }
+.art { position: absolute; inset: 5px; border-radius: inherit; overflow: hidden; }
+.art img { object-fit: cover; object-position: center; }
+.art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 44%, #281b1555 60%, #281b15f2 88%); }
+.caption { position: relative; z-index: 4; width: 100%; padding: 18px 10px 20px; text-align: center; }
+.symbol { display: block; margin: 0 auto 10px; color: #e7be7d; }
+.caption h3 { display: flex; justify-content: center; align-items: center; min-height: 2.5em; font-family: var(--font-cinzel), serif; font-size: clamp(16px, 1.5vw, 24px); font-weight: 400; line-height: 1.2; text-transform: uppercase; color: #ffebc7; margin: 0 0 14px; }
+.action { display: grid; place-items: center; width: 46px; height: 46px; margin: auto; border: 1px solid #dcb474; border-radius: 50%; color: #f2cb8c; transition: background .25s; }
+.card:hover .action,.card:focus-visible .action { background: #e6b76a26; }
+.threads { z-index: 3; opacity: .45; mask-image: linear-gradient(transparent 12%, #000 28%, #000 63%, transparent 84%); }
+.motionControl { top: auto !important; bottom: 18px; right: 25px !important; color: #edd0a1 !important; border-color: #d6ad7044 !important; background: #2b211c88 !important; box-shadow: none !important; }
+.furtherPaths { position: relative; z-index: 4; display: flex; align-items: center; justify-content: center; gap: 28px; margin: 36px auto 0; padding: 17px 0; border-block: 1px solid #d6ad7040; max-width: 1050px; color: #edd0a1; font-size: 14px; }
+.furtherPaths a { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 44px; }
+.furtherPaths a:hover { color: #fff4d9; text-decoration: underline; text-underline-offset: 5px; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (min-width: 1800px) { .caption { padding-bottom: 28px; }.caption h3 { font-size: 24px; } }
+@media (max-width: 1000px) {
+  .grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 30px 22px; max-width: 780px; }
+  .card { grid-column: span 2; aspect-ratio: 1 / 1.95; }
+  .card:nth-last-child(2) { grid-column: 2 / span 2; }
+  .caption h3 { font-size: 19px; }
+}
+@media (max-width: 650px) {
+  .section { padding: 42px 20px 75px; }
+  .heading { margin-bottom: 35px; }.heading h2 { font-size: 26px; letter-spacing: .015em; }.heading > p { font-size: 10px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 20px; }
+  .card,.card:nth-last-child(2) { grid-column: auto; aspect-ratio: 1 / 2.25; }
+  .card:last-child { grid-column: 1 / -1; width: calc(50% - 10px); justify-self: center; }
+  .caption { padding: 12px 5px 14px; }.caption h3 { font-size: clamp(13px, 3.5vw, 20px); margin-bottom: 9px; }.symbol { width: 28px; height: 28px; margin-bottom: 8px; }
+  .action { width: 44px; height: 44px; }.furtherPaths { gap: 3px; flex-direction: column; font-size: 13px; margin-top: 26px; }.furtherPaths > span { display: none; }
+  .threads { opacity: .25; }
+}
+@media (prefers-reduced-motion: reduce) { .card,.action { transition: none; }.card:hover { transform: none; } }
+@media (forced-colors: active) { .card,.action { border-color: LinkText; }.caption h3 { color: LinkText; }.symbol { color: LinkText; } }
