@@ -19,6 +19,7 @@ const details = [
   { icon: UserRound, description: 'Manage your account and preferences.' },
   { icon: FileText, description: 'Always visible.' },
   { icon: ShieldCheck, description: 'Always visible.' },
+  { icon: Sparkles, description: 'Live readings, donations, and the TikTok LIVE queue.' },
 ];
 const isLocked = (href: string) => href === '/terms-of-service' || href === '/privacy-policy';
 

@@ -78,3 +78,7 @@ Google OAuth is currently in Testing mode. Prepare its production audience/publi
 The catalog migration enables admin-only saved edits and seeds 15-minute Mini Cord Cut, 15-minute Mediumship, and 10-minute Psychic Reading booking policies. Default prices are $66, $99, and $77 respectively. Public offering text uses the saved catalog; confirmed historical service titles remain unchanged. Displayed duration describes the offering (including multi-session packages); actual appointment length, buffers, and booking caps remain under **Service limits**.
 
 Primary configuration reference: https://supabase.com/docs/guides/auth/social-login/auth-google and https://supabase.com/docs/guides/auth/redirect-urls.
+
+## TikTok LIVE queue
+
+Apply `202610120020_tiktok_live_queue.sql` after earlier unapplied migrations before deploying the LIVE intake form. See [TikTok LIVE setup and validation](tiktok-live.md). `/admin/live` is independent of scheduling and requires the existing administrator membership. Public visitors do not need an account, but must acknowledge both linked policies and confirm before their request is stored.

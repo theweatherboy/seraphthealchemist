@@ -143,3 +143,17 @@
 .enter,.light .enter { font-size:13px; letter-spacing:.025em; }
 .dropdown a { font-size:14px; }
 .chakraMenu > p { font-size:12px; }
+
+/* Keep LIVE reachable from the header even when the full menu is collapsed. */
+.mobileLive { display:none; }
+@media(max-width:1200px) {
+  .mobileLive { display:inline-flex; align-items:center; justify-content:center; min-height:40px; padding:8px 11px; border:1px solid #a88b6477; border-radius:999px; background:#fff7e6dc; color:#493653; font:700 12px var(--glass-type); white-space:nowrap; }
+}
+@media(max-width:420px) {
+  .header { gap:8px; }
+  .brand { gap:4px; }
+  .brand > span { font-size:18px; }
+  .brand img { width:32px; height:42px; }
+  .actions { gap:6px; }
+  .mobileLive { padding-inline:8px; font-size:11px; }
+}

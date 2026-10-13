@@ -1,0 +1,78 @@
+.page {
+  min-height: 100svh;
+  padding: 145px 24px 72px;
+  color: #453626;
+  background: radial-gradient(ellipse at top, #fff9eac9, transparent 65%);
+  font-family: var(--font-glass), sans-serif;
+}
+
+.content { max-width: 850px; margin-inline: auto; }
+.header { text-align: center; }
+.badge { display: inline-flex; align-items: center; gap: 9px; padding: 8px 15px; border: 1px solid #a47b6470; border-radius: 999px; background: #fff7edb3; color: #794235; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.badge > span { width: 7px; height: 7px; border-radius: 50%; background: #a34a5a; }
+.header h1 { margin: 22px 0 12px; font: 400 clamp(30px, 5vw, 48px)/1.2 var(--font-cinzel), serif; color: #453626; }
+.intro { margin: 0; font-size: 19px; color: #685744; }
+.notice { max-width: 560px; margin: 22px auto 28px; font-size: 17px; line-height: 1.65; }
+.notice strong { color: #794235; }
+.paymentPanel { padding: 26px; border: 1px solid #b99a6b66; border-radius: 24px; background: var(--pearl-fill); box-shadow: var(--pearl-shadow); }
+.paymentPanel h2 { margin: 0 0 18px; font-size: 21px; font-weight: 700; text-align: center; }
+.payments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.payment { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 76px; padding: 14px 18px; border: 1px solid #a88b6466; border-radius: 14px; color: #453626; background: #fffaf0d9; text-decoration: none; transition: background-color .2s, box-shadow .2s; }
+.payment:hover { background: #fffdf5; box-shadow: 0 4px 18px #9e754924; }
+.payment:focus-visible { outline: 3px solid #794235; outline-offset: 4px; }
+.payment strong { display: block; font-size: 18px; }
+.payment small { display: block; margin-top: 3px; font-size: 12px; overflow-wrap: anywhere; color: #685744; }
+.payment svg { flex-shrink: 0; }
+.paymentNote { margin: 17px 0 0; font-size: 14px; line-height: 1.6; color: #685744; text-align: center; }
+.offerings { margin-top: 38px; }
+.sectionHeading { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.sectionHeading h2 { margin: 0; font: 400 clamp(21px, 4vw, 28px)/1.3 var(--font-cinzel), serif; }
+.subtitle { margin: 9px 0 22px; text-align: center; color: #685744; font-size: 15px; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.card { padding: 24px; border: 1px solid #b99a6b55; border-radius: 20px; background: #fffaf0ad; box-shadow: 0 5px 20px #49341c08; }
+.card:first-child { grid-column: 1 / -1; background: linear-gradient(120deg, #fff8e9eb, #eae2efb0); }
+.cardHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.card h3 { margin: 0; font-size: 21px; line-height: 1.35; font-weight: 700; }
+.price { color: #794235; font-size: 28px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.duration { display: flex; align-items: center; gap: 7px; margin: 12px 0; font-size: 14px; color: #685744; }
+.description { margin: 0; font-size: 16px; line-height: 1.65; }
+.note { margin: 16px 0 0; padding-top: 12px; border-top: 1px solid #b99a6b44; font-size: 14px; font-weight: 700; color: #794235; }
+.footer { margin: 32px 0 0; text-align: center; font-size: 14px; color: #685744; }
+.liveForm { display: grid; gap: 28px; color: #453626; }
+.fieldset { min-width: 0; margin: 0; padding: 24px; border: 1px solid #b99a6b66; border-radius: 22px; background: #fffaf0ad; }
+.fieldset > p { margin-block: 12px 20px; line-height: 1.6; }
+.formHeading { padding-inline: 8px; font-size: 21px; font-weight: 700; }
+.choiceTitle { display: flex; align-items: flex-start; gap: 10px; font-size: 19px; }
+.choiceTitle input, .check input { width: 20px; height: 20px; flex-shrink: 0; margin-top: 3px; accent-color: #794235; }
+.liveForm .card { cursor: pointer; }
+.liveForm .card:has(input:checked) { border-color: #794235; box-shadow: 0 0 0 1px #794235; }
+.liveForm .description, .liveForm .note { display: block; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-block: 20px; }
+.fields label { display: flex; flex-direction: column; gap: 8px; font-weight: 600; }
+.fields input, .fields select { width: 100%; min-width: 0; padding: 12px; font: inherit; font-size: 16px; background: #fffaf0; border: 1px solid #a88b64; border-radius: 10px; }
+.fields small { font-weight: 400; line-height: 1.5; }
+.summary { display: flex; flex-direction: column; gap: 8px; margin-block: 20px; padding: 18px; background: #eae2ef80; border-radius: 12px; }
+.summary strong { font-size: 22px; }
+.check { display: flex; align-items: flex-start; gap: 12px; margin-block: 20px; line-height: 1.65; cursor: pointer; }
+.check a { text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+.submit { padding: 14px 22px; width: 100%; border: 1px solid #794235; border-radius: 999px; background: #794235; color: #fffaf0; font: inherit; font-weight: 700; cursor: pointer; }
+.submit:disabled { opacity: .5; cursor: not-allowed; }
+.error { color: #8a2929; font-weight: 700; }
+.liveForm :is(input,select,button,a):focus-visible { outline: 3px solid #794235; outline-offset: 4px; }
+
+@media (max-width: 600px) {
+  .page { padding: 115px 18px 55px; }
+  .paymentPanel { padding: 20px 16px; }
+  .payments, .cards { grid-template-columns: 1fr; }
+  .card { padding: 21px; }
+  .card h3 { font-size: 19px; }
+  .fields { grid-template-columns: 1fr; }
+  .fieldset { padding: 18px 12px; }
+  .choiceTitle { font-size: 17px; }
+  .liveForm .card { padding: 16px 12px; }
+  .liveForm .price { font-size: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .payment { transition: none; }
+}

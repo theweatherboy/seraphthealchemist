@@ -17,6 +17,7 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
   let bookedPreferences;
   let marketingWithdrawals = 0;
   let callbackCount = 0;
+  const liveRequests = [];
   const encode = value => Buffer.from(JSON.stringify(value)).toString('base64url');
   const token = `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode({ sub: userId, exp: Math.floor(Date.now() / 1000) + 3600, aud: 'authenticated' })}.test-signature`;
   const user = { id: userId, email: 'private@example.test', aud: 'authenticated', role: 'authenticated', app_metadata: { provider: 'google' }, user_metadata: {}, created_at: new Date().toISOString() };
@@ -33,6 +34,21 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
         response.writeHead(400); response.end(JSON.stringify({ error: 'invalid_grant', error_description: 'Invalid test code' })); return;
       }
       response.end(JSON.stringify({ access_token: token, refresh_token: 'test-refresh', token_type: 'bearer', expires_in: 3600, user })); return;
+    }
+    if (url.pathname === '/rest/v1/rpc/submit_tiktok_live') {
+      let body = ''; for await (const chunk of request) body += chunk;
+      const input = JSON.parse(body);
+      assert.equal(input.accepted_terms, true);
+      assert.equal(input.accepted_privacy, true);
+      assert.equal(input.confirmed, true);
+      if (input.entry_source === 'admin') assert(isAdmin);
+      liveRequests.push(input);
+      response.end(JSON.stringify(input.request_id)); return;
+    }
+    if (url.pathname === '/rest/v1/tiktok_live_queue') {
+      assert(isAdmin);
+      response.setHeader('Content-Range', '*/0');
+      response.end('[]'); return;
     }
     if (request.headers.authorization !== `Bearer ${token}`) {
       response.writeHead(401); response.end(JSON.stringify({ message: 'Invalid test token' })); return;
@@ -134,17 +150,46 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     Object.entries(values).forEach(([key, value]) => body.set(key, value));
     return request(path, { method: 'POST', body, headers: { Origin: origin } });
   };
+  // Next may stream the layout before an authorization redirect/notFound resolves.
+  const redirectDestination = async response => response.headers.get('location')
+    ?? (await response.text()).match(/NEXT_REDIRECT;(?:replace|push);([^;]+);30[378];/)?.[1];
   try {
     await start(false);
     assert.match(await (await request('/login')).text(), /Account sign-in is coming soon/);
-    assert.equal((await request('/account')).headers.get('location'), '/login');
-    assert.equal((await request('/admin')).headers.get('location'), '/login');
+    assert.equal(await redirectDestination(await request('/account')), '/login');
+    assert.equal(await redirectDestination(await request('/admin')), '/login');
     const callback = await request('/auth/callback?code=untrusted&next=https://evil.example');
     assert.equal(callback.headers.get('location'), `${origin}/login?error=callback`);
     assert.match(callback.headers.get('cache-control'), /no-store/);
     await stop();
 
     await start(true);
+    const liveManifest = JSON.parse(await readFile('.next/server/server-reference-manifest.json', 'utf8'));
+    const submitLive = async (exportedName, values) => {
+      const actionId = Object.keys(liveManifest.node).find(key => liveManifest.node[key].exportedName === exportedName);
+      assert(actionId);
+      const body = new FormData();
+      for (const [key, value] of Object.entries(values)) for (const entry of (Array.isArray(value) ? value : [value])) body.append('_1_' + key, entry);
+      body.set('0', '[{"ok":false,"message":""},"$K1"]');
+      return request('/tiktok-live', { method: 'POST', body, headers: { Origin: origin, 'Next-Action': actionId } });
+    };
+    const liveValues = { request_id: '00000000-0000-4000-8000-000000000020', name: 'LIVE guest', services: ['guidance','aura'], extra: 'on', payment: 'paypal', terms: 'on', privacy: 'on', confirmed: 'on' };
+    const livePage = await request('/tiktok-live');
+    assert.equal(livePage.status, 200);
+    const liveHtml = await livePage.text();
+    assert.match(liveHtml, /privacy-policy/); assert.match(liveHtml, /terms-of-service/);
+    assert.doesNotMatch(liveHtml, /Book a reading|name="slot_start"|name="timezone"/);
+    for (const field of ['terms','privacy','confirmed']) {
+      assert.match(await (await submitLive('submitLiveRequest', { ...liveValues, [field]: '' })).text(), /"ok":false/);
+    }
+    assert.equal(liveRequests.length, 0, 'unacknowledged requests never reach the database');
+    assert.match(await (await submitLive('submitLiveRequest', liveValues)).text(), /"ok":true/);
+    assert.equal(liveRequests.length, 1);
+    assert.equal(liveRequests[0].entry_source, 'visitor');
+    assert.deepEqual(liveRequests[0].selected_services, ['guidance','aura']);
+    assert.equal(bookedPreferences, undefined, 'LIVE submission does not invoke booking');
+    await submitLive('addManualLiveRequest', liveValues);
+    assert.equal(liveRequests.length, 1, 'signed-out visitor cannot invoke admin intake');
     const login = await submit('/login', 'Continue with Google');
     const authorize = new URL(login.headers.get('location'));
     assert.equal(authorize.origin, backendOrigin);
@@ -158,8 +203,11 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     assert.equal(account.status, 200);
     assert.match(account.headers.get('cache-control'), /private/);
     assert.match(await account.text(), /private@example.test/);
-    for (const path of ['/admin', '/admin/scheduling', '/admin/calendar', '/admin/clients', '/admin/services', '/admin/testimonies']) {
-      assert.equal((await request(path)).status, 404, `non-admin cannot open ${path}`);
+    for (const path of ['/admin', '/admin/scheduling', '/admin/calendar', '/admin/clients', '/admin/services', '/admin/testimonies', '/admin/live']) {
+      const denied = await request(path);
+      const deniedHtml = await denied.text();
+      assert(denied.status === 404 || deniedHtml.includes('NEXT_HTTP_ERROR_FALLBACK;404'), `non-admin cannot open ${path}`);
+      assert.doesNotMatch(deniedHtml, /Welcome, Seraph|Add someone manually/);
     }
     const invalidName = await submit('/account', 'Save display name', { display_name: 'x' });
     assert.equal(invalidName.headers.get('location'), '/account?error=name');
@@ -179,7 +227,12 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     const withdrawn = await submit('/account', 'Withdraw marketing permission');
     assert.equal(withdrawn.headers.get('location'), '/account?saved=preferences');
     assert.equal(marketingWithdrawals, 1);
+    await submitLive('addManualLiveRequest', liveValues);
+    assert.equal(liveRequests.length, 1, 'ordinary account cannot invoke admin intake');
     isAdmin = true;
+    assert.equal((await request('/admin/live')).status, 200);
+    assert.match(await (await submitLive('addManualLiveRequest', liveValues)).text(), /"ok":true/);
+    assert.equal(liveRequests.at(-1).entry_source, 'admin');
     const manifest = JSON.parse(await readFile('.next/server/server-reference-manifest.json', 'utf8'));
     const actionId = Object.keys(manifest.node).find(key => manifest.node[key].exportedName === 'updateNavigationVisibility');
     assert(actionId, 'navigation action is present in production build');
@@ -196,7 +249,8 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       const { items } = await response.json();
       assert.equal(items.find(item => item.href === '/services').is_visible, visible, 'saved state survives a fresh request');
       assert.equal(items.find(item => item.href === '/privacy-policy').is_visible, true, 'legal links always stay visible');
-      assert.equal(items.length, 11, 'hidden links remain available to the editor');
+      assert.equal(items.length, 13, 'hidden links remain available to the editor');
+      assert.equal(items.find(item => item.href === '/tiktok-live').is_visible, true, 'LIVE link is visible by default');
     }
     assert.match(await changeMenu('/privacy-policy', false), /"ok":false/);
     assert.match(await changeMenu('/invalid-page', false), /"ok":false/);
@@ -215,7 +269,7 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     }
     const logout = await submit('/account', 'Sign out');
     assert.equal(logout.headers.get('location'), '/login?message=signed-out');
-    assert.match((await request('/account')).headers.get('location'), /^\/login/);
+    assert.match(await redirectDestination(await request('/account')), /^\/login/);
   } finally {
     await stop();
     backend.closeAllConnections();

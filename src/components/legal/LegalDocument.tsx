@@ -4,13 +4,13 @@ import styles from './legal.module.css';
 
 export type LegalSection = { id: string; title: string; content: ReactNode };
 
-export default function LegalDocument({ title, introduction, sections }: { title: string; introduction: string; sections: LegalSection[] }) {
+export default function LegalDocument({ title, introduction, sections, updated = 'September 16, 2026' }: { title: string; introduction: string; sections: LegalSection[]; updated?: string }) {
   return <article className={styles.document}>
     <header id="top" className={`${styles.header} folio-opening folio-legal`}>
       <p className="eyebrow">Seraph, The Alchemist</p>
       <h1>{title}</h1>
       <p>{introduction}</p>
-      <p className={styles.date}>Last updated: September 16, 2026</p>
+      <p className={styles.date}>Last updated: {updated}</p>
       <nav className={styles.links} aria-label="Legal pages">
         <Link href="/terms-of-service">Terms of Service</Link>
         <Link href="/privacy-policy">Privacy Policy</Link>

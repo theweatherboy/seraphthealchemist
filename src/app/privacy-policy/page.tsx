@@ -17,6 +17,7 @@ const sections: LegalSection[] = [
     <ul>
       <li><strong>Account information.</strong> Signing in with Google supplies your email address, a Google account identifier, and basic profile information made available by Google, which may include your name and profile image. Supabase handles authentication. We also store your site account ID, chosen display name, public profile ID, and account timestamps. We do not receive your Google password.</li>
       <li><strong>Booking and service information.</strong> We store the service you request, appointment times and timezone, your contact email, an optional phone number or alternate contact, notes you submit, booking status, and service completion records. We may keep private administrative notes to manage your request.</li>
+      <li><strong>TikTok LIVE requests.</strong> We store the name or TikTok handle and/or email you submit, selected LIVE offerings, expected donation amount, payment method and optional reference, submission date, queue and payment-verification status, and your Terms of Service and Privacy Policy acknowledgments with their date and versions. These details are available to administrators to manage the LIVE queue and compare donations. An administrator may enter a request on your behalf after obtaining your acknowledgments; we record who entered it. Completed and removed requests may remain in our administrative records. LIVE requests do not create calendar appointments.</li>
       <li><strong>Payment references.</strong> We store your chosen payment provider, the reference or username you submit, and payment verification status. <strong>This website does not collect or store payment card numbers, card security codes, bank account numbers, or payment-provider passwords.</strong> Payment takes place on an external provider’s website.</li>
       <li><strong>Messages.</strong> If you contact us, we receive the name, email address, inquiry type, message, and any other information you choose to share. The website contact form is processed by FormSubmit and delivered to our email inbox.</li>
       <li><strong>Testimonies.</strong> We store your submitted text, rating, associated service, submission dates, revisions, and moderation records.</li>
@@ -87,5 +88,5 @@ const sections: LegalSection[] = [
 ];
 
 export default function PrivacyPolicyPage() {
-  return <LegalDocument title="Privacy Policy" introduction="Understand what you share, what stays private, and what appears when you publish a testimony." sections={sections} />;
+  return <LegalDocument updated="October 12, 2026" title="Privacy Policy" introduction="Understand what you share, what stays private, and what appears when you publish a testimony." sections={sections} />;
 }

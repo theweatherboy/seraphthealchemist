@@ -9,6 +9,7 @@ import SubmitButton from '@/components/auth/SubmitButton';
 
 const links = [
   ['/admin', 'Dashboard', LayoutDashboard],
+  ['/admin/live', 'LIVE Queue', ListChecks],
   ['/admin/scheduling', 'Scheduling Queue', ListChecks],
   ['/admin/calendar', 'Calendar', CalendarDays],
   ['/admin/clients', 'Clients', Users],

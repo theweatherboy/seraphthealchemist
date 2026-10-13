@@ -8,7 +8,7 @@ import { ArrowRight, Menu } from 'lucide-react';
 import { chakraNavigation } from '@/data/realms';
 import styles from './navigation.module.css';
 
-const primaryLinks = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/birth-chart', 'Birth Chart'], ['/reviews', 'Testimonies'], ['/grimoire', 'Grimoire'], ['/contact', 'Contact']] as const;
+const primaryLinks = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/tiktok-live', 'TikTok LIVE'], ['/birth-chart', 'Birth Chart'], ['/reviews', 'Testimonies'], ['/grimoire', 'Grimoire'], ['/contact', 'Contact']] as const;
 const extraLinks = [['/account', 'Your account'], ['/forge', 'Offerings'], ['/support', 'Support'], ['/terms-of-service', 'Terms of Service'], ['/privacy-policy', 'Privacy Policy']] as const;
 
 export default function GlobalNavigation() {
@@ -65,7 +65,10 @@ export default function GlobalNavigation() {
       {primaryLinks.filter(([href]) => show(href)).map(([href, label]) => <Link href={href} key={href} aria-current={pathname === href ? 'page' : undefined}>{label}</Link>)}
     </nav>
     <div className={styles.actions}>
-      <Link className={styles.enter} href="/services">Book a reading <ArrowRight size={15} /></Link>
+      {show('/tiktok-live') && <Link className={styles.mobileLive} href="/tiktok-live" aria-current={pathname === '/tiktok-live' ? 'page' : undefined}>TikTok LIVE</Link>}
+      {pathname === '/tiktok-live'
+        ? <a className={styles.enter} href="#live-request">LIVE offerings <ArrowRight size={15} /></a>
+        : <Link className={styles.enter} href="/services">Book a reading <ArrowRight size={15} /></Link>}
       <details ref={menu} className={styles.menu} key={pathname} onKeyDown={event => {
         if (event.key === 'Escape') {
           close();
