@@ -3,7 +3,7 @@ import LiveForm from './LiveForm';
 import styles from './tiktok-live.module.css';
 
 const title = 'TikTok LIVE Offerings | Seraph, The Alchemist';
-const description = 'TikTok LIVE readings only. Explore suggested donations and pay through Cash App, PayPal, Venmo, or Stripe.';
+const description = 'TikTok LIVE readings only. Explore minimum donations and pay through Cash App, PayPal, Venmo, or Stripe.';
 
 export const metadata: Metadata = {
   title,

@@ -47,14 +47,14 @@ function LiveRequestForm({ manual, onNew }: { manual: boolean; onNew: () => void
               if (offering.id === 'guidance' && !event.target.checked) setExtra(false);
               changeDetails();
             }} /><strong>{offering.title}</strong></span>
-            <span className={styles.price}>${offering.price}</span>
+            <span className={styles.price}><small>minimum donation of</small> +${offering.price}</span>
           </div>
           <span className={styles.duration}><Clock3 size={15} aria-hidden="true" /> {offering.duration}</span>
           <span className={styles.description}>{offering.description}</span>
           {'note' in offering && <span className={styles.note}>{offering.note}</span>}
         </label>)}
       </div>
-      {hasGuidance && <label className={styles.check}><input type="checkbox" name="extra" checked={extra} onChange={event => { setExtra(event.target.checked); changeDetails(); }} /> Add extra time to “What do I need to know?” (+$11)</label>}
+      {hasGuidance && <label className={styles.check}><input type="checkbox" name="extra" checked={extra} onChange={event => { setExtra(event.target.checked); changeDetails(); }} /> Add extra time to “What do I need to know?” (minimum donation of +$11)</label>}
     </fieldset>
 
     <fieldset disabled={pending} className={styles.fieldset}>
@@ -67,7 +67,7 @@ function LiveRequestForm({ manual, onNew }: { manual: boolean; onNew: () => void
         <label>Payment name or reference (optional)<input name="reference" maxLength={120} value={reference} onChange={event => { setReference(event.target.value); changeDetails(); }} /><small>Useful if the payment name differs from the TikTok name.</small></label>
       </div>
       <div className={styles.summary} aria-live="polite">
-        <strong>Expected donation: ${total}</strong>
+        <strong>{selected.length ? `Minimum donation of +$${total}` : 'Your donation total'}</strong>
         <span>{selected.length ? liveOfferings.filter(item => selected.includes(item.id)).map(item => item.title).join(' · ') + (hasGuidance && extra ? ' · Guidance extra time' : '') : 'Select an offering to see the total.'}</span>
       </div>
       {!manual && paymentLink && <><a className={styles.payment} href={paymentLink.href} target="_blank" rel="noopener noreferrer"><span><strong>Pay with {paymentLink.name}</strong><small>Opens in a new tab — return here to confirm</small></span><ArrowUpRight size={20} aria-hidden="true" /></a><p className={styles.paymentNote}>Enter or check the amount on the payment page. After donating, return here and send your details to the LIVE queue.</p></>}

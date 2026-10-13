@@ -51,7 +51,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
       initial={currentVariant.initial}
-      animate={currentVariant.animate}
+      // Even blur(0px) traps fixed backgrounds inside this full-page wrapper.
+      animate={{ ...currentVariant.animate, transitionEnd: { filter: "none" } }}
       exit={currentVariant.exit}
       transition={{
         duration: 0.7,

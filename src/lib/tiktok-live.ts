@@ -1,9 +1,9 @@
 export const liveOfferings = [
-  { id: 'guidance', title: 'What do I need to know?', price: 55, duration: '5–7 mins', description: 'A quick reading tapping into your higher self or your guides for what you need to know at this time.', note: 'Extra time can be added for $11.' },
-  { id: 'mediumship', title: 'Mediumship', price: 88, duration: '10–12 mins', description: 'A dedicated mediumship reading during the LIVE.', note: 'This reading cannot be extended.' },
-  { id: 'energy', title: 'Energy healing', price: 77, duration: '5 mins', description: 'A focused energy healing session during the LIVE.' },
-  { id: 'chakra', title: 'Blockage scan & removal', price: 55, duration: '5–10 mins', description: 'A blockage scan and removal for a single chakra.' },
-  { id: 'aura', title: 'Aura cleanse & reset', price: 66, duration: '5–10 mins', description: 'An aura cleansing and reset session during the LIVE.' },
+  { id: 'guidance', title: 'What do I need to know?', price: 55, duration: '~ 5 mins', description: 'A quick reading tapping into your higher self or your guides for what you need to know at this time.', note: 'Extra time can be added for a minimum donation of +$11.' },
+  { id: 'mediumship', title: 'Mediumship', price: 88, duration: '10 mins', description: 'A dedicated mediumship reading during the LIVE.', note: 'This reading cannot be extended.' },
+  { id: 'energy', title: 'Energy healing', price: 77, duration: '~ 5 mins', description: 'A focused energy healing session during the LIVE.' },
+  { id: 'chakra', title: 'Blockage scan & removal', price: 55, duration: '~ 5 mins', description: 'A blockage scan and removal for a single chakra.' },
+  { id: 'aura', title: 'Aura cleanse & reset', price: 66, duration: '~ 5 mins', description: 'An aura cleansing and reset session during the LIVE.' },
 ] as const;
 
 export const livePayments = [
