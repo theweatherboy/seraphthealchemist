@@ -4,7 +4,7 @@ import type { LiveEntry } from '@/lib/tiktok-live';
 export type Database = {
   public: {
     Tables: {
-      tiktok_live_queue: { Row: LiveEntry; Insert: never; Update: { status?: 'waiting' | 'completed' | 'removed'; payment_status?: 'unverified' | 'verified' }; Relationships: [] };
+      tiktok_live_queue: { Row: LiveEntry; Insert: never; Update: { status?: 'waiting' | 'completed' | 'removed'; payment_status?: 'unverified' | 'verified'; donated_amount?: number; payment_method?: string }; Relationships: [] };
       birth_profiles: {
         Row: { user_id: string; birth_date: string; birth_time: string; place_label: string; latitude: number; longitude: number; timezone: string; storage_consent: boolean; consent_version: string; consent_granted_at: string; updated_at: string };
         Insert: { user_id: string; birth_date: string; birth_time: string; place_label: string; latitude: number; longitude: number; timezone: string; storage_consent: boolean; consent_version: string; consent_granted_at?: string; updated_at?: string };
@@ -100,6 +100,7 @@ export type Database = {
     };
     Functions: {
       submit_tiktok_live: { Args: { request_id: string; contact_name: string; contact_email: string; selected_services: string[]; extra_time: boolean; selected_payment: string; payment_reference: string; accepted_terms: boolean; accepted_privacy: boolean; confirmed: boolean; entry_source?: string }; Returns: string };
+      join_tiktok_live: { Args: { request_id: string; first_name: string; last_name: string; selected_payment: string; accepted_terms: boolean; accepted_privacy: boolean; entry_source?: string }; Returns: string };
       submit_review: { Args: { instance_id: string; review_body: string; review_rating?: number }; Returns: string };
       moderate_review: { Args: { target_review: string; target_revision: string; decision: string; reason?: string | null }; Returns: undefined };
       create_scheduling_block: { Args: { starts_local: string; ends_local: string; schedule_timezone: string; block_reason: string }; Returns: string };

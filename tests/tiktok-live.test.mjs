@@ -59,6 +59,8 @@ test('LIVE intake requires consent, protects private data, preserves totals, and
     assert.equal(rows[0].terms_version, '2026-09-16');
     assert.equal(rows[0].privacy_version, '2026-10-12');
     assert.equal(rows[0].source, 'visitor');
+    assert.equal(rows[0].account_status, 'guest');
+    assert.equal(rows[0].account_id, null);
     for (const status of ['completed', 'removed', 'waiting']) {
       await db.query('update public.tiktok_live_queue set status=$1 where id=$2', [status, id]);
       assert.equal((await db.query('select status from public.tiktok_live_queue where id=$1', [id])).rows[0].status, status);
@@ -73,6 +75,57 @@ test('LIVE intake requires consent, protects private data, preserves totals, and
     assert.equal(manual.expected_amount, 220);
     assert.equal(manual.source, 'admin');
     assert.equal(manual.entered_by, admin);
+    assert.equal(manual.account_status, 'manual');
+    assert.equal(manual.account_id, null);
+    const join = (changes = {}) => {
+      const args = { id: randomUUID(), first: 'New', last: 'Visitor', payment: 'venmo', terms: true, privacy: true, source: 'visitor', ...changes };
+      return db.query('select public.join_tiktok_live($1,$2,$3,$4,$5,$6,$7) as id', Object.values(args));
+    };
+    await db.exec("reset role; select set_config('request.jwt.claim.sub','',false); set role anon");
+    for (const field of ['terms', 'privacy']) {
+      for (const value of [false, null]) await assert.rejects(join({ [field]: value }), /acknowledge/);
+    }
+    for (const changes of [{ first: '' }, { last: ' ' }, { first: null }, { first: 'a'.repeat(61) }, { last: 'bad\nname' }]) await assert.rejects(join(changes), /valid first and last/);
+    await assert.rejects(join({ payment: 'forged' }), /payment method/);
+    await assert.rejects(join({ source: 'admin' }), e => e.code === '42501');
+    const simpleId = randomUUID();
+    await join({ id: simpleId });
+    await join({ id: simpleId });
+    await assert.rejects(join({ id: simpleId, first: 'Changed' }), /already used/);
+    await assert.rejects(db.query('update public.tiktok_live_queue set donated_amount=25 where id=$1', [simpleId]), e => e.code === '42501');
+    await db.exec('reset role; set role authenticated');
+    await db.query("select set_config('request.jwt.claim.sub',$1,false)", [customer]);
+    assert.equal((await db.query('update public.tiktok_live_queue set donated_amount=25 where id=$1 returning id', [simpleId])).rows.length, 0);
+    const accountId = randomUUID();
+    await join({ id: accountId, first: 'Account', last: 'Visitor' });
+    assert.equal((await db.query('select * from public.tiktok_live_queue where id=$1', [accountId])).rows.length, 0, 'account holders cannot read private queue records');
+    await db.query("select set_config('request.jwt.claim.sub',$1,false)", [admin]);
+    const accountEntry = (await db.query('select * from public.tiktok_live_queue where id=$1', [accountId])).rows[0];
+    assert.equal(accountEntry.account_status, 'account');
+    assert.equal(accountEntry.account_id, customer);
+    await assert.rejects(db.query("update public.tiktok_live_queue set account_status='guest' where id=$1", [accountId]), e => e.code === '42501');
+    const simple = (await db.query('select * from public.tiktok_live_queue where id=$1', [simpleId])).rows[0];
+    assert.equal(simple.name, 'New Visitor');
+    assert.equal(simple.first_name, 'New');
+    assert.equal(simple.account_status, 'guest');
+    assert.equal(simple.account_id, null);
+    assert.equal(simple.last_name, 'Visitor');
+    assert.equal(simple.donated_amount, null);
+    assert.equal(simple.expected_amount, null);
+    assert.deepEqual(simple.items, []);
+    assert.equal(simple.payment_status, 'unverified');
+    assert(simple.acknowledged_at);
+    await db.query("update public.tiktok_live_queue set donated_amount=88.25,payment_method='cash_app',payment_status='verified' where id=$1", [simpleId]);
+    const corrected = (await db.query('select * from public.tiktok_live_queue where id=$1', [simpleId])).rows[0];
+    assert.equal(Number(corrected.donated_amount), 88.25);
+    assert.equal(corrected.payment_method, 'cash_app');
+    assert.equal(corrected.payment_status, 'verified');
+    await assert.rejects(db.query('update public.tiktok_live_queue set donated_amount=-1 where id=$1', [simpleId]), e => e.code === '23514');
+    await assert.rejects(db.query("update public.tiktok_live_queue set payment_method='forged' where id=$1", [simpleId]), e => e.code === '23514');
+    await db.exec('reset role; set role anon');
+    await join({ id: simpleId });
+    await join(); await join();
+    await assert.rejects(join(), /Please wait/);
     await db.exec('reset role');
     assert.deepEqual(await snapshot(), before, 'no appointment, availability, block, policy or service record changed');
     await db.exec('set role anon');

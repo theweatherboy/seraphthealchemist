@@ -2,6 +2,10 @@
 .tabs a { padding: 10px 18px; border: 1px solid #b99a6b66; border-radius: 999px; }
 .tabs a[aria-current] { background: #e8d8ba; font-weight: 700; }
 .entries { display: grid; gap: 20px; }
+.paymentEditor { margin-block: 20px; }
+.paymentFields { display: flex; flex-wrap: wrap; gap: 16px; }
+.paymentFields label { display: flex; flex-direction: column; gap: 8px; flex: 1 1 180px; }
+.paymentFields input, .paymentFields select { width: 100%; padding: 12px; border: 1px solid #b99a6b88; border-radius: 10px; font: inherit; background: #fffaf0; color: #453626; }
 .entries article { overflow-wrap: anywhere; }
 .heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
 .heading h2 { margin: 0; }

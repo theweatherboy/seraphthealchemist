@@ -35,12 +35,11 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       }
       response.end(JSON.stringify({ access_token: token, refresh_token: 'test-refresh', token_type: 'bearer', expires_in: 3600, user })); return;
     }
-    if (url.pathname === '/rest/v1/rpc/submit_tiktok_live') {
+    if (url.pathname === '/rest/v1/rpc/join_tiktok_live') {
       let body = ''; for await (const chunk of request) body += chunk;
       const input = JSON.parse(body);
       assert.equal(input.accepted_terms, true);
       assert.equal(input.accepted_privacy, true);
-      assert.equal(input.confirmed, true);
       if (input.entry_source === 'admin') assert(isAdmin);
       liveRequests.push(input);
       response.end(JSON.stringify(input.request_id)); return;
@@ -173,23 +172,34 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       body.set('0', '[{"ok":false,"message":""},"$K1"]');
       return request('/tiktok-live', { method: 'POST', body, headers: { Origin: origin, 'Next-Action': actionId } });
     };
-    const liveValues = { request_id: '00000000-0000-4000-8000-000000000020', name: 'LIVE guest', services: ['guidance','aura'], extra: 'on', payment: 'paypal', terms: 'on', privacy: 'on', confirmed: 'on' };
+    const liveValues = { request_id: '00000000-0000-4000-8000-000000000020', first_name: 'LIVE', last_name: 'Guest', payment: 'paypal', terms: 'on', privacy: 'on' };
     const livePage = await request('/tiktok-live');
     assert.equal(livePage.status, 200);
     const liveHtml = await livePage.text();
     assert.match(liveHtml, /privacy-policy/); assert.match(liveHtml, /terms-of-service/);
-    assert.doesNotMatch(liveHtml, /Book a reading|name="slot_start"|name="timezone"/);
-    for (const field of ['terms','privacy','confirmed']) {
+    assert.match(liveHtml, /Continue with Google/);
+    assert.match(liveHtml, /Continue as guest/);
+    assert.doesNotMatch(liveHtml, /name="first_name"|name="slot_start"|name="timezone"/);
+    for (const field of ['terms','privacy']) {
       assert.match(await (await submitLive('submitLiveRequest', { ...liveValues, [field]: '' })).text(), /"ok":false/);
     }
     assert.equal(liveRequests.length, 0, 'unacknowledged requests never reach the database');
     assert.match(await (await submitLive('submitLiveRequest', liveValues)).text(), /"ok":true/);
     assert.equal(liveRequests.length, 1);
     assert.equal(liveRequests[0].entry_source, 'visitor');
-    assert.deepEqual(liveRequests[0].selected_services, ['guidance','aura']);
+    assert.equal(liveRequests[0].first_name, 'LIVE');
+    assert.equal(liveRequests[0].last_name, 'Guest');
     assert.equal(bookedPreferences, undefined, 'LIVE submission does not invoke booking');
     await submitLive('addManualLiveRequest', liveValues);
     assert.equal(liveRequests.length, 1, 'signed-out visitor cannot invoke admin intake');
+    const liveLogin = await submit('/tiktok-live', 'Continue with Google', { next: '/tiktok-live' });
+    const liveCallback = new URL(new URL(liveLogin.headers.get('location')).searchParams.get('redirect_to'));
+    assert.equal(liveCallback.pathname, '/auth/callback');
+    assert.equal(liveCallback.searchParams.get('next'), '/tiktok-live');
+    const cancelledLive = await request('/auth/callback?error=access_denied&next=/tiktok-live');
+    const retryLive = new URL(cancelledLive.headers.get('location'));
+    assert.equal(retryLive.pathname, '/login');
+    assert.equal(retryLive.searchParams.get('next'), '/tiktok-live');
     const login = await submit('/login', 'Continue with Google');
     const authorize = new URL(login.headers.get('location'));
     assert.equal(authorize.origin, backendOrigin);
@@ -199,6 +209,19 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     const exchange = await request('/auth/callback?code=valid&next=https://evil.example');
     assert.equal(exchange.headers.get('location'), `${origin}/account`, 'untrusted redirect destination is ignored');
     assert.equal(callbackCount, 1);
+    // Start a fresh OAuth attempt so the second exchange has a new PKCE verifier.
+    const googleAction = Object.keys(liveManifest.node).find(key => liveManifest.node[key].exportedName === 'signInWithGoogle');
+    assert(googleAction);
+    const googleBody = new FormData();
+    googleBody.set('_1_next', '/tiktok-live');
+    googleBody.set('0', '["$K1"]');
+    await request('/tiktok-live', { method: 'POST', body: googleBody, headers: { Origin: origin, 'Next-Action': googleAction } });
+    const liveExchange = await request('/auth/callback?code=valid&next=/tiktok-live');
+    assert.equal(liveExchange.headers.get('location'), `${origin}/tiktok-live`);
+    assert.equal(await redirectDestination(await request('/login?next=/tiktok-live')), '/tiktok-live');
+    const signedInLive = await (await request('/tiktok-live')).text();
+    assert.match(signedInLive, /Continuing with your account/);
+    assert.match(signedInLive, /name="first_name"/);
     const account = await request('/account');
     assert.equal(account.status, 200);
     assert.match(account.headers.get('cache-control'), /private/);

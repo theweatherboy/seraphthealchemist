@@ -5,6 +5,7 @@ import { getSupabaseConfig } from '@/lib/supabase/config';
 import { createClient } from '@/lib/supabase/server';
 import SubmitButton from '@/components/auth/SubmitButton';
 import { signInWithGoogle } from './actions';
+import { authReturnPath } from '@/lib/auth-return';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Sign in | Seraph, The Alchemist', robots: { index: false, follow: false } };
@@ -15,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const client = await createClient();
   if (client) {
     const { data } = await client.auth.getUser();
-    if (data.user) redirect(params.next === '/admin' ? '/admin' : '/account');
+    if (data.user) redirect(authReturnPath(params.next));
   }
   return <section className="account-page"><div className="account-panel">
     <p className="eyebrow">Your place in the sanctuary</p>
@@ -24,8 +25,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     {params.error && <p role="alert" className="account-notice">We couldn&apos;t complete sign-in. Please try again. If you cancelled at Google, you can start again below.</p>}
     {params.message === 'signed-out' && <p role="status" className="account-notice">You have been signed out on this browser.</p>}
     {configured ? <form action={signInWithGoogle}>
+      <input type="hidden" name="next" value={authReturnPath(params.next)} />
       <SubmitButton pendingLabel="Opening Google…">Continue with Google</SubmitButton>
     </form> : <p role="status" className="account-notice">Account sign-in is coming soon. You can still explore the sanctuary or contact Seraph.</p>}
+    {params.next === '/tiktok-live' && <p><Link href="/tiktok-live">Return to TikTok LIVE to continue as a guest</Link></p>}
     <p className="account-fine-print">By continuing with Google, you confirm you are at least 18 and agree to the <Link href="/terms-of-service">Terms of Service</Link>. Read the <Link href="/privacy-policy">Privacy Policy</Link> for how your information is handled.</p>
     <p className="account-fine-print">Your first sign-in creates an account. Your email stays private, and you choose the name used for future public testimonies.</p>
     <div className="account-links"><Link href="/">Return to the sanctuary</Link><Link href="/privacy-policy">Privacy Policy</Link><Link href="/terms-of-service">Terms of Service</Link></div>

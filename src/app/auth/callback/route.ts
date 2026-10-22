@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSiteOrigin } from '@/lib/supabase/config';
 import { createClient } from '@/lib/supabase/server';
+import { authReturnPath } from '@/lib/auth-return';
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
-  const next = request.nextUrl.searchParams.get('next') === '/admin' ? '/admin' : '/account';
+  const next = authReturnPath(request.nextUrl.searchParams.get('next'));
   const client = await createClient();
   let authenticated = false;
   let failureReason = 'missing-code';
@@ -24,6 +25,7 @@ export async function GET(request: NextRequest) {
   }
   const failure = new URL('/login', getSiteOrigin());
   failure.searchParams.set('error', 'callback');
+  if (next !== '/account') failure.searchParams.set('next', next);
   // Keep browser errors generic; the server log contains the safe diagnostic.
   const response = NextResponse.redirect(authenticated ? new URL(next, getSiteOrigin()) : failure);
   response.headers.set('Cache-Control', 'private, no-store');

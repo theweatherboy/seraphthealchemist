@@ -15,10 +15,11 @@ export const livePayments = [
 
 export type LiveItem = { id: string; title: string; amount: number };
 export type LiveEntry = {
+  account_status: 'account' | 'guest' | 'manual' | 'unknown'; account_id: string | null;
   id: string; name: string | null; email: string | null; items: LiveItem[];
-  expected_amount: number; payment_method: string; payment_reference: string | null;
+  expected_amount: number | null; donated_amount: number | null; first_name: string | null; last_name: string | null; payment_method: string; payment_reference: string | null;
   status: 'waiting' | 'completed' | 'removed'; payment_status: 'unverified' | 'verified';
   created_at: string; acknowledged_at: string; terms_version: string; privacy_version: string;
   source: 'visitor' | 'admin'; entered_by: string | null;
 };
-export type LiveFormState = { ok: boolean; message: string };
+export type LiveFormState = { ok: boolean; message: string; payment?: string };

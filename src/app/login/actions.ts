@@ -3,11 +3,15 @@
 import { redirect } from 'next/navigation';
 import { getSiteOrigin } from '@/lib/supabase/config';
 import { createClient } from '@/lib/supabase/server';
+import { authReturnPath } from '@/lib/auth-return';
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(form: FormData) {
+  const next = authReturnPath(form.get('next'));
+  const failure = next === '/account' ? '/login?error=unavailable' : `/login?error=unavailable&next=${encodeURIComponent(next)}`;
   const client = await createClient();
-  if (!client) redirect('/login?error=unavailable');
+  if (!client) redirect(failure);
   const callback = new URL('/auth/callback', getSiteOrigin());
+  if (next !== '/account') callback.searchParams.set('next', next);
   let destination: string | undefined;
   try {
     const { data, error } = await client.auth.signInWithOAuth({
@@ -16,7 +20,7 @@ export async function signInWithGoogle() {
     });
     if (!error) destination = data.url ?? undefined;
   } catch { /* Display a fixed message rather than provider details or tokens. */ }
-  if (!destination) redirect('/login?error=unavailable');
+  if (!destination) redirect(failure);
   redirect(destination);
 }
 

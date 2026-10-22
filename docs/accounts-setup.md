@@ -81,4 +81,4 @@ Primary configuration reference: https://supabase.com/docs/guides/auth/social-lo
 
 ## TikTok LIVE queue
 
-Apply `202610120020_tiktok_live_queue.sql` after earlier unapplied migrations before deploying the LIVE intake form. See [TikTok LIVE setup and validation](tiktok-live.md). `/admin/live` is independent of scheduling and requires the existing administrator membership. Public visitors do not need an account, but must acknowledge both linked policies and confirm before their request is stored.
+Apply `202610120020_tiktok_live_queue.sql` and then `202610210021_live_donation_intake.sql` after earlier unapplied migrations before deploying the LIVE intake form. See [TikTok LIVE setup and validation](tiktok-live.md). `/admin/live` is independent of scheduling and requires administrator membership. Visitors enter first and last name and accept both policies, then choose a payment method to save their entry and reveal its donation link. Admins record the actual amount, correct the method, and confirm payment in the LIVE queue.

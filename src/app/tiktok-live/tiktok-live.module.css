@@ -10,6 +10,24 @@
 
 .content { max-width: 850px; margin-inline: auto; }
 .header { text-align: center; }
+.accessActions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; margin-top: 24px; }
+.googleButton { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 14px 22px; border: 1px solid #ffffffa6; border-radius: 999px; background: #352b48; color: #fff; -webkit-text-fill-color: #fff; font: inherit; font-weight: 700; box-shadow: 0 4px 18px #0003; cursor: pointer; }
+.googleButton:hover { background: #49395f; border-color: #fff; }
+.googleButton:disabled { opacity: .65; cursor: wait; }
+.guestButton { min-height: 44px; padding: 12px 22px; border: 1px solid #ddd0f080; border-radius: 999px; background: #252438; color: #fff2d8; font: inherit; cursor: pointer; }
+.accessStatus { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-bottom: 22px; color: #d6cede; }
+.accessStatus button { padding: 8px 12px; background: transparent; border: 0; color: #f8dfb1; text-decoration: underline; font: inherit; cursor: pointer; }
+.accessActions :is(button,a):focus-visible, .accessStatus button:focus-visible { outline: 3px solid #ffe1a9; outline-offset: 4px; }
+.quickPayments { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 24px 0; }
+.quickPayment { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 10px 17px; border: 1px solid #ffffff40; border-radius: 999px; font-size: 14px; font-weight: 800; line-height: 1.2; text-decoration: none; box-shadow: 0 4px 14px #0003; transition: filter .2s; }
+.quickPayment[data-method='cash_app'] { background: #00d64f; color: #003512; }
+.quickPayment[data-method='paypal'] { background: #003087; color: #fff; }
+.quickPayment[data-method='venmo'] { background: #0074de; color: #fff; }
+.quickPayment[data-method='stripe'] { background: #635bff; color: #fff; }
+.quickPayment:hover { filter: brightness(1.12); }
+.quickPayment { font-family: inherit; cursor: pointer; }
+.quickPayment:disabled { opacity: .6; cursor: wait; }
+.quickPayment:focus-visible { outline: 3px solid #ffe1a9; outline-offset: 4px; }
 .badge { display: inline-flex; align-items: center; gap: 9px; padding: 8px 15px; border: 1px solid #a47b6470; border-radius: 999px; background: #fff7edb3; color: #794235; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 .badge > span { width: 7px; height: 7px; border-radius: 50%; background: #a34a5a; }
 .header h1 { margin: 22px 0 12px; font: 400 clamp(30px, 5vw, 48px)/1.2 var(--font-cinzel), serif; color: #453626; }
@@ -113,5 +131,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .payment, .page .card { transition: none; }
+  .payment, .quickPayment, .page .card { transition: none; }
 }
