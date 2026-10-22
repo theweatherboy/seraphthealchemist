@@ -31,6 +31,7 @@ const sections: LegalSection[] = [
     <p>Providing a phone number is optional. Account or booking contact details are used for service communications; submitting them does not by itself enroll you in marketing emails or texts.</p>
   </> },
   { id: 'saved-birth-details', title: 'Optional saved birth details', content: <>
+    <p>On the TikTok LIVE signup form, you may optionally share your birth date, local birth time, and selected birthplace with its coordinates. Any details you submit are stored with that LIVE queue entry and are visible to administrators to support your LIVE request. These details are separate from a saved account birth profile and may remain with completed or removed queue records. You can leave any of these fields blank.</p>
     <p>Signed-in users can choose an unchecked permission box and select Save to retain one birth profile in their private account: birth date, local birth time, selected city label, coordinates, and its resolved timezone. We also record the permission version and time of the save. Calculating a chart does not save these fields automatically.</p>
     <p>Saved birth profiles are not public and are not included in public testimonies or the website administration interface. They can be loaded into the birth-chart form for a fresh calculation, replaced through another explicit save, or deleted on that page. Deleting the account also deletes its saved profile. Deleting saved details removes the active database record and clears the current page’s chart; infrastructure backups may retain earlier copies under the provider’s retention settings.</p>
     <p>The birth-chart AI assistant is currently disabled, and chart questions are not being sent to Groq through the site. If the assistant is enabled again, its data handling will be updated before users can access it.</p>
@@ -57,7 +58,7 @@ const sections: LegalSection[] = [
       <li><strong>Vercel:</strong> website hosting and delivery.</li>
       <li><strong>FormSubmit and our email provider:</strong> contact-form processing and correspondence.</li>
       <li><strong>Zoom, including Zoom AI Companion:</strong> online sessions, optional recordings, and optional AI-generated notes.</li>
-      <li><strong>CosmyDay:</strong> when you search for a birthplace, the city text you enter is sent to CosmyDay to find matching places and coordinates. When you request a reading, your birth date, local birth time, and selected birthplace coordinates are sent to its API to calculate the natal chart. Its service processes this information under its own privacy policy. We save your birth details in our database only if you separately choose the optional account-saving feature.</li>
+      <li><strong>CosmyDay:</strong> when you search for a birthplace in the Birth Chart or LIVE form, the city text you enter is sent to CosmyDay to find matching places and coordinates. When you request a birth chart, your birth date, local birth time, and selected birthplace coordinates are sent to its API to calculate the natal chart. Its service processes this information under its own privacy policy. We save birth details when you choose the optional account-saving feature or include them in a submitted LIVE request.</li>
       <li><strong>Astronomy Engine:</strong> the site uses this open-source calculation library on our server to calculate future planetary positions and transit-to-natal aspect dates. Birth details are not sent to Astronomy Engine as a separate service.</li>
       <li><strong>Groq:</strong> the birth-chart AI assistant is currently disabled, so chart data and chat messages are not sent to Groq through this feature.</li>
       <li><strong>Cash App, PayPal, Venmo, or Stripe:</strong> payments you make through their external websites. They may supply us with transaction information such as the payer’s name, amount, date, and payment status through their own services.</li>
@@ -88,5 +89,5 @@ const sections: LegalSection[] = [
 ];
 
 export default function PrivacyPolicyPage() {
-  return <LegalDocument updated="October 12, 2026" title="Privacy Policy" introduction="Understand what you share, what stays private, and what appears when you publish a testimony." sections={sections} />;
+  return <LegalDocument updated="October 21, 2026" title="Privacy Policy" introduction="Understand what you share, what stays private, and what appears when you publish a testimony." sections={sections} />;
 }

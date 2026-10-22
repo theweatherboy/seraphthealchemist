@@ -1,9 +1,10 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getSiteOrigin } from '@/lib/supabase/config';
 import { createClient } from '@/lib/supabase/server';
-import { authReturnPath } from '@/lib/auth-return';
+import { AUTH_RETURN_COOKIE, authReturnPath } from '@/lib/auth-return';
 
 export async function signInWithGoogle(form: FormData) {
   const next = authReturnPath(form.get('next'));
@@ -11,7 +12,11 @@ export async function signInWithGoogle(form: FormData) {
   const client = await createClient();
   if (!client) redirect(failure);
   const callback = new URL('/auth/callback', getSiteOrigin());
-  if (next !== '/account') callback.searchParams.set('next', next);
+  const cookieStore = await cookies();
+  cookieStore.set(AUTH_RETURN_COOKIE, next, {
+    httpOnly: true, sameSite: 'lax', secure: callback.protocol === 'https:',
+    path: '/', maxAge: 600,
+  });
   let destination: string | undefined;
   try {
     const { data, error } = await client.auth.signInWithOAuth({
@@ -20,11 +25,15 @@ export async function signInWithGoogle(form: FormData) {
     });
     if (!error) destination = data.url ?? undefined;
   } catch { /* Display a fixed message rather than provider details or tokens. */ }
-  if (!destination) redirect(failure);
+  if (!destination) {
+    cookieStore.delete(AUTH_RETURN_COOKIE);
+    redirect(failure);
+  }
   redirect(destination);
 }
 
 export async function signOut() {
+  (await cookies()).delete(AUTH_RETURN_COOKIE);
   const client = await createClient();
   let failed = false;
   if (client) {

@@ -35,7 +35,7 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       }
       response.end(JSON.stringify({ access_token: token, refresh_token: 'test-refresh', token_type: 'bearer', expires_in: 3600, user })); return;
     }
-    if (url.pathname === '/rest/v1/rpc/join_tiktok_live') {
+    if (url.pathname === '/rest/v1/rpc/join_tiktok_live_details') {
       let body = ''; for await (const chunk of request) body += chunk;
       const input = JSON.parse(body);
       assert.equal(input.accepted_terms, true);
@@ -172,7 +172,7 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       body.set('0', '[{"ok":false,"message":""},"$K1"]');
       return request('/tiktok-live', { method: 'POST', body, headers: { Origin: origin, 'Next-Action': actionId } });
     };
-    const liveValues = { request_id: '00000000-0000-4000-8000-000000000020', first_name: 'LIVE', last_name: 'Guest', payment: 'paypal', terms: 'on', privacy: 'on' };
+    const liveValues = { request_id: '00000000-0000-4000-8000-000000000020', first_name: 'LIVE', last_name: 'Guest', payment: 'paypal', terms: 'on', privacy: 'on', offerings: ['tarot_oracle','cleanse'] };
     const livePage = await request('/tiktok-live');
     assert.equal(livePage.status, 200);
     const liveHtml = await livePage.text();
@@ -184,19 +184,26 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
       assert.match(await (await submitLive('submitLiveRequest', { ...liveValues, [field]: '' })).text(), /"ok":false/);
     }
     assert.equal(liveRequests.length, 0, 'unacknowledged requests never reach the database');
+    assert.match(await (await submitLive('submitLiveRequest', { ...liveValues, offerings: ['forged'] })).text(), /"ok":false/);
+    assert.equal(liveRequests.length, 0, 'invalid selections never reach the database');
+    assert.match(await (await submitLive('submitLiveRequest', { ...liveValues, date: '2026-02-30' })).text(), /"ok":false/);
+    assert.equal(liveRequests.length, 0, 'invalid optional birth dates never reach the database');
     assert.match(await (await submitLive('submitLiveRequest', liveValues)).text(), /"ok":true/);
     assert.equal(liveRequests.length, 1);
     assert.equal(liveRequests[0].entry_source, 'visitor');
     assert.equal(liveRequests[0].first_name, 'LIVE');
     assert.equal(liveRequests[0].last_name, 'Guest');
+    assert.deepEqual(liveRequests[0].selected_offerings, ['tarot_oracle','cleanse']);
+    assert.deepEqual(liveRequests[0].birth_details, { date: '', time: '', place: null });
     assert.equal(bookedPreferences, undefined, 'LIVE submission does not invoke booking');
     await submitLive('addManualLiveRequest', liveValues);
     assert.equal(liveRequests.length, 1, 'signed-out visitor cannot invoke admin intake');
     const liveLogin = await submit('/tiktok-live', 'Continue with Google', { next: '/tiktok-live' });
     const liveCallback = new URL(new URL(liveLogin.headers.get('location')).searchParams.get('redirect_to'));
     assert.equal(liveCallback.pathname, '/auth/callback');
-    assert.equal(liveCallback.searchParams.get('next'), '/tiktok-live');
-    const cancelledLive = await request('/auth/callback?error=access_denied&next=/tiktok-live');
+    assert.equal(liveCallback.search, '', 'all sign-ins use the same allowlisted callback URL');
+    assert(liveLogin.headers.getSetCookie().some(cookie => cookie.startsWith('sanctuary-auth-return=') && /httponly/i.test(cookie) && /samesite=lax/i.test(cookie)), 'return destination is stored in an HTTP-only cookie');
+    const cancelledLive = await request('/auth/callback?error=access_denied');
     const retryLive = new URL(cancelledLive.headers.get('location'));
     assert.equal(retryLive.pathname, '/login');
     assert.equal(retryLive.searchParams.get('next'), '/tiktok-live');
@@ -216,12 +223,17 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     googleBody.set('_1_next', '/tiktok-live');
     googleBody.set('0', '["$K1"]');
     await request('/tiktok-live', { method: 'POST', body: googleBody, headers: { Origin: origin, 'Next-Action': googleAction } });
-    const liveExchange = await request('/auth/callback?code=valid&next=/tiktok-live');
+    const liveExchange = await request('/auth/callback?code=valid');
     assert.equal(liveExchange.headers.get('location'), `${origin}/tiktok-live`);
+    assert(liveExchange.headers.getSetCookie().some(cookie => cookie.startsWith('sanctuary-auth-return=;')), 'return cookie is cleared after use');
+    jar.set('sanctuary-auth-return', 'https://evil.example');
+    const forgedReturn = await request('/auth/callback?error=access_denied');
+    assert.equal(forgedReturn.headers.get('location'), `${origin}/login?error=callback`, 'untrusted cookie destinations are ignored');
     assert.equal(await redirectDestination(await request('/login?next=/tiktok-live')), '/tiktok-live');
     const signedInLive = await (await request('/tiktok-live')).text();
     assert.match(signedInLive, /Continuing with your account/);
     assert.match(signedInLive, /name="first_name"/);
+    for (const offering of ['tarot_oracle', 'healing', 'cleanse', 'psychic', 'mediumship']) assert.match(signedInLive, new RegExp(`name="offerings" value="${offering}"`));
     const account = await request('/account');
     assert.equal(account.status, 200);
     assert.match(account.headers.get('cache-control'), /private/);
@@ -254,8 +266,9 @@ test('HTTP auth boundaries, OAuth callback and account permissions', { timeout: 
     assert.equal(liveRequests.length, 1, 'ordinary account cannot invoke admin intake');
     isAdmin = true;
     assert.equal((await request('/admin/live')).status, 200);
-    assert.match(await (await submitLive('addManualLiveRequest', liveValues)).text(), /"ok":true/);
+    assert.match(await (await submitLive('addManualLiveRequest', { ...liveValues, date: '1990-06-15', time: '14:30', city: 'Austin, Texas', birth_latitude: '30.2672', birth_longitude: '-97.7431' })).text(), /"ok":true/);
     assert.equal(liveRequests.at(-1).entry_source, 'admin');
+    assert.deepEqual(liveRequests.at(-1).birth_details, { date: '1990-06-15', time: '14:30', place: { label: 'Austin, Texas', lat: 30.2672, lon: -97.7431 } });
     const manifest = JSON.parse(await readFile('.next/server/server-reference-manifest.json', 'utf8'));
     const actionId = Object.keys(manifest.node).find(key => manifest.node[key].exportedName === 'updateNavigationVisibility');
     assert(actionId, 'navigation action is present in production build');

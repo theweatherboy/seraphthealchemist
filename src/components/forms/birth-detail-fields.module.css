@@ -1,0 +1,21 @@
+.fields { --birth-text: #453626; --birth-muted: #685744; --birth-fill: #fffaf0; --birth-border: #b78e6d77; --birth-button: #eadabb; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; grid-column: 1 / -1; text-align: left; }
+.fields.dark { --birth-text: #fff7eb; --birth-muted: #d6cede; --birth-fill: #101221; --birth-border: #d8c6ec66; --birth-button: #352b48; color-scheme: dark; }
+.fields .label { display: flex; flex-direction: column; gap: 8px; color: var(--birth-text); font: inherit; font-size: 14px; font-weight: 600; letter-spacing: normal; text-transform: none; }
+.label small { color: var(--birth-muted); font-size: 11px; font-weight: 400; }
+.fields input:not([type=hidden]) { width: 100%; min-width: 0; min-height: 48px; padding: 12px; border: 1px solid var(--birth-border); border-radius: 10px; color: var(--birth-text); background: var(--birth-fill); font: inherit; font-size: 16px; }
+/* The site's ID-level glass input rules otherwise replace the dark palette. */
+.fields.dark input:not([type=hidden]) { color: var(--birth-text) !important; -webkit-text-fill-color: var(--birth-text) !important; background: var(--birth-fill) !important; border-color: var(--birth-border) !important; }
+.fields.dark input::placeholder { color: var(--birth-muted) !important; -webkit-text-fill-color: var(--birth-muted) !important; opacity: 1; }
+.city { grid-column: 1 / -1; display: grid; gap: 10px; min-width: 0; }
+.search { display: flex; gap: 10px; }
+.search input { flex: 1; }
+.search button { padding: 12px 18px; flex-shrink: 0; border: 1px solid var(--birth-border); border-radius: 10px; color: var(--birth-text); background: var(--birth-button); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.search button:disabled { opacity: .6; cursor: default; }
+.fields .hint, .message { margin: 0; color: var(--birth-muted); font-size: 12px; line-height: 1.6; font-weight: 400; }
+.results { margin: 0; padding: 0; max-height: 220px; overflow-y: auto; list-style: none; border: 1px solid var(--birth-border); border-radius: 10px; background: var(--birth-fill); }
+.results button { display: block; width: 100%; padding: 12px 14px; border: 0; border-bottom: 1px solid var(--birth-border); background: transparent; color: var(--birth-text); text-align: left; font: inherit; font-size: 14px; line-height: 1.6; cursor: pointer; }
+.results button:hover { background: var(--birth-button); }
+.selected { display: flex; gap: 12px; justify-content: space-between; align-items: center; margin: 0; color: var(--birth-text); font-size: 13px; line-height: 1.6; }
+.selected button { padding: 8px; border: 0; background: transparent; color: inherit; text-decoration: underline; cursor: pointer; }
+.fields :is(input,button):focus-visible { outline: 2px solid #c9a86b; outline-offset: 3px; }
+@media(max-width: 540px) { .fields { grid-template-columns: 1fr; } .search { flex-direction: column; } }

@@ -1,11 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSiteOrigin } from '@/lib/supabase/config';
 import { createClient } from '@/lib/supabase/server';
-import { authReturnPath } from '@/lib/auth-return';
+import { AUTH_RETURN_COOKIE, authReturnPath } from '@/lib/auth-return';
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
-  const next = authReturnPath(request.nextUrl.searchParams.get('next'));
+  const savedReturn = request.cookies.get(AUTH_RETURN_COOKIE)?.value;
+  const next = authReturnPath(savedReturn || request.nextUrl.searchParams.get('next'));
   const client = await createClient();
   let authenticated = false;
   let failureReason = 'missing-code';
@@ -28,6 +29,7 @@ export async function GET(request: NextRequest) {
   if (next !== '/account') failure.searchParams.set('next', next);
   // Keep browser errors generic; the server log contains the safe diagnostic.
   const response = NextResponse.redirect(authenticated ? new URL(next, getSiteOrigin()) : failure);
+  response.cookies.delete(AUTH_RETURN_COOKIE);
   response.headers.set('Cache-Control', 'private, no-store');
   response.headers.set('Referrer-Policy', 'no-referrer');
   return response;

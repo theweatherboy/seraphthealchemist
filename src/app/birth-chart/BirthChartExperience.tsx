@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import styles from './birth-chart.module.css';
 import SavedBirthDetails from './SavedBirthDetails';
+import BirthDetailFields, { type BirthPlace } from '@/components/forms/BirthDetailFields';
 import type { BirthDetails } from '@/lib/birth-profile';
 
 type Planet = { lon: number; sign: string; degInSign: number; house: number | null; retrograde: boolean; dignity: string; speed_lon: number };
@@ -15,7 +16,7 @@ type ChartData = {
   aspects: { a: string; b: string; type: string; angle: number; delta: number; applying: boolean }[];
 };
 type Transit = { kind: string; date: string; exactAt: string; body: string; target: string; aspect: string; exactness?: number; significance?: string; phase?: string };
-type PlaceChoice = { label: string; lat: number; lon: number };
+type PlaceChoice = BirthPlace;
 type Reading = { chart: ChartData; transits: Transit[]; place: string; from: string; to: string; timezone: string | null; houseCusps: { house: number; position: string }[] };
 
 const symbols: Record<string, string> = { Sun: '\u2609', Moon: '\u263e', Mercury: '\u263f', Venus: '\u2640', Mars: '\u2642', Jupiter: '\u2643', Saturn: '\u2644', Uranus: '\u2645', Neptune: '\u2646', Pluto: '\u2647', Chiron: '\u26b7', NorthNode: '\u260a', SouthNode: '\u260b' };
@@ -55,51 +56,29 @@ export default function BirthChartExperience() {
   const [birthDate, setBirthDate] = useState('');
   const [birthTime, setBirthTime] = useState('');
   const [loading, setLoading] = useState(false);
-  const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
-  const [locationError, setLocationError] = useState('');
-  const [cityQuery, setCityQuery] = useState('');
-  const [places, setPlaces] = useState<PlaceChoice[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceChoice | null>(null);
   const [reading, setReading] = useState<Reading | null>(null);
   const [includeLunarTransits, setIncludeLunarTransits] = useState(false);
   const [visibleTransitCount, setVisibleTransitCount] = useState(60);
   const resultsRef = useRef<HTMLElement>(null);
   const chartRequest = useRef<AbortController | null>(null);
-  const cityRequest = useRef<AbortController | null>(null);
-  useEffect(() => () => { chartRequest.current?.abort(); cityRequest.current?.abort(); }, []);
+  const [detailsVersion, setDetailsVersion] = useState(0);
+  useEffect(() => () => { chartRequest.current?.abort(); }, []);
   const clearDetails = useCallback(() => {
-    chartRequest.current?.abort(); chartRequest.current = null; cityRequest.current?.abort(); cityRequest.current = null;
-    setLoading(false); setSearching(false);
-    setBirthDate(''); setBirthTime(''); setCityQuery(''); setSelectedPlace(null); setPlaces([]); setReading(null); setError(''); setLocationError('');
+    chartRequest.current?.abort(); chartRequest.current = null; setDetailsVersion(value => value + 1);
+    setLoading(false);
+    setBirthDate(''); setBirthTime(''); setSelectedPlace(null); setReading(null); setError('');
   }, []);
   function loadDetails(details: BirthDetails) {
-    chartRequest.current?.abort(); chartRequest.current = null; cityRequest.current?.abort(); cityRequest.current = null;
-    setLoading(false); setSearching(false);
-    setBirthDate(details.date); setBirthTime(details.time); setSelectedPlace(details.place); setCityQuery(details.place.label); setPlaces([]); setReading(null); setError(''); setLocationError('');
+    chartRequest.current?.abort(); chartRequest.current = null; setDetailsVersion(value => value + 1);
+    setLoading(false);
+    setBirthDate(details.date); setBirthTime(details.time); setSelectedPlace(details.place); setReading(null); setError('');
   }
 
   useEffect(() => {
     if (reading) resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [reading]);
-
-  async function searchCity() {
-    const query = cityQuery.trim();
-    if (query.length < 2) { setLocationError('Enter at least two characters to search.'); return; }
-    cityRequest.current?.abort();
-    const controller = new AbortController(); cityRequest.current = controller;
-    setSearching(true); setLocationError(''); setPlaces([]); setSelectedPlace(null);
-    try {
-      const response = await fetch(`/api/birth-chart?q=${encodeURIComponent(query)}`, { cache: 'no-store', signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]) });
-      const payload = await response.json();
-      if (controller.signal.aborted) return;
-      if (!response.ok) throw new Error(payload.error ?? 'City search is temporarily unavailable.');
-      const choices = Array.isArray(payload.places) ? payload.places as PlaceChoice[] : [];
-      setPlaces(choices);
-      if (choices.length === 0) setLocationError('No matching city was found. Try adding a state, region, or country.');
-    } catch (caught) { if (!controller.signal.aborted) setLocationError(caught instanceof Error ? caught.message : 'City search is temporarily unavailable.'); }
-    finally { if (cityRequest.current === controller) { cityRequest.current = null; setSearching(false); } }
-  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -143,16 +122,7 @@ export default function BirthChartExperience() {
       </header>
       <p className={styles.forecastNote}>Your date, local birth time, and selected birthplace are used to calculate your natal chart and year-ahead personal transits. Birth details are sent securely to CosmyDay for the natal chart. Saving them to your account is a separate, optional choice below.</p>
       <form className={styles.form} onSubmit={submit}>
-        <label>Birth date<input required name="date" type="date" min="1900-01-01" max={new Date().toISOString().slice(0, 10)} value={birthDate} onChange={event => setBirthDate(event.target.value)} /></label>
-        <label>Local birth time<input required name="time" type="time" value={birthTime} onChange={event => setBirthTime(event.target.value)} /></label>
-        <div className={styles.citySearch}>
-          <label htmlFor="birth-city">Birth city</label>
-          <div className={styles.cityControls}><input id="birth-city" type="search" minLength={2} maxLength={120} placeholder="Search a city, region, or country" autoComplete="off" value={cityQuery} onChange={event => { setCityQuery(event.target.value); setSelectedPlace(null); setPlaces([]); setLocationError(''); setError(''); }} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void searchCity(); } }} /><button type="button" className={styles.searchCity} disabled={searching || cityQuery.trim().length < 2} onClick={() => void searchCity()}>{searching ? 'Searching…' : 'Find city'}</button></div>
-          {locationError && <p className={styles.locationMessage} role="status">{locationError}</p>}
-          {places.length > 0 && <div className={styles.placeOptions} role="listbox" aria-label="Matching birth cities">{places.map((place, index) => <button type="button" role="option" aria-selected={selectedPlace?.lat === place.lat && selectedPlace?.lon === place.lon} key={`${place.lat}-${place.lon}-${index}`} onClick={() => { setSelectedPlace(place); setCityQuery(place.label); setPlaces([]); setLocationError(''); setError(''); }}>{place.label}</button>)}</div>}
-          {selectedPlace && <p className={styles.selectedPlace} role="status">Selected: {selectedPlace.label}</p>}
-          <input type="hidden" name="city" value={selectedPlace?.label ?? ''} />
-        </div>
+        <BirthDetailFields key={detailsVersion} date={birthDate} time={birthTime} place={selectedPlace} onDate={setBirthDate} onTime={setBirthTime} onPlace={place => { setSelectedPlace(place); setError(''); }} />
         <div className={styles.yearNotice}><span>12 months</span><span>Your personal transit calendar</span></div>
         <button className={styles.submit} type="submit" disabled={loading}>{loading ? 'Calculating your year…' : 'Reveal my chart'} <span aria-hidden="true">→</span></button>
       </form>

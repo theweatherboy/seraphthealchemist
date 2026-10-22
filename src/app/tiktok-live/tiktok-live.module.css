@@ -10,6 +10,22 @@
 
 .content { max-width: 850px; margin-inline: auto; }
 .header { text-align: center; }
+.birthDetails { margin: 28px 0; padding: 22px; border: 1px solid #b99a6b66; border-radius: 20px; }
+.birthHeading { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.birthHeading > span { font-size: 32px; }
+.birthHeading h2 { margin: 0; font-size: 20px; line-height: 1.4; }
+.birthHeading p { margin: 5px 0 0; font-size: 12px; }
+.birthHint { margin: 14px 0; font-size: 13px; line-height: 1.7; }
+.page .birthDetails { background: linear-gradient(135deg, #dec4f014, #f2d49b09); border-color: #ddd0f047; }
+.page .birthHeading { color: #f8dfb1; }
+.page .birthHint { color: #d6cede; }
+@media (max-width: 540px) { .birthDetails { padding: 18px 12px; } }
+.offeringChoices { min-width: 0; margin: 24px 0; padding: 18px; border: 1px solid #b99a6b66; border-radius: 14px; }
+.offeringChoices legend { padding-inline: 8px; font-weight: 700; }
+.offeringChoices > p { margin: 0 0 12px; font-size: 14px; }
+.offeringChoices > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 8px 18px; }
+.offeringChoices .check { margin: 0; padding-block: 8px; }
+.page .offeringChoices { border-color: #ddd0f047; background: #dec4f009; }
 .accessActions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; margin-top: 24px; }
 .googleButton { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 14px 22px; border: 1px solid #ffffffa6; border-radius: 999px; background: #352b48; color: #fff; -webkit-text-fill-color: #fff; font: inherit; font-weight: 700; box-shadow: 0 4px 18px #0003; cursor: pointer; }
 .googleButton:hover { background: #49395f; border-color: #fff; }

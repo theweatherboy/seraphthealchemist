@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin';
-import { livePayments } from '@/lib/tiktok-live';
+import { livePayments, liveRequestOfferings } from '@/lib/tiktok-live';
 import LiveForm from '@/app/tiktok-live/LiveForm';
 import { PaymentEditor, QueueAction, QueueRefresh } from './QueueControls';
 import styles from './queue.module.css';
@@ -26,6 +26,15 @@ export default async function LiveQueue({ searchParams }: { searchParams: Promis
       return <article key={entry.id} className="admin-card">
         <div className={styles.heading}><div><h2>{person}</h2>{entry.email && entry.name && <p>{entry.email}</p>}<p className="admin-muted"><time dateTime={entry.created_at}>{formatDate(entry.created_at)}</time></p></div><strong className={styles.total}>{entry.donated_amount == null ? 'Not recorded' : `$${Number(entry.donated_amount).toFixed(2)}`}<small>Amount donated</small></strong></div>
         {entry.expected_amount != null && <p className="admin-muted">Original expected donation: ${entry.expected_amount}</p>}
+        {(entry.birth_date || entry.birth_time || entry.birth_place) && <div className={styles.birthDetails}>
+          <strong>Birth details</strong>
+          <dl>
+            {entry.birth_date && <div><dt>Date of birth</dt><dd>{new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${entry.birth_date}T12:00:00Z`))}</dd></div>}
+            {entry.birth_time && <div><dt>Local birth time</dt><dd>{entry.birth_time.slice(0, 5)}</dd></div>}
+            {entry.birth_place && <div><dt>Birthplace</dt><dd>{entry.birth_place.label}</dd></div>}
+          </dl>
+        </div>}
+        <div><strong>Requested offerings</strong>{entry.requested_offerings?.length ? <ul className={styles.items}>{entry.requested_offerings.map(id => <li key={id}>{liveRequestOfferings.find(item => item.id === id)?.title ?? id}</li>)}</ul> : <p className="admin-muted">No selections recorded</p>}</div>
         <p><strong>{entry.account_status === 'account' ? 'Signed in with an account' : entry.account_status === 'guest' ? 'Guest · no sign-in' : entry.account_status === 'manual' ? 'Added manually · account status not checked' : 'Account status not recorded'}</strong></p>
         <ul className={styles.items}>{entry.items.map(item => <li key={item.id}><span>{item.title}</span><strong>${item.amount}</strong></li>)}</ul>
         <p><strong>{livePayments.find(method => method.id === entry.payment_method)?.name ?? entry.payment_method}</strong> · {entry.payment_status === 'verified' ? 'Payment verified by admin' : 'Needs payment verification'}</p>

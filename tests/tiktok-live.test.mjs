@@ -78,8 +78,8 @@ test('LIVE intake requires consent, protects private data, preserves totals, and
     assert.equal(manual.account_status, 'manual');
     assert.equal(manual.account_id, null);
     const join = (changes = {}) => {
-      const args = { id: randomUUID(), first: 'New', last: 'Visitor', payment: 'venmo', terms: true, privacy: true, source: 'visitor', ...changes };
-      return db.query('select public.join_tiktok_live($1,$2,$3,$4,$5,$6,$7) as id', Object.values(args));
+      const args = { id: randomUUID(), first: 'New', last: 'Visitor', payment: 'venmo', terms: true, privacy: true, offerings: ['tarot_oracle', 'healing'], birth: {}, source: 'visitor', ...changes };
+      return db.query('select public.join_tiktok_live_details($1,$2,$3,$4,$5,$6,$7,$8,$9) as id', Object.values(args));
     };
     await db.exec("reset role; select set_config('request.jwt.claim.sub','',false); set role anon");
     for (const field of ['terms', 'privacy']) {
@@ -87,10 +87,14 @@ test('LIVE intake requires consent, protects private data, preserves totals, and
     }
     for (const changes of [{ first: '' }, { last: ' ' }, { first: null }, { first: 'a'.repeat(61) }, { last: 'bad\nname' }]) await assert.rejects(join(changes), /valid first and last/);
     await assert.rejects(join({ payment: 'forged' }), /payment method/);
+    for (const offerings of [null, ['forged'], ['healing','healing'], [null]]) await assert.rejects(join({ offerings }), /valid LIVE offerings/);
     await assert.rejects(join({ source: 'admin' }), e => e.code === '42501');
+    for (const birth of [{ date: '2026-02-30' }, { date: '2999-01-01' }, { date: '1899-01-01' }, { time: '24:00' }, { place: { label: 'Bad', lat: 91, lon: 0 } }, { place: { label: 'Missing coordinates' } }, null]) await assert.rejects(join({ birth }));
     const simpleId = randomUUID();
     await join({ id: simpleId });
     await join({ id: simpleId });
+    await join({ id: simpleId, offerings: ['healing', 'tarot_oracle'] });
+    await assert.rejects(join({ id: simpleId, offerings: ['cleanse'] }), /different offerings/);
     await assert.rejects(join({ id: simpleId, first: 'Changed' }), /already used/);
     await assert.rejects(db.query('update public.tiktok_live_queue set donated_amount=25 where id=$1', [simpleId]), e => e.code === '42501');
     await db.exec('reset role; set role authenticated');
@@ -107,6 +111,29 @@ test('LIVE intake requires consent, protects private data, preserves totals, and
     const simple = (await db.query('select * from public.tiktok_live_queue where id=$1', [simpleId])).rows[0];
     assert.equal(simple.name, 'New Visitor');
     assert.equal(simple.first_name, 'New');
+    assert.equal(simple.birth_date, null);
+    assert.equal(simple.birth_time, null);
+    assert.equal(simple.birth_place, null);
+    const birthId = randomUUID();
+    const birth = { date: '1990-06-15', time: '14:30', place: { label: 'New York, United States', lat: 40.7128, lon: -74.006 } };
+    await join({ id: birthId, first: 'Birth', last: 'Details', source: 'admin', birth });
+    await join({ id: birthId, first: 'Birth', last: 'Details', source: 'admin', birth });
+    const savedBirth = (await db.query('select * from public.tiktok_live_queue where id=$1', [birthId])).rows[0];
+    assert.equal(savedBirth.birth_date.toISOString().slice(0, 10), '1990-06-15');
+    assert.equal(savedBirth.birth_time, '14:30:00');
+    assert.deepEqual(savedBirth.birth_place, birth.place);
+    assert.equal(savedBirth.privacy_version, '2026-10-21');
+    await assert.rejects(join({ id: birthId, first: 'Birth', last: 'Details', source: 'admin', birth: { ...birth, time: '15:30' } }), /different birth details/);
+    for (const partial of [{ date: '1990-06-15' }, { time: '14:30' }, { place: birth.place }]) await join({ first: 'Partial', last: 'Details', source: 'admin', birth: partial });
+    await assert.rejects(db.query("update public.tiktok_live_queue set birth_date='1991-01-01' where id=$1", [birthId]), e => e.code === '42501');
+    assert.deepEqual(simple.requested_offerings, ['tarot_oracle','healing']);
+    const allOfferingsId = randomUUID();
+    await join({ id: allOfferingsId, first: 'Manual', last: 'All', source: 'admin', offerings: ['tarot_oracle','healing','cleanse','psychic','mediumship'] });
+    assert.equal((await db.query('select requested_offerings from public.tiktok_live_queue where id=$1', [allOfferingsId])).rows[0].requested_offerings.length, 5);
+    const noOfferingsId = randomUUID();
+    await join({ id: noOfferingsId, first: 'Manual', last: 'None', source: 'admin', offerings: [] });
+    assert.deepEqual((await db.query('select requested_offerings from public.tiktok_live_queue where id=$1', [noOfferingsId])).rows[0].requested_offerings, []);
+    await assert.rejects(db.query("update public.tiktok_live_queue set requested_offerings='{}' where id=$1", [simpleId]), e => e.code === '42501');
     assert.equal(simple.account_status, 'guest');
     assert.equal(simple.account_id, null);
     assert.equal(simple.last_name, 'Visitor');

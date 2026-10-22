@@ -6,6 +6,14 @@ export const liveOfferings = [
   { id: 'aura', title: 'Aura cleanse & reset', price: 66, duration: '~ 5 mins', description: 'An aura cleansing and reset session during the LIVE.' },
 ] as const;
 
+export const liveRequestOfferings = [
+  { id: 'tarot_oracle', title: 'Tarot / oracle reading' },
+  { id: 'healing', title: 'Healing' },
+  { id: 'cleanse', title: 'Cleanse' },
+  { id: 'psychic', title: 'Psychic reading' },
+  { id: 'mediumship', title: 'Mediumship' },
+] as const;
+
 export const livePayments = [
   { id: 'cash_app', name: 'Cash App', detail: '$seraphthealchemist', href: 'https://cash.app/$seraphthealchemist' },
   { id: 'paypal', name: 'PayPal', detail: 'Pay with PayPal', href: 'https://www.paypal.me/seraphthealchemist' },
@@ -15,6 +23,8 @@ export const livePayments = [
 
 export type LiveItem = { id: string; title: string; amount: number };
 export type LiveEntry = {
+  birth_date: string | null; birth_time: string | null; birth_place: { label: string; lat: number; lon: number } | null;
+  requested_offerings: string[];
   account_status: 'account' | 'guest' | 'manual' | 'unknown'; account_id: string | null;
   id: string; name: string | null; email: string | null; items: LiveItem[];
   expected_amount: number | null; donated_amount: number | null; first_name: string | null; last_name: string | null; payment_method: string; payment_reference: string | null;
