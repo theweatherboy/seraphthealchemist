@@ -2,14 +2,18 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import TestimonyGroups, { type PublicReview, type TestimonyGroup } from '@/components/reviews/TestimonyGroups';
+import StarChoice from '@/components/reviews/StarChoice';
+import SubmitButton from '@/components/auth/SubmitButton';
+import { submitGuestReview } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Testimonies | Seraph, The Alchemist',
-  description: 'Verified service testimonies from the sanctuary.',
+  description: 'Reviews and service testimonies from the sanctuary.',
 };
 
-export default async function ReviewsPage() {
+export default async function ReviewsPage({ searchParams }: { searchParams: Promise<{ submitted?: string; error?: string }> }) {
+  const params = await searchParams;
   const client = await createClient();
   let groups: TestimonyGroup[] = [];
   let unavailable = !client;
@@ -41,6 +45,21 @@ export default async function ReviewsPage() {
       byCustomer.get(review.customer_id)!.reviews.push({ ...review, service_title: serviceNames.get(review.id) });
     }
     groups = [...byCustomer.values()];
+    const { data: guestReviews, error: guestError } = await client.from('guest_reviews')
+      .select('id,first_name,last_name,service_title,rating,body,created_at')
+      .eq('status', 'approved').order('created_at', { ascending: false });
+    if (guestError) {
+      console.warn('[reviews/guest-public] Query failed:', guestError.code);
+      unavailable = true;
+    }
+    for (const review of guestReviews ?? []) {
+      groups.push({
+        customer_id: `guest-${review.id}`,
+        display_name: `${review.first_name} ${review.last_name}`,
+        reviews: [{ id: review.id, customer_id: `guest-${review.id}`, rating: review.rating,
+          service_title: review.service_title ?? undefined, review_revisions: [{ body: review.body }], guest: true }],
+      });
+    }
   }
   return (
     <section className="reviews-page">
@@ -49,11 +68,27 @@ export default async function ReviewsPage() {
         <h1>Testimonies</h1>
         <p>Reflections from people who have walked a path with Seraph.</p>
       </div>
+      <section id="leave-a-review" className="guest-review-panel" aria-labelledby="leave-a-review-title">
+        <p className="eyebrow">Share your experience</p><h2 id="leave-a-review-title">Leave a review</h2>
+        <p>No account is needed. Your review appears here only after Seraph approves it.</p>
+        {params.submitted && <p role="status" className="account-notice">Thank you. Your review is in the approval queue.</p>}
+        {params.error && <p role="alert" className="account-notice">{params.error === 'unavailable' ? 'Reviews are unavailable right now. Please try again later.' : 'Check your name, rating, and review, then try again.'}</p>}
+        <form action={submitGuestReview} className="account-form guest-review-form">
+          <div className="guest-name-fields"><div><label htmlFor="guest-first-name">First name</label><input id="guest-first-name" name="first_name" autoComplete="given-name" maxLength={60} required /></div>
+            <div><label htmlFor="guest-last-name">Last name</label><input id="guest-last-name" name="last_name" autoComplete="family-name" maxLength={60} required /></div></div>
+          <label htmlFor="guest-service">Service received <span>(optional)</span></label><input id="guest-service" name="service_title" maxLength={120} placeholder="e.g. Tarot reading" />
+          <StarChoice />
+          <label htmlFor="guest-review">Your review</label><textarea id="guest-review" name="body" minLength={20} maxLength={1600} rows={5} required />
+          <div className="guest-review-trap" aria-hidden="true"><label htmlFor="guest-website">Website</label><input id="guest-website" name="website" tabIndex={-1} autoComplete="off" /></div>
+          <p className="account-fine-print">By submitting, you agree to the <Link href="/terms-of-service#testimonies">testimony terms</Link> and request publication of your name, rating, review, and optional service. See our <Link href="/privacy-policy#public-testimonies">Privacy Policy</Link>.</p>
+          <SubmitButton pendingLabel="Submitting…">Submit for approval</SubmitButton>
+        </form>
+      </section>
       {unavailable ? <div className="reviews-empty" role="status">Testimonies could not be loaded. Please try again shortly.</div>
         : groups.length ? <TestimonyGroups groups={groups} />
         : <div className="reviews-empty"><p>Testimonies are being gathered.</p><Link href="/contact">Begin a session</Link></div>}
       <div className="reviews-footer">
-        <Link href="/account">Sign in to view your eligible services</Link>
+        <Link href="/account">View your account</Link>
         <Link href="/">Return to the sanctuary</Link>
       </div>
     </section>

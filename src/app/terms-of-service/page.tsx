@@ -45,7 +45,7 @@ const sections: LegalSection[] = [
     <p>If we cannot provide a paid service, we will offer a replacement appointment or refund for the undelivered service. Nothing in these terms removes non-waivable refund rights or the right to raise a legitimate payment dispute.</p>
   </> },
   { id: 'testimonies', title: 'Testimonies & public submissions', content: <>
-    <p>Share only your own honest experience. A confirmed historical service makes a testimony eligible for submission; it is not an endorsement of a particular result. A verified testimony label means Seraph confirmed the service record, not that an independent payment auditor verified it.</p>
+    <p>Share only your own honest experience. Guests can submit a review without an account. A verified testimony label means Seraph confirmed the service record, not that an independent payment auditor verified it. Guest reviews are labeled community reviews and are not service verified.</p>
     <p>You keep ownership of your words. By submitting a testimony for publication, you give us a nonexclusive, royalty-free permission to host and display it on this website with your chosen public name, rating, and service title. This permission does not authorize unrelated advertising use. You can request removal by email.</p>
     <p>We may moderate spam, impersonation, unlawful content, threats, or private information. We do not require favorable feedback, and these terms do not restrict honest reviews or impose penalties for criticism. Public testimonies from one account are grouped together, as explained in the <Link href="/privacy-policy#public-testimonies">Privacy Policy</Link>.</p>
   </> },

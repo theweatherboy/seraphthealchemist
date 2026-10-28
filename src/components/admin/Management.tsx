@@ -9,10 +9,12 @@ import {
   deleteAvailabilityWindow,
   deleteSchedulingBlock,
   moderateReview,
+  moderateGuestReview,
   saveServiceSchedulePolicy,
 } from '@/app/admin/actions';
 import { getServices } from '@/lib/services';
 import type { Database } from '@/lib/supabase/database.types';
+import WovenRating from '@/components/reviews/WovenRating';
 
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -30,9 +32,10 @@ export default async function Management({ searchParams, section }: { searchPara
   const services = await getServices({ includeInactive: true });
   const catalogResult = await client.from('service_catalog').select('slug').limit(1);
   const params = await searchParams;
-  const [profilesResult, reviewsResult, availabilityResult, blocksResult, policiesResult] = await Promise.all([
+  const [profilesResult, reviewsResult, guestReviewsResult, availabilityResult, blocksResult, policiesResult] = await Promise.all([
     client.from('profiles').select('id, display_name').order('display_name'),
     client.from('reviews').select('id, customer_id, service_instance_id, status, created_at').eq('status', 'pending').order('created_at', { ascending: true }),
+    client.from('guest_reviews').select('id, first_name, last_name, service_title, rating, body, created_at').eq('status', 'pending').order('created_at', { ascending: true }),
     client.from('scheduling_availability').select('id, weekday, starts_at, ends_at, timezone, is_enabled').order('weekday').order('starts_at'),
     client.from('scheduling_blocks').select('id, starts_at, ends_at, reason').gte('ends_at', new Date().toISOString()).order('starts_at'),
     client.from('service_schedule_policies').select('service_slug, duration_minutes, buffer_minutes, max_per_day, max_per_week, max_per_month, is_bookable'),
@@ -57,6 +60,10 @@ export default async function Management({ searchParams, section }: { searchPara
     </div>
 
 </> : <>    <div className="account-next"><h2>Verify a completed service</h2><p>For past sessions, ask your client to sign in at /login and share their account ID from My account. Select that member, the service, and its original completion date. They can then return to My account to submit a testimony; no new booking or payment is needed.</p>{profilesResult.error && <p role="alert">The client list could not be loaded. Please reload before confirming a service.</p>}<form action={addServiceInstance} className="account-form"><label htmlFor="customer-id">Customer</label><select id="customer-id" name="customer_id" required><option value="">Choose a member</option>{(profilesResult.data ?? []).map(profile => <option value={profile.id} key={profile.id}>{profile.display_name} ({profile.id.slice(0, 8)})</option>)}</select><label htmlFor="service-slug">Published offering</label><select id="service-slug" name="service_slug" required><option value="">Choose an offering</option>{services.map(service => <option value={service.slug} key={service.slug}>{service.title}</option>)}</select><label htmlFor="completed-at">Completed on</label><input id="completed-at" name="completed_at" type="date" required /><SubmitButton pendingLabel="Saving…">Confirm service</SubmitButton></form></div>
-    <div className="account-next"><h2>Testimonies awaiting review</h2>{reviewsResult.error ? <p role="alert">The review queue could not be loaded.</p> : pendingReviews.length ? pendingReviews.map(review => { const revision = (revisionsResult.data ?? []).find(item => item.review_id === review.id); return <article className="review-entry" key={review.id}><h3>Pending testimony</h3><p>{revision?.body ?? 'Revision unavailable'}</p><form action={moderateReview} className="account-links"><input type="hidden" name="review_id" value={review.id} /><input type="hidden" name="revision_id" value={revision?.id ?? ''} /><button name="decision" value="approved" type="submit">Publish</button><button name="decision" value="rejected">Reject</button></form></article>; }) : <p>No pending testimonies.</p>}</div>
+    <div className="account-next"><h2>Testimonies awaiting review</h2>{reviewsResult.error || guestReviewsResult.error ? <p role="alert">The review queue could not be loaded.</p> : <>
+      {pendingReviews.map(review => { const revision = (revisionsResult.data ?? []).find(item => item.review_id === review.id); return <article className="review-entry" key={review.id}><h3>Verified service testimony</h3><p>{revision?.body ?? 'Revision unavailable'}</p><form action={moderateReview} className="account-links"><input type="hidden" name="review_id" value={review.id} /><input type="hidden" name="revision_id" value={revision?.id ?? ''} /><button name="decision" value="approved" type="submit">Publish</button><button name="decision" value="rejected">Reject</button></form></article>; })}
+      {(guestReviewsResult.data ?? []).map(review => <article className="review-entry" key={review.id}><h3>Guest review</h3><p><strong>{review.first_name} {review.last_name}</strong>{review.service_title ? ` · ${review.service_title}` : ''}</p><WovenRating rating={review.rating} /><p>{review.body}</p><form action={moderateGuestReview} className="account-links"><input type="hidden" name="review_id" value={review.id} /><button name="decision" value="approved" type="submit">Publish</button><button name="decision" value="rejected" type="submit">Reject</button></form></article>)}
+      {!pendingReviews.length && !guestReviewsResult.data?.length && <p>No pending testimonies.</p>}
+    </>}</div>
 </>}</div></section>;
 }

@@ -141,6 +141,17 @@ export async function moderateReview(formData: FormData) {
   redirect('/admin/testimonies?saved=moderation');
 }
 
+export async function moderateGuestReview(formData: FormData) {
+  const { client } = await requireAdmin();
+  const reviewId = String(formData.get('review_id') ?? '');
+  const decision = String(formData.get('decision') ?? '');
+  if (!/^[0-9a-f-]{36}$/i.test(reviewId) || !['approved', 'rejected'].includes(decision)) redirect('/admin/testimonies?error=moderation');
+  const { error } = await client.rpc('moderate_guest_review', { target_review: reviewId, decision });
+  if (error) redirect('/admin/testimonies?error=moderation');
+  revalidatePath('/admin', 'layout'); revalidatePath('/reviews');
+  redirect('/admin/testimonies?saved=moderation');
+}
+
 export async function updateServiceRequest(formData: FormData) {
   const { client } = await requireAccount('/admin');
   const requestId = String(formData.get('request_id') ?? '');

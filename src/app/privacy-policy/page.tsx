@@ -37,7 +37,7 @@ const sections: LegalSection[] = [
     <p>The birth-chart AI assistant is currently disabled, and chart questions are not being sent to Groq through the site. If the assistant is enabled again, its data handling will be updated before users can access it.</p>
   </> },
   { id: 'public-testimonies', title: 'What becomes public', content: <>
-    <p>Submitting a testimony asks us to review it for public display. If published, visitors can see your chosen display name, testimony, rating, service title, and associated review information. Testimonies from the same account are grouped using an account identifier, which connects those experiences publicly.</p>
+    <p>Submitting a testimony asks us to review it for public display. If published, visitors can see your chosen display name or submitted first and last name, testimony, star rating, optional service title, and associated review information. Testimonies from the same account are grouped using an account identifier, which connects those experiences publicly. Guest reviews appear separately and are labeled community reviews.</p>
     <p>Your email, phone number, payment reference, and private booking or moderation notes are not included in the public testimony display. Information you put in the testimony itself can become public, so review it before submitting. Your Google profile photo is not automatically displayed with testimonies.</p>
     <p>You may request removal of a testimony by emailing us. Public content may be copied by other people or indexed by search engines; removing it from our site cannot erase copies held by others.</p>
   </> },

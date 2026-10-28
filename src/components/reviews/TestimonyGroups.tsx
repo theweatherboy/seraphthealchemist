@@ -5,6 +5,7 @@ export type PublicReview = {
   customer_id: string;
   rating: number;
   service_title?: string;
+  guest?: boolean;
   review_revisions: { body: string }[];
 };
 export type TestimonyGroup = { customer_id: string; display_name: string; reviews: PublicReview[] };
@@ -25,7 +26,7 @@ export default function TestimonyGroups({ groups }: { groups: TestimonyGroup[] }
       </summary>
       <div className="review-group-body">{group.reviews.map(review => (
         <article className="review-entry" key={review.id}>
-          <span className="eyebrow">Verified testimony</span>
+          <span className="eyebrow">{review.guest ? 'Community review' : 'Verified testimony'}</span>
           {review.service_title && <h2>{review.service_title}</h2>}
           <WovenRating rating={review.rating} />
           <p>{review.review_revisions?.[0]?.body ?? ''}</p>

@@ -65,6 +65,12 @@ export type Database = {
         Update: { duration_minutes?: number; buffer_minutes?: number; max_per_day?: number | null; max_per_week?: number | null; max_per_month?: number | null; is_bookable?: boolean; updated_by?: string | null; updated_at?: string };
         Relationships: [];
       };
+      guest_reviews: {
+        Row: { id: string; first_name: string; last_name: string; service_title: string | null; rating: number; body: string; status: 'pending' | 'approved' | 'rejected'; created_at: string; moderated_at: string | null };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       reviews: {
         Row: { id: string; service_instance_id: string; customer_id: string; rating: number; status: 'pending' | 'approved' | 'rejected' | 'withdrawn' | 'hidden'; approved_revision_id: string | null; created_at: string; updated_at: string };
         Insert: { id?: string; service_instance_id: string; customer_id: string; rating?: number; status?: 'pending' | 'approved' | 'rejected' | 'withdrawn' | 'hidden'; approved_revision_id?: string | null; created_at?: string; updated_at?: string };
@@ -103,6 +109,8 @@ export type Database = {
       join_tiktok_live: { Args: { request_id: string; first_name: string; last_name: string; selected_payment: string; accepted_terms: boolean; accepted_privacy: boolean; entry_source?: string }; Returns: string };
       join_tiktok_live_offerings: { Args: { request_id: string; first_name: string; last_name: string; selected_payment: string; accepted_terms: boolean; accepted_privacy: boolean; selected_offerings: string[]; entry_source?: string }; Returns: string };
       join_tiktok_live_details: { Args: { request_id: string; first_name: string; last_name: string; selected_payment: string; accepted_terms: boolean; accepted_privacy: boolean; selected_offerings: string[]; birth_details: { date: string; time: string; place: { label: string; lat: number; lon: number } | null }; entry_source?: string }; Returns: string };
+      submit_guest_review: { Args: { guest_first_name: string; guest_last_name: string; guest_service_title: string; guest_rating: number; guest_body: string }; Returns: string };
+      moderate_guest_review: { Args: { target_review: string; decision: string }; Returns: undefined };
       submit_review: { Args: { instance_id: string; review_body: string; review_rating?: number }; Returns: string };
       moderate_review: { Args: { target_review: string; target_revision: string; decision: string; reason?: string | null }; Returns: undefined };
       create_scheduling_block: { Args: { starts_local: string; ends_local: string; schedule_timezone: string; block_reason: string }; Returns: string };

@@ -199,6 +199,30 @@ html { scroll-behavior:smooth; scroll-padding-top:100px; }
 :focus-visible { outline-color: #79582b; }
 .bg-glass { background: var(--paper-surface); border: 1px solid #b08a4c80; border-radius: 22px; box-shadow: var(--paper-shadow), inset 0 0 0 1px #f5e5bd44; }
 .woven-rating-art { mix-blend-mode: multiply; }
+.woven-rating { display:inline-flex; align-items:center; gap:10px; margin:4px 0; color:#8b642c; }
+.woven-rating-stars { font-size:24px; letter-spacing:2px; line-height:1; }
+.woven-rating-stars span { color:#a6967f; }
+.woven-rating-count { font-size:12px; color:#625c48; }
+.guest-review-panel { margin:0 0 36px; padding:28px; border:1px solid #d6b45a50; border-radius:16px; background:#f4e7cdd9; }
+.guest-review-panel h2 { font-family:var(--font-cinzel),serif; color:#79582b; margin:8px 0; }
+.guest-review-panel > p { color:#625c48; }
+.guest-review-form { max-width:none; margin-top:18px; }
+.guest-name-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.guest-name-fields > div { display:flex; flex-direction:column; }
+.guest-review-form label span { font-weight:normal; }
+.guest-review-form textarea { min-height:130px; }
+.guest-review-trap { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.star-choice { border:0; padding:0; margin:14px 0; }
+.star-choice legend { color:#625c48; margin-bottom:8px; }
+.star-options { display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:3px; }
+.star-options label { display:inline-flex; position:relative; cursor:pointer; font-size:34px; line-height:1; color:#a6967f; }
+.star-options input { position:absolute; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+.star-options label:has(input:checked),.star-options label:has(input:checked) ~ label { color:#b77e21; }
+.star-options:hover label { color:#a6967f; }
+.star-options label:hover,.star-options label:hover ~ label { color:#b77e21; }
+.star-options label:has(input:focus-visible) { outline:2px solid #79582b; outline-offset:2px; border-radius:3px; }
+.star-choice-help { display:block; font-size:12px; color:#625c48; margin-top:7px; }
+@media (max-width:480px) { .guest-review-panel { padding:20px; } .guest-name-fields { grid-template-columns:1fr; } }
 .account-form input,.account-form select,.account-form textarea { background: #f8eed9; border-color: #b78e6d80; }
 .admin-shell { --admin-gold: #79582b; --admin-ink: #f4e7cb; --admin-line: #b78e6d50; }
 input:not([type=checkbox]):not([type=radio]),select,textarea { background-color: #f4e7cbf2; }
