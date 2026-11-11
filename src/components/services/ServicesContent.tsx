@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import type { Service } from '@/data/services';
 import ServiceCard from '@/components/services/ServiceCard';
+import LivingTapestryCanvasV2 from '@/components/visual/LivingTapestryCanvasV2';
 
 export default function ServicesContent({ services }: { services: Service[] }) {
   const categories = [
@@ -16,7 +17,11 @@ export default function ServicesContent({ services }: { services: Service[] }) {
 
   return (
     <div className="relative pt-32 pb-20 px-4 w-full min-h-screen">
-      <div className="max-w-7xl mx-auto">
+      {/* Version 05 (ff48c9e): steady loops, scoped to the services listing. */}
+      <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" data-services-strands="05">
+        <LivingTapestryCanvasV2 />
+      </div>
+      <div className="relative z-10 max-w-7xl mx-auto">
         <div className="folio-opening text-center mb-20">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
