@@ -16,7 +16,7 @@ export default function GlobalNavigation() {
   const [scrolled, setScrolled] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
   const pathname = usePathname();
-  const home = ['/', '/tiktok-live', '/reviews', '/contact'].includes(pathname);
+  const home = ['/', '/tiktok-live', '/reviews', '/contact', '/explore'].includes(pathname);
   useEffect(() => {
     let controller: AbortController | undefined;
     const refresh = () => {

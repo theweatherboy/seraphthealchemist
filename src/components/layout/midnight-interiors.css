@@ -27,6 +27,33 @@
 .midnight-interiors .contact-silk-control { color:#493653!important; background:var(--pearl-lustre)!important; border-color:#fff1d8!important; }
 .midnight-interiors .text-muted { color:#dbd0bc; }
 .midnight-interiors .text-seraphic-gold { color:#efd197; }
+.midnight-interiors[data-folio='explore'] #main-content { position:relative; isolation:isolate; }
+.midnight-interiors[data-folio='explore'] #main-content::before { content:''; position:absolute; z-index:-1; inset:0 0 auto; height:650px; pointer-events:none; background:linear-gradient(90deg,#0c1728e8,#0c1728a8 48%,#0c172849),var(--folio-art) center 38% / cover no-repeat; mask-image:linear-gradient(#000 0%,#000 65%,transparent); }
+.midnight-interiors[data-folio='explore'] #main-content::after { display:none; }
+.midnight-interiors[data-folio='explore'] .explorePage { max-width:920px; margin:auto; padding:130px 24px 70px; color:#f4ead8; }
+.midnight-interiors[data-folio='explore'] .exploreBack { color:#ead5ad; }
+.midnight-interiors[data-folio='explore'] .exploreHeader { text-align:center; margin:36px 0; }
+.midnight-interiors[data-folio='explore'] .exploreHeader h1 { font:400 clamp(38px,6vw,60px)/1.2 var(--font-cinzel),serif; color:#ffebc7; text-shadow:0 2px 16px #080e18; }
+.midnight-interiors[data-folio='explore'] .exploreHeader > p:last-child { color:#ede0c9; }
+.midnight-interiors[data-folio='explore'] .explorePanel { padding:clamp(24px,5vw,46px); border:1px solid #c2a46c66; border-radius:22px; background:linear-gradient(135deg,#17283af2,#0d1829f5); color:#f5ead7; box-shadow:inset 0 1px #fff2,0 16px 48px #060c1870; backdrop-filter:blur(16px); }
+.midnight-interiors[data-folio='explore'] .explorePanel h2,.midnight-interiors[data-folio='explore'] .explorePanel h3 { color:#f1d6a1; }
+.midnight-interiors[data-folio='explore'] .exploreEyebrow { color:#e5c18a; }
+.midnight-interiors[data-folio='explore'] .exploreProgress { background:#26344a; }
+.midnight-interiors[data-folio='explore'] .exploreProgress::-webkit-progress-bar { background:#26344a; }
+.midnight-interiors[data-folio='explore'] .exploreProgress::-webkit-progress-value,.midnight-interiors[data-folio='explore'] .exploreProgress::-moz-progress-bar { background:linear-gradient(90deg,#d9bd81,#9aabd0,#ead5ad); }
+.midnight-interiors[data-folio='explore'] .exploreOption { color:#f0e5d2; border-color:#d1b37a60; background:linear-gradient(120deg,#ffffff0c,#e1d4f00a); transition:background .2s,border-color .2s,box-shadow .2s,transform .2s; }
+.midnight-interiors[data-folio='explore'] .exploreOption:hover { border-color:#e8cd96; background:#ffffff14; transform:translateY(-1px); }
+.midnight-interiors[data-folio='explore'] .exploreOption:has(input:checked) { border-color:#efd197; background:linear-gradient(120deg,#e6c98a26,#b9c9ef1b); box-shadow:inset 0 0 0 1px #efd197,0 0 18px #e6c98a18; }
+.midnight-interiors[data-folio='explore'] .exploreOption input { accent-color:#eacb8d; }
+.midnight-interiors[data-folio='explore'] .explorePrimary { color:#493653; background:var(--pearl-lustre); border:1px solid #fff1d8; box-shadow:var(--pearl-shadow); }
+.midnight-interiors[data-folio='explore'] .exploreSecondary { color:#f0dfc0; border-color:#c4a46c99; background:#162438; }
+.midnight-interiors[data-folio='explore'] .exploreQuiet { color:#ead5ad; }
+.midnight-interiors[data-folio='explore'] .exploreNote,.midnight-interiors[data-folio='explore'] .exploreFooter { color:#cfc8bd; }
+.midnight-interiors[data-folio='explore'] .exploreNext { border-left-color:#d2ad6b; }
+.midnight-interiors[data-folio='explore'] .exploreMatch { border-color:#c2a46c55; background:linear-gradient(135deg,#ffffff0e,#d6c8ed0a); }
+.midnight-interiors[data-folio='explore'] .exploreSummary { border-color:#c2a46c55; }
+.midnight-interiors[data-folio='explore'] .explorePanel :is(button,a,input,summary):focus-visible { outline-color:#f3d49c; }
+@media(max-width:650px) { .midnight-interiors[data-folio='explore'] #main-content::before { height:560px; }.midnight-interiors[data-folio='explore'] .explorePage { padding:105px 16px 48px; }.midnight-interiors[data-folio='explore'] .exploreHeader { margin:30px 0; } }
 .midnight-interiors .contact-glass-stage::after { border-radius:18px; padding:1px; background:linear-gradient(120deg,#e7c78a,#8c6b37,#e7c78a); }
 .midnight-interiors .weave-disclosure,.midnight-interiors .review-group summary:hover .weave-disclosure { color:#e8c88e; }
 .midnight-interiors .star-options label { color:#697483; }

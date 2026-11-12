@@ -1,5 +1,6 @@
 /** Text-free folio illustrations, selected by route without loading other assets. */
 export function pageArtwork(pathname: string): string | undefined {
+  if (pathname === '/explore') return 'explore';
   if (pathname === '/tiktok-live') return 'live';
   if (pathname === '/services' || pathname.startsWith('/services/')) return 'services';
   if (pathname === '/reviews') return 'reviews';
@@ -18,6 +19,7 @@ export function pageArtwork(pathname: string): string | undefined {
 /** Shared by the page opening and environment so artwork paths cannot drift. */
 export function pageArtworkSource(artwork: string | undefined): string {
   switch (artwork) {
+    case 'explore': return '/images/greek-live-navy-v1.webp';
     case 'live': return '/images/greek-live-navy-v1.webp';
     case 'reviews': return '/images/greek-reviews-navy-v1.webp';
     case 'contact': return '/images/greek-contact-navy-v1.webp';

@@ -19,7 +19,7 @@ export default function AppShell({ children }: AppShellProps) {
   const admin = pathname === '/admin' || pathname.startsWith('/admin/');
   const home = pathname === '/';
   const designStudio = pathname.startsWith('/design/');
-  const midnight = ['/tiktok-live', '/reviews', '/contact'].includes(pathname);
+  const midnight = ['/tiktok-live', '/reviews', '/contact', '/explore'].includes(pathname);
   const parchment = !home && !admin && !designStudio && !midnight && !pathname.startsWith('/chakras/');
   const artwork = pageArtwork(pathname);
   const scenic = ['about', 'contact', 'reviews', 'support'].includes(artwork ?? '');
