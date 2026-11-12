@@ -1,0 +1,44 @@
+/* The three public gathering pages share the homepage's navy stone. */
+.midnight-interiors { background:#25364e url('/images/seraph-worn-stone-v1.webp') center top / 900px repeat; background-blend-mode:soft-light; color:#f5ead7; --text:#f5ead7; --muted:#d6cbb8; }
+.midnight-interiors::before { content:''; position:absolute; inset:0 0 auto; height:760px; pointer-events:none; background:linear-gradient(90deg,#0b1525b3,transparent 75%),var(--folio-art) center top / cover no-repeat; mask-image:linear-gradient(#000 0%,#000 60%,transparent 100%); }
+.midnight-interiors #main-content { min-height:100svh; }
+.midnight-interiors .folio-opening { min-height:390px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; margin:0 auto 35px; padding:60px 0 50px; }
+.midnight-interiors .folio-opening h1 { font:400 clamp(38px,5vw,64px)/1.15 var(--font-cinzel),serif; color:#ffebc7; text-shadow:0 3px 18px #07101b; margin:14px 0 22px; }
+.midnight-interiors .folio-opening > p { color:#ede0c9; max-width:520px; font-size:17px; line-height:1.8; text-shadow:0 2px 7px #08121d; margin-bottom:0; }
+.midnight-interiors .folio-opening .eyebrow { font-size:11px; letter-spacing:.23em; text-transform:uppercase; color:#e5c18a; }
+.midnight-interiors .reviews-page { max-width:1040px; }
+.midnight-interiors .reviews-header { max-width:none; }
+.midnight-interiors :is(.guest-review-panel,.review-group,.reviews-empty,.contact-glass) { background:linear-gradient(135deg,#17283af0,#0d1829f5); color:#f5ead7; border:1px solid #b894565e; box-shadow:inset 0 1px #e3c99226,0 16px 40px #060c183d; border-radius:18px; }
+.midnight-interiors :is(.guest-review-panel h2,.review-group summary strong,.review-entry h2,.review-chevron,.account-form label,.star-choice legend) { color:#f1d6a1; }
+.midnight-interiors :is(.guest-review-panel > p,.review-group summary small,.review-entry time,.review-entry > p,.account-fine-print,.star-choice-help,.reviews-empty) { color:#ddd2c0; }
+.midnight-interiors :is(.reviews-footer a,.reviews-empty a,.account-fine-print a) { color:#efd197; }
+.midnight-interiors :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea) { background:#0b1729e6; border:1px solid #c7a56a80; color:#fff0d6; color-scheme:dark; border-radius:10px; }
+.midnight-interiors :is(input,textarea)::placeholder { color:#b7b4b0; opacity:1; }
+.midnight-interiors select option { color:#fff0d6; background:#102039; }
+.midnight-interiors :is(a,button,input,textarea,select,summary):focus-visible { outline:2px solid #f3d49c; outline-offset:4px; }
+.midnight-interiors :is(.account-button,.contact-glass button[type=submit]) { position:relative; background:var(--pearl-lustre); color:#493653; border:1px solid #fff1d8; border-radius:999px; box-shadow:var(--pearl-shadow); backdrop-filter:blur(22px); transition:box-shadow .25s,transform .25s; }
+.midnight-interiors :is(.account-button,.contact-glass button[type=submit])::before { content:''; position:absolute; inset:-2px; padding:2px; border-radius:inherit; pointer-events:none; background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude; }
+.midnight-interiors :is(.account-button,.contact-glass button[type=submit]):hover:not(:disabled) { box-shadow:inset 0 1px 4px #fff,0 0 24px #dac6ed80,0 0 38px #e5c18a40; transform:translateY(-2px); }
+.midnight-interiors .contact-glass-stage { padding:0; }
+.midnight-interiors .contact-glass-stage::before,.midnight-interiors .contact-glass::before { display:none; }
+.midnight-interiors .contact-glass { padding:clamp(22px,4vw,38px); backdrop-filter:blur(16px); }
+.midnight-interiors .contact-glass label { color:#efd197; }
+.midnight-interiors .contact-silk { opacity:.15; }
+.midnight-interiors .contact-silk-control { color:#493653!important; background:var(--pearl-lustre)!important; border-color:#fff1d8!important; }
+.midnight-interiors .text-muted { color:#dbd0bc; }
+.midnight-interiors .text-seraphic-gold { color:#efd197; }
+.midnight-interiors .contact-glass-stage::after { border-radius:18px; padding:1px; background:linear-gradient(120deg,#e7c78a,#8c6b37,#e7c78a); }
+.midnight-interiors .weave-disclosure,.midnight-interiors .review-group summary:hover .weave-disclosure { color:#e8c88e; }
+.midnight-interiors .star-options label { color:#697483; }
+.midnight-interiors .star-options label:has(input:checked),.midnight-interiors .star-options label:has(input:checked) ~ label { color:#f2c977; }
+.midnight-interiors .star-options:hover label { color:#697483; }
+.midnight-interiors .star-options label:hover,.midnight-interiors .star-options label:hover ~ label { color:#ffe2a6; }
+.midnight-interiors .star-options label:has(input:focus-visible) { outline-color:#f2c977; }
+@media(max-width:650px) {
+ .midnight-interiors::before { height:650px; background-position:65% top; }
+ .midnight-interiors .folio-opening { min-height:330px; padding:45px 0 25px; margin-bottom:24px; }
+ .midnight-interiors .folio-opening h1 { font-size:38px; }
+ .midnight-interiors .folio-opening > p { font-size:15px; }
+ .midnight-interiors .guest-review-panel { padding:22px 18px; }
+}
+@media(prefers-reduced-motion:reduce) { .midnight-interiors :is(.account-button,.contact-glass button[type=submit]) { transition:none; }.midnight-interiors :is(.account-button,.contact-glass button[type=submit]):hover { transform:none; } }

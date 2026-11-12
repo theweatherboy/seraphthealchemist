@@ -1,0 +1,25 @@
+.studio { background:#141b18; color:#f5e8cf; min-height:100vh; font-family:var(--font-inter),sans-serif; }
+.intro { padding:145px 24px 30px; text-align:center; max-width:850px; margin:auto; }
+.eyebrow { color:#c8ac79; text-transform:uppercase; letter-spacing:.3em; font-size:10px; margin:0 0 17px; }
+.intro h1 { font-family:var(--font-cinzel),serif; font-weight:400; font-size:clamp(28px,3.4vw,46px); line-height:1.25; margin:0 0 20px; }
+.intro > p:not(.eyebrow) { color:#d2c8b7; max-width:650px; margin:auto; font-size:14px; line-height:1.8; }
+.links { display:flex; justify-content:center; flex-wrap:wrap; gap:10px 25px; margin-top:20px; }
+.links a { display:flex; align-items:center; min-height:44px; font-size:12px; color:#ead0a0; text-decoration:underline; text-underline-offset:5px; }
+.controls { position:fixed; bottom:16px; left:2%; right:2%; z-index:40; padding:14px 24px 10px; border-radius:12px; background:#141b18f5; border:1px solid #ad8c5177; box-shadow:0 8px 25px #0006; backdrop-filter:blur(16px); }
+.swatches { display:flex; justify-content:center; gap:10px; max-width:1100px; margin:auto; }
+.swatches button { display:flex; align-items:center; gap:10px; padding:8px 13px; min-height:48px; border:1px solid #847657; border-radius:8px; cursor:pointer; background:#202722; color:#e9dcc5; font-size:12px; }
+.swatches button[aria-pressed=true] { background:#3b4237; border-color:#f3d49c; box-shadow:0 0 0 1px #f3d49c; color:#fff2d9; }
+.swatch { display:block; flex-shrink:0; width:26px; height:26px; border:1px solid #e9d2a766; border-radius:50%; background-image:url('/images/seraph-worn-stone-v1.webp'); background-size:100px; background-blend-mode:soft-light; }
+.caption { display:flex; justify-content:center; gap:15px; margin:12px 0 0; font-size:11px; line-height:1.6; color:#cbbfaa; }
+.caption strong { color:#f2d9aa; font-weight:500; }
+.preview section[id] { scroll-margin-top:230px; }
+.footnote { text-align:center; padding:24px 24px 150px; margin:0; color:#cbbfaa; font-size:12px; line-height:1.7; }
+.studio :is(a,button):focus-visible { outline:2px solid #f3d49c; outline-offset:4px; }
+@media(max-width:750px) {
+ .controls { bottom:8px; padding:12px; }
+ .swatches { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+ .swatches button { padding:7px; gap:6px; font-size:10px; }
+ .swatch { width:20px; height:20px; }
+ .caption { margin-top:10px; }.caption span { display:none; }
+ .preview section[id] { scroll-margin-top:265px; }
+}

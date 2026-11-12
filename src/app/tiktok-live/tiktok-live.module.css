@@ -2,7 +2,7 @@
   min-height: 100svh;
   padding: 145px 24px 72px;
   color: #f8f2e8;
-  background: linear-gradient(#090b18 0%, #111023 100%);
+  background: transparent;
   position: relative;
   isolation: isolate;
   font-family: var(--font-glass), sans-serif;
@@ -99,7 +99,6 @@
 .liveForm :is(input,select,button,a):focus-visible { outline: 3px solid #794235; outline-offset: 4px; }
 
 /* Celestial glass is scoped to the visitor page; the shared admin form keeps its palette. */
-.page::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(#080b1838, #080b1870), url('/images/tiktok-live-stars-v1.webp') center / cover no-repeat; }
 /* Override the shared parchment theme's ID-level colors on this dark page. */
 .page .header h1 { color: #fff5df !important; text-shadow: 0 2px 24px #080b18 !important; }
 .page .intro, .page .subtitle, .page .duration, .page .footer, .page .paymentNote { color: #d6cede; }
@@ -149,3 +148,18 @@
 @media (prefers-reduced-motion: reduce) {
   .payment, .quickPayment, .page .card { transition: none; }
 }
+
+/* Greek oracle terrace fades into the shared midnight stone. */
+.header { min-height:350px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding-bottom:30px; }
+.page .fieldset,.page .paymentPanel { background:linear-gradient(135deg,#17283af0,#0d1829f5); border-color:#b894565e; }
+.page .formHeading { background:#17283a; border-color:#b8945666; }
+.page .badge { background:#14263de6; border-color:#bc965e80; }
+.page .googleButton,.page .guestButton { background:#14263d; border-color:#b8945688; color:#f5e4c5; }
+.page .submit { background:linear-gradient(115deg,#f4dfb1,#cfa76b); border-color:#eed3a0; color:#172438; }
+@media(max-width:600px) { .header { min-height:310px; }.page .header h1 { font-size:34px; } }
+
+/* Restore luminous pearl actions over the midnight scenery. */
+.page :is(.googleButton,.guestButton,.submit:not(:disabled),.payment) { position:relative; background:var(--pearl-lustre); color:#493653; -webkit-text-fill-color:currentColor; border:1px solid #fff1d8; border-radius:999px; box-shadow:var(--pearl-shadow); backdrop-filter:blur(22px); transition:box-shadow .25s,transform .25s; }
+.page :is(.googleButton,.guestButton,.submit:not(:disabled),.payment)::before { content:''; position:absolute; inset:-2px; padding:2px; border-radius:inherit; pointer-events:none; background:var(--pearl-rim); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude; }
+.page :is(.googleButton,.guestButton,.submit,.payment):hover:not(:disabled) { background:var(--pearl-lustre); box-shadow:inset 0 1px 4px #fff,0 0 24px #dac6ed80,0 0 38px #e5c18a40; transform:translateY(-2px); }
+@media(prefers-reduced-motion:reduce) { .page :is(.googleButton,.guestButton,.submit,.payment) { transition:none; }.page :is(.googleButton,.guestButton,.submit,.payment):hover { transform:none; } }

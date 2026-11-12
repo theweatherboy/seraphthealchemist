@@ -20,7 +20,7 @@ const offerings = [
 export default function Home() {
   return <div className={styles.home + ' ' + script.variable}>
     <section className={styles.hero} aria-labelledby="sanctuary-title">
-      <SceneBackdrop poster="/images/sanctuary-moonlit-extended-v1.png" scene="sanctuary" className={styles.heroArt} label="sanctuary" priority speed={.23} controlClassName={styles.motionControl} />
+      <SceneBackdrop poster="/images/sanctuary-celestial-statue-v1.webp" scene="sanctuary" className={styles.heroArt} label="sanctuary" priority speed={.23} controlClassName={styles.motionControl} />
       <div className={styles.heroShade} />
       <aside className={styles.marginNote} aria-hidden="true">Same<br />soul<br />more<br />magic<span>✦</span></aside>
       <div className={styles.heroCopy}>
@@ -28,8 +28,14 @@ export default function Home() {
         <h1 id="sanctuary-title">Sacred<br />knowledge</h1>
         <p className={styles.script}>for a More Aligned You</p>
         <p className={styles.description}>Ancient wisdom. Modern tools.<br />A sanctuary for multi-dimensional souls where the mystical meets the practical, and your soul’s wisdom finds a home in the here and now.</p>
-        <a className={styles.button} href="#offerings">Explore the path <ArrowRight size={19} strokeWidth={1} /></a>
-        <p className={styles.values}>Heal <Sparkle /> Align <Sparkle /> Evolve <Sparkle /> Belong</p>
+        <Link className={styles.button} href="/explore">Explore the path <ArrowRight size={19} strokeWidth={1} /></Link>
+        <div className={styles.values}>
+          <span><Triangle strokeWidth={1} />Heal</span>
+          <span><Sun strokeWidth={1} />Align</span>
+          <span><Sparkle strokeWidth={1} />Evolve</span>
+          <span><Compass strokeWidth={1} />Belong</span>
+        </div>
+        <div className={styles.moonOrnament} aria-hidden="true"><span />☽ ☽ ● ☾ ☾<span /></div>
       </div>
     </section>
     <section id="offerings" className={portals.section} aria-labelledby="offerings-title">
@@ -52,7 +58,9 @@ export default function Home() {
       <div className={portals.furtherPaths}><Link href="/birth-chart">Your birth chart <Sun size={20} strokeWidth={1} /></Link><span aria-hidden="true">✦</span><Link href="/chakras/earth-star"><Sparkle size={20} strokeWidth={1} />Explore the nine chakras</Link></div>
     </section>
     <section className={styles.vision} aria-labelledby="vision-title">
-      <SceneBackdrop poster="/images/sanctuary-alchemy-v5.webp" scene="vision" className={styles.visionArt} label="vision" speed={.23} controlClassName={styles.visionControl} />
+      <div className={styles.visionArt} aria-hidden="true">
+        <Image src="/images/ethereal-cosmic-harmony-clean-v2.webp" alt="" fill sizes="100vw" />
+      </div>
       <div className={styles.visionShade} />
       <div className={styles.visionCopy}>
         <p className={styles.eyebrow}>The vision</p>
@@ -61,7 +69,6 @@ export default function Home() {
         <p className={styles.description}>I believe in a world where spiritual wisdom and everyday life exist in harmony — not as an escape, but as a return. And where your soul’s gifts are meant to be lived, not just explored.</p>
         <Link href="/about" className={styles.button}>Learn more <ArrowRight size={19} strokeWidth={1} /></Link>
       </div>
-      <aside className={styles.visionNote} aria-hidden="true">People<br />Places<br />Practices<br />Possibilities<span>✦</span></aside>
       <footer className={styles.footer}>
         <Link href="/" className={styles.wordmark}>Seraph<small>The Alchemist</small></Link>
         <p>Not to escape, but to be more present.</p>

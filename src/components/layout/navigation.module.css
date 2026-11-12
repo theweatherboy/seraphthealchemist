@@ -157,3 +157,17 @@
   .actions { gap:6px; }
   .mobileLive { padding-inline:8px; font-size:11px; }
 }
+
+
+/* Pearl controls brighten gently on hover and keyboard focus. */
+.enter,.menu summary,.mobileLive { transition:box-shadow .25s,transform .25s; }
+.enter:hover,.enter:focus-visible,.menu summary:hover,.mobileLive:hover { box-shadow:inset 0 1px 4px #fff,0 0 24px #dac6ed80,0 0 38px #e5c18a40; transform:translateY(-1px); }
+@media(prefers-reduced-motion:reduce) { .enter,.menu summary,.mobileLive { transition:none; }.enter:hover,.enter:focus-visible,.menu summary:hover,.mobileLive:hover { transform:none; } }
+
+/* Match the dropdown to the iridescent hero glass. */
+.dropdown { color:#fff8e8; border:1px solid #fff0d980; background:linear-gradient(135deg,#101923ed,#172032e8 54%,#292338e8); backdrop-filter:blur(24px) saturate(125%); -webkit-backdrop-filter:blur(24px) saturate(125%); box-shadow:inset 0 1px 0 #fff5,inset 0 0 0 4px #ffffff0a,0 18px 45px #03071175; scrollbar-color:#c9ab7c #152033; }
+.dropdown::before { inset:0; padding:1px; background:linear-gradient(125deg,#fff2d9,#c4b4da,#a9d9d5,#e5bf82); opacity:.75; }
+.dropdown a,.dropdown .chakraMenu a { color:#fff4df; }
+.dropdown a:hover,.dropdown a[aria-current=page] { background:linear-gradient(110deg,#ffffff1c,#e6d4f02c,#d9c7a21c); color:#fff; box-shadow:inset 0 1px #fff3,0 0 16px #d8c5ee22; }
+.chakraMenu { border-color:#e8d4b844; }
+.chakraMenu > p { color:#e7cc98; }

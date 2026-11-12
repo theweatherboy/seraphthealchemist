@@ -3,6 +3,7 @@ import { Cinzel, Inter, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import "@/components/layout/sanctuary-interiors.css";
 import "@/components/layout/ethereal-glass.css";
+import "@/components/layout/midnight-interiors.css";
 import AppShell from "@/components/layout/AppShell";
 
 const cinzel = Cinzel({

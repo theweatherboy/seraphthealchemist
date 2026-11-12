@@ -132,10 +132,51 @@
 /* Keep the moon and arch in view when the extended foreground is cropped. */
 @media(min-width:1600px) { .heroArt { object-position:50% 0%; } }
 
-/* Shared warm stone at both boundaries joins the three sanctuary scenes. */
-.home { background:#2b211c; }
-.hero::after { height:170px; background:linear-gradient(transparent,#2b211c); }
-.vision::before { height:180px; background:linear-gradient(#2b211c,transparent); }
+/* One continuous stone surface beneath the softly feathered scenic artwork. */
+.home { background:var(--stone-color,#25364e) url('/images/seraph-worn-stone-v1.webp') center top / 900px 900px repeat; background-blend-mode:soft-light; }
+.hero::after,.vision::before { display:none; }
+.heroArt,.heroShade { mask-image:linear-gradient(#000 0%,#000 calc(100% - 280px),transparent 100%); }
+.visionArt { mask-image:linear-gradient(transparent,#000 240px); }
+.visionArt { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.visionArt img { object-fit:cover; object-position:inherit; }
+.heroArt::before { content:''; position:absolute; inset:-20px; background:url('/images/sanctuary-moonlit-extended-v1.png') center top / cover; filter:blur(18px); opacity:.65; }
+.heroArt img { width:88%!important; height:auto!important; max-width:none; left:6%!important; object-fit:contain; mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent); }
 .visionShade { mask-image:linear-gradient(transparent,#000 180px); background:linear-gradient(90deg,#20150b55,transparent 65%),linear-gradient(0deg,#17120fe6,transparent 40%); }
-@media(max-width:650px) { .hero::after { height:100px; }.vision::before { height:140px; } }
+@media(max-width:650px) {
+ .heroArt,.heroShade { mask-image:linear-gradient(#000 0%,#000 calc(100% - 180px),transparent); }
+ .heroArt img { width:150%!important; left:-40%!important; }
+ .heroArt::before { background-position:68% top; }
+ .visionArt { mask-image:linear-gradient(transparent,#000 180px); }
+}
 @media(max-width:650px) { .visionArt { object-position:78% 50%; }.visionShade { background:linear-gradient(90deg,#20150bcc,#20150b55),linear-gradient(0deg,#17120ff5,transparent 75%); } }
+
+/* Celestial sanctuary: fine gold details over deep, quiet glass. */
+.heroCopy { margin-left:22%; width:35%; max-width:540px; }
+.heroCopy h1 { font-size:clamp(42px,4.5vw,72px); line-height:1.03; font-weight:400; letter-spacing:.025em; color:#f5e3b9; text-shadow:0 2px 12px #080f15; }
+.heroCopy .script { font-size:clamp(42px,4.5vw,70px); color:#edce8b; margin-top:8px; }
+.heroCopy .eyebrow { display:flex; align-items:center; gap:14px; color:#f5e9ce; font-family:var(--font-cinzel),serif; letter-spacing:.25em; }
+.heroCopy .eyebrow::before,.heroCopy .eyebrow::after { content:''; height:1px; width:34px; background:linear-gradient(90deg,transparent,#c8a35f); }
+.heroCopy .eyebrow::after { transform:rotate(180deg); }
+.heroCopy .description { font-family:Georgia,serif; font-size:17px; line-height:1.65; letter-spacing:.025em; max-width:390px; text-shadow:0 2px 5px #070c10; }
+.values { gap:28px; margin-top:30px; }
+.values > span { display:flex; flex-direction:column; align-items:center; gap:10px; font-size:11px; letter-spacing:.12em; }
+.values svg { width:27px; height:27px; color:#dfbb77; }
+.values > span:first-child svg { transform:rotate(180deg); }
+.moonOrnament { display:flex; align-items:center; gap:18px; margin-top:27px; max-width:330px; color:#d9b978; font-size:17px; letter-spacing:.15em; }
+.moonOrnament span { flex:1; height:1px; background:linear-gradient(90deg,transparent,#b89a60); }
+.moonOrnament span:last-child { transform:rotate(180deg); }
+@media(min-width:1600px) { .heroCopy { margin-left:22%; }.heroCopy h1 { font-size:76px; }.heroCopy .script { font-size:76px; } }
+@media(max-width:1000px) { .heroCopy { margin-left:16%; width:53%; }.heroCopy .description { font-size:16px; }.heroCopy .script { white-space:normal; margin-right:0; } }
+@media(max-width:650px) { .heroCopy { margin:0; width:100%; }.heroCopy h1 { font-size:44px; }.heroCopy .script { font-size:48px; }.heroCopy .eyebrow { font-size:8px; gap:8px; }.heroCopy .description { font-size:15px; }.heroCopy .button { min-width:0; width:100%; max-width:330px; }.values { gap:25px; }.values > span { font-size:10px; }.moonOrnament { margin-top:23px; } }
+
+/* Wide reference artwork keeps the statue, full arch, and terrace in frame. */
+.hero { height:clamp(760px,56.25vw,1080px); }
+.heroArt { object-position:center top; }
+.heroArt::before { display:none; }
+.heroArt img { width:100%!important; height:100%!important; left:0!important; object-fit:cover; mask-image:none; }
+.heroShade { background:linear-gradient(90deg,transparent 12%,#080f1626 27%,transparent 58%); }
+@media(max-width:650px) { .hero { height:auto; min-height:930px; padding-top:355px; }.heroArt { object-position:62% top; }.heroArt img { object-position:62% top; }.heroShade { background:linear-gradient(0deg,#09121df5 6%,#09121deb 42%,#09121d33 72%,transparent); } }
+
+.button { transition:background .25s,box-shadow .25s,transform .25s; }
+.button:hover,.button:focus-visible { background:var(--pearl-lustre); box-shadow:inset 0 1px 4px #fff,0 0 24px #dac6ed80,0 0 38px #e5c18a40; transform:translateY(-2px); }
+@media(prefers-reduced-motion:reduce) { .button { transition:none; }.button:hover,.button:focus-visible { transform:none; } }

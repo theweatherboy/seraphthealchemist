@@ -18,21 +18,23 @@ export default function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const admin = pathname === '/admin' || pathname.startsWith('/admin/');
   const home = pathname === '/';
-  const parchment = !home && !admin && !pathname.startsWith('/chakras/');
+  const designStudio = pathname.startsWith('/design/');
+  const midnight = ['/tiktok-live', '/reviews', '/contact'].includes(pathname);
+  const parchment = !home && !admin && !designStudio && !midnight && !pathname.startsWith('/chakras/');
   const artwork = pageArtwork(pathname);
   const scenic = ['about', 'contact', 'reviews', 'support'].includes(artwork ?? '');
   return (
     <RealmProvider>
       <PaymentProvider>
-      <div className={`relative min-h-screen w-full overflow-x-hidden bg-obsidian text-text${parchment ? ' parchment-site sanctuary-interiors' : ''}`} data-folio={artwork} data-scenic={scenic || undefined} style={{ '--folio-art': `url('${pageArtworkSource(artwork)}')` } as React.CSSProperties}>
+      <div className={`relative min-h-screen w-full overflow-x-hidden bg-obsidian text-text${parchment ? ' parchment-site sanctuary-interiors' : ''}${midnight ? ' midnight-interiors' : ''}`} data-folio={artwork} data-scenic={scenic || undefined} style={{ '--folio-art': `url('${pageArtworkSource(artwork)}')` } as React.CSSProperties}>
         {/* Living Environment (Persists) */}
-        {!home && <div className="fixed inset-0 z-0 pointer-events-none">
+        {!home && !designStudio && !midnight && <div className="fixed inset-0 z-0 pointer-events-none">
           <EnvironmentBackground />
         </div>}
 
         {/* Persistent UI */}
         {!admin && <GlobalNavigation />}
-        {!admin && !home && <RealmIndicator />}
+        {!admin && !home && !designStudio && !midnight && <RealmIndicator />}
 
         {/* Page Content (Transitions) */}
         <main id="main-content" className="relative z-10">

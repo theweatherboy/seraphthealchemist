@@ -1,5 +1,6 @@
 /** Text-free folio illustrations, selected by route without loading other assets. */
 export function pageArtwork(pathname: string): string | undefined {
+  if (pathname === '/tiktok-live') return 'live';
   if (pathname === '/services' || pathname.startsWith('/services/')) return 'services';
   if (pathname === '/reviews') return 'reviews';
   if (pathname === '/birth-chart') return 'birth-chart';
@@ -17,6 +18,9 @@ export function pageArtwork(pathname: string): string | undefined {
 /** Shared by the page opening and environment so artwork paths cannot drift. */
 export function pageArtworkSource(artwork: string | undefined): string {
   switch (artwork) {
+    case 'live': return '/images/greek-live-navy-v1.webp';
+    case 'reviews': return '/images/greek-reviews-navy-v1.webp';
+    case 'contact': return '/images/greek-contact-navy-v1.webp';
     case 'services': return '/images/page-services-marble-v1.webp';
     case 'grimoire':
     case 'journal':
@@ -24,8 +28,6 @@ export function pageArtworkSource(artwork: string | undefined): string {
     case 'forge': return '/images/page-grimoire-marble-v1.webp';
     case 'about':
     case 'account': return '/images/sanctuary-hero-v3.webp';
-    case 'contact':
-    case 'reviews':
     case 'support':
     case 'admin': return '/images/sanctuary-vision-v3.webp';
     case 'policies': return '/images/pages/policies-v1.webp';
